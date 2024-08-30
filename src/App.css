@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: 1fr;
   /* text-align: center; */
+  background-color: rgb(187, 187, 187);
 }
 
 
@@ -26,7 +27,7 @@
 
 .pageContainer{
   display: grid;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: 0.5fr 4fr;
   row-gap: 5px;
   /* justify-items: center; */
 }

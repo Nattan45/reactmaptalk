@@ -1,41 +1,25 @@
-import './App.css';
-import Sidebar from './components/sidebar/Sidebar'
-import Maptalks from './components/maptalks/Maptalks'
-import Footer from './components/footer/Footer'
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+
+
+import Maptalk from './Maptalk'
+import MaptalksPinPage from './page/MaptalksPinPage'
+import MaptalksRoutePage from './page/MaptalksRoutePage'
 
 
 function App() {
   return (
-    <div className="App">
-      {/* header */}
-      <div className="App-header">
-        <h1>Header Section</h1>
-      </div>
-
-
-      {/* Page-Container */}
-      <div className='pageContainer'>
-        {/* Side Bar */}
-        <div className='sideBar'>
-          <Sidebar/>
-          <hr/>
-        </div>
+    <>
+    {/* <AuthProvider> */}
+      <Routes>
+        <Route path="/" exact element={<Maptalk />}></Route>
+        <Route path="/MaptalksPinPage" exact element={<MaptalksPinPage />}></Route>
+        <Route path="/MaptalksRoutePage" exact element={<MaptalksRoutePage />}></Route>
 
         
-
-        {/* All Contents */}
-        <div className='contentsContainer'>
-          <Maptalks/>
-        </div>
-
-      </div>
-
-
-      {/* Footer-Container */}
-      <div className='footerContainer'>
-        <Footer/>
-      </div>
-    </div>
+      </Routes>
+    {/* </AuthProvider> */}
+  </>
   );
 }
 
