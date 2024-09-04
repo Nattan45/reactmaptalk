@@ -1,0 +1,12 @@
+.SidebarContents{
+
+    display: grid;
+    justify-content: center;
+}
+.navs{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5px;
+    height: fit-content;
+    margin-top: 25%;
+}

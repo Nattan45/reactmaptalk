@@ -1,0 +1,9 @@
+.matalksContainer{
+    margin: 2% 0;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    justify-items: center;
+
+}

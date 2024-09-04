@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+
+
+import Maptalk from './Maptalk'
+import MaptalksPinPage from './page/MaptalksPinPage'
+import MaptalksRoutePage from './page/MaptalksRoutePage'
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    {/* <AuthProvider> */}
+      <Routes>
+        <Route path="/" exact element={<Maptalk />}></Route>
+        <Route path="/MaptalksPinPage" exact element={<MaptalksPinPage />}></Route>
+        <Route path="/MaptalksRoutePage" exact element={<MaptalksRoutePage />}></Route>
+
+        
+      </Routes>
+    {/* </AuthProvider> */}
+  </>
   );
 }
 
