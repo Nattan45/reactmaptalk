@@ -29,7 +29,7 @@ To get started with the project, follow these steps:
 
 3. **Start the Development Server**:
     ```bash
-    npm run dev
+    npm start
     ```
 
     The application will be available at `http://localhost:3000`.
