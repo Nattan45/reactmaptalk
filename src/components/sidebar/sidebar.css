@@ -1,65 +1,63 @@
 .sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 100px; /* Collapsed width */
-    background-color: #415a77;
-    z-index: 1000; /* Ensure it stays on top when expanded */
-    transition: width 0.3s ease-in-out; /* Smooth transition */
-    overflow: hidden;
-  }
-  
-  .sidebar.open {
-    width: 250px; /* Expanded width */
-  }
-  
-  .sidebar-toggle {
-    display: grid;
-    position: relative;
-    top: 50px;
-    /* margin-top: 80px; */
-    cursor: pointer;
-  }
-  
-  .navs {
-    display: flex;
-    flex-direction: column;
-    margin-top: 50px;
-  }
-  
-  .nav-item {
-    display: flex;
-    align-items: center;
-    margin: 10px 0;
-  }
-  
-  .icon {
-    color: #fff;
-    margin-right: 10px;
-    /* Adjust icon size or style as needed */
-  }
-  
-  .sidebar.open .nav-item {
-    justify-content: flex-start;
-  }
-  
-  .sidebar .nav-item {
-    justify-content: center;
-  }
-  
-  /* Adjust the button style when expanded */
-  .sidebar.open .nav-item .MuiButton-root {
-    display: inline-block;
-  }
-  
-  .sidebar .nav-item .MuiButton-root {
-    display: none;
-  }
-  .collapsable{
-    display: grid;
-    justify-content: center;
-  }
-  .yellowcolor{
-    color: yellow;
-  }
+  height: 100%;
+  width: 80px; /* Collapsed width */
+  background-color: #282c34;
+  z-index: 1000; /* Ensure it stays on top when expanded */
+  transition: width 0.3s ease-in-out; /* Smooth transition */
+  overflow: hidden;
+  /* outline: 1px solid rgb(200, 255, 0); */
+}
+
+.sidebar.open {
+  width: 200px; /* Expanded width */
+}
+
+.sidebar-toggle {
+  display: grid;
+  position: relative;
+  top: 50px;
+  /* margin-top: 80px; */
+  cursor: pointer;
+}
+
+.navs {
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.icon {
+  color: #fff;
+  margin-right: 10px;
+  /* Adjust icon size or style as needed */
+}
+
+.sidebar.open .nav-item {
+  justify-content: flex-start;
+}
+
+.sidebar .nav-item {
+  justify-content: center;
+}
+
+/* Adjust the button style when expanded */
+.sidebar.open .nav-item .MuiButton-root {
+  display: inline-block;
+}
+
+.sidebar .nav-item .MuiButton-root {
+  display: none;
+}
+.collapsable {
+  display: grid;
+  justify-content: center;
+}
+.yellowcolor {
+  /* color: yellow; */
+}

@@ -1,4 +1,6 @@
 import React from "react";
+
+import Header from "../components/header/Header";
 import Sidebar from "../components/sidebar/Sidebar";
 import Footer from "../components/footer/Footer";
 import MaptalksMyLocation from "../components/maptalks/MaptalksMyLocation";
@@ -8,7 +10,7 @@ const MaptalksMyLocationPage = () => {
     <div className="App">
       {/* header */}
       <div className="App-header">
-        <h1>Header Section</h1>
+        <Header />
       </div>
 
       {/* Page-Container */}

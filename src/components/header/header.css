@@ -1,0 +1,30 @@
+.headerClass {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  align-content: center;
+  height: 60px;
+}
+.headerComponents {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 0.5fr;
+  width: 90%;
+  justify-content: space-evenly;
+}
+
+.headernaves {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.jumper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: end;
+  width: 250px;
+  margin-left: 60px;
+}
+
+.ddcolor {
+  color: #bee9e8;
+}

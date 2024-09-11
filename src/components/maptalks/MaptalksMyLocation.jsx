@@ -37,7 +37,7 @@ const MaptalksMyLocation = () => {
 
     // Create a marker at the user location using the SVG directly
     const marker = new maptalks.Marker(coords, {
-        symbol: {
+      symbol: {
         markerFile: `data:image/svg+xml,${encodeURIComponent(userLocationSvg)}`,
         textFaceName: "sans-serif",
         textFill: "#34495e",
@@ -48,7 +48,9 @@ const MaptalksMyLocation = () => {
     marker.addTo(markerLayerRef.current);
 
     // Log the coordinates to the console
-    console.log(`User location: Longitude: ${coords[0]}, Latitude: ${coords[1]}`);
+    console.log(
+      `User location: Longitude: ${coords[0]}, Latitude: ${coords[1]}`
+    );
   };
 
   const resetToMyLocation = () => {
@@ -111,7 +113,7 @@ const MaptalksMyLocation = () => {
   }, []);
 
   return (
-    <div className="maptalksContainer">
+    <div className="matalksContainer">
       <div ref={mapRef} style={{ width: "70vw", height: "80vh" }} />
 
       {locationDenied ? (

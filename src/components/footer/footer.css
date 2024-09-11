@@ -1,0 +1,37 @@
+.footerContents {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.footerComponents {
+  margin: 2% 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: center;
+  /* gap: 100px; */
+}
+
+.footerCompany {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+.footernaves {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  justify-items: self-start;
+}
+
+.footerSoclial {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  margin: 2% 0;
+  justify-self: center;
+}
+
+.footerFooter {
+  margin-top: 2%;
+  text-align: center;
+  border-top: 1px solid white;
+}
