@@ -18,7 +18,6 @@ const MaptalksPinPage = () => {
         {/* Side Bar */}
         <div className="sideBar">
           <Sidebar />
-          <hr />
         </div>
 
         {/* All Contents */}

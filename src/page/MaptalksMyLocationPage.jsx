@@ -18,7 +18,6 @@ const MaptalksMyLocationPage = () => {
         {/* Side Bar */}
         <div className="sideBar">
           <Sidebar />
-          <hr />
         </div>
 
         {/* All Contents */}

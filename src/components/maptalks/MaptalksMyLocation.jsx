@@ -1,12 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
+
 import * as maptalks from "maptalks"; //npm i maptalks --save
 import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 
 const MaptalksMyLocation = () => {
   const mapRef = useRef(null);
   const mapInstance = useRef(null); // Ref to store the map instance
   const markerLayerRef = useRef(null); // Ref for marker layer
   const [locationDenied, setLocationDenied] = useState(false); // To handle location denied
+
+  const [Longitude, setLongitude] = useState(null);
+  const [Latitude, setLatitude] = useState(null);
 
   const initializeMap = (center, zoomLevel = 10) => {
     // If a map instance already exists, remove it
@@ -46,6 +51,10 @@ const MaptalksMyLocation = () => {
       },
     });
     marker.addTo(markerLayerRef.current);
+
+    // Set longitude and latitude state
+    setLongitude(coords[0]);
+    setLatitude(coords[1]);
 
     // Log the coordinates to the console
     console.log(
@@ -114,32 +123,65 @@ const MaptalksMyLocation = () => {
 
   return (
     <div className="matalksContainer">
-      <div ref={mapRef} style={{ width: "70vw", height: "80vh" }} />
+      <div className="sideBySide">
+        <div className="left">
+          <div className="leftdata">
+            <Button variant="outlined">
+              {" "}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#fa0000"
+                stroke-width="0.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-map-pin-check-inside"
+              >
+                <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+                <path d="m9 10 2 2 4-4" />
+              </svg>
+              Current Location
+            </Button>
 
-      {locationDenied ? (
-        <div style={{ color: "red", marginTop: "10px" }}>
-          Could not display user's location.
+            <Stack direction="row" spacing={2}>
+              <Button variant="text">Longitude: {Longitude}</Button>
+              <Button variant="text">Latitude: {Latitude}</Button>
+            </Stack>
+          </div>
         </div>
-      ) : (
-        <Button variant="outlined" onClick={resetToMyLocation}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#236bfb"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-undo"
-          >
-            <path d="M3 7v6h6" />
-            <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
-          </svg>{" "}
-          Reset To My Location
-        </Button>
-      )}
+
+        <div className="right">
+          <div ref={mapRef} style={{ width: "70vw", height: "80vh" }} />
+
+          {locationDenied ? (
+            <div style={{ color: "red", marginTop: "10px" }}>
+              Could not display user's location.
+            </div>
+          ) : (
+            <Button variant="outlined" onClick={resetToMyLocation}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#236bfb"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-undo"
+              >
+                <path d="M3 7v6h6" />
+                <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
+              </svg>{" "}
+              Reset To My Location
+            </Button>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

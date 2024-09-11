@@ -1,9 +1,33 @@
-.matalksContainer{
-    margin: 2% 0;
+.matalksContainer {
+  margin: 2% 0;
 
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 15px;
-    justify-items: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  justify-items: center;
+}
 
+.sideBySide {
+  display: grid;
+  grid-template-columns: 0.5fr 1.5fr;
+}
+
+.left,
+.right {
+  display: grid;
+  gap: 15px;
+  justify-items: center;
+}
+
+.left {
+  align-items: center;
+  margin-right: 15px;
+}
+.leftdata {
+  display: grid;
+  justify-content: center;
+  height: 150px;
+  width: 250px;
+  background-color: #ffffff;
+  background-image: linear-gradient(160deg, #d5e16a 0%, #8de1d1 100%);
 }
