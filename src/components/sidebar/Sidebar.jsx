@@ -15,24 +15,43 @@ const Sidebar = () => {
   return (
     <div className={sidebarClass}>
       <div className="collapsable">
-        <button onClick={toggleSidebar} className="sidebar-toggle">
+        {isOpen ? (
           <svg
+            onClick={toggleSidebar}
             xmlns="http://www.w3.org/2000/svg"
-            width="36"
-            height="36"
+            width="32"
+            height="32"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#000"
-            strokeWidth="0.75"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-panel-right-open"
+            stroke="#fff700"
+            stroke-width="1.25"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            className="lucide lucide-arrow-left-from-line sidebar-toggle sidebarclose"
           >
-            <rect width="18" height="18" x="3" y="3" rx="2" />
-            <path d="M15 3v18" />
-            <path d="m10 15-3-3 3-3" />
+            <path d="m9 6-6 6 6 6" />
+            <path d="M3 12h14" />
+            <path d="M21 19V5" />
           </svg>
-        </button>
+        ) : (
+          <svg
+            onClick={toggleSidebar}
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#fff700"
+            stroke-width="1.25"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            className="lucide lucide-arrow-right-from-line sidebar-toggle "
+          >
+            <path d="M3 5v14" />
+            <path d="M21 12H7" />
+            <path d="m15 18 6-6-6-6" />
+          </svg>
+        )}
 
         <div className="navs">
           <div className="nav-item">

@@ -15,15 +15,14 @@
 .sidebar-toggle {
   display: grid;
   position: relative;
-  top: 50px;
-  /* margin-top: 80px; */
+  top: 10px;
   cursor: pointer;
 }
 
 .navs {
   display: flex;
   flex-direction: column;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 .nav-item {
@@ -33,7 +32,6 @@
 }
 
 .icon {
-  color: #fff;
   margin-right: 10px;
   /* Adjust icon size or style as needed */
 }
@@ -57,7 +55,12 @@
 .collapsable {
   display: grid;
   justify-content: center;
+  margin-top: 5%;
 }
 .yellowcolor {
-  /* color: yellow; */
+  color: yellow;
+}
+
+.sidebarclose {
+  margin-left: 130px;
 }
