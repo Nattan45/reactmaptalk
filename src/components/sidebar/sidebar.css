@@ -1,12 +1,66 @@
-.SidebarContents{
-
-    display: grid;
-    justify-content: center;
+.sidebar {
+  height: 100%;
+  width: 80px; /* Collapsed width */
+  background-color: #282c34;
+  z-index: 1000; /* Ensure it stays on top when expanded */
+  transition: width 0.3s ease-in-out; /* Smooth transition */
+  overflow: hidden;
+  /* outline: 1px solid rgb(200, 255, 0); */
 }
-.navs{
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.5px;
-    height: fit-content;
-    margin-top: 25%;
+
+.sidebar.open {
+  width: 200px; /* Expanded width */
+}
+
+.sidebar-toggle {
+  display: grid;
+  position: relative;
+  top: 10px;
+  cursor: pointer;
+}
+
+.navs {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.icon {
+  margin-right: 10px;
+  /* Adjust icon size or style as needed */
+}
+
+.sidebar.open .nav-item {
+  justify-content: flex-start;
+}
+
+.sidebar .nav-item {
+  justify-content: center;
+}
+
+/* Adjust the button style when expanded */
+.sidebar.open .nav-item .MuiButton-root {
+  display: inline-block;
+}
+
+.sidebar .nav-item .MuiButton-root {
+  display: none;
+}
+.collapsable {
+  display: grid;
+  justify-content: center;
+  margin-top: 5%;
+}
+.yellowcolor {
+  color: yellow;
+}
+
+.sidebarclose {
+  margin-left: 130px;
 }

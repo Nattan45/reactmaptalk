@@ -3,9 +3,9 @@ import React from "react";
 import Header from "../components/header/Header";
 import Sidebar from "../components/sidebar/Sidebar";
 import Footer from "../components/footer/Footer";
-import Maptalks from "../components/maptalks/MaptalksPin";
+import MaptalksMyLocation from "../components/maptalks/MaptalksMyLocation";
 
-const MaptalksPinPage = () => {
+const MaptalksMyLocationPage = () => {
   return (
     <div className="App">
       {/* header */}
@@ -22,7 +22,7 @@ const MaptalksPinPage = () => {
 
         {/* All Contents */}
         <div className="contentsContainer">
-          <Maptalks />
+          <MaptalksMyLocation />
         </div>
       </div>
 
@@ -34,4 +34,4 @@ const MaptalksPinPage = () => {
   );
 };
 
-export default MaptalksPinPage;
+export default MaptalksMyLocationPage;
