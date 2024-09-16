@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import * as maptalks from "maptalks"; //npm i maptalks --save
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { yellow } from "@mui/material/colors";
 
 const MaptalksMyLocation = () => {
   const mapRef = useRef(null);
@@ -121,65 +123,97 @@ const MaptalksMyLocation = () => {
     };
   }, []);
 
+  // marteial Ui
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: "#FF5733",
+        // light: will be calculated from palette.primary.main,
+        // dark: will be calculated from palette.primary.main,
+        // contrastText: will be calculated to contrast with palette.primary.main
+      },
+      secondary: yellow,
+    },
+  });
+
   return (
     <div className="matalksContainer">
       <div className="sideBySide">
         <div className="left">
-          <div className="leftdata">
-            <Button variant="outlined">
-              {" "}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="28"
-                height="28"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#fa0000"
-                stroke-width="0.75"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-map-pin-check-inside"
-              >
-                <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
-                <path d="m9 10 2 2 4-4" />
-              </svg>
-              Current Location
-            </Button>
+          <div className="leftdata card">
+            <div className="card2">
+              <ThemeProvider theme={theme}>
+                <Button color="secondary">
+                  {" "}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#ffff00"
+                    strokeWidth="0.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-map-pin-check-inside"
+                  >
+                    <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+                    <path d="m9 10 2 2 4-4" />
+                  </svg>
+                  &nbsp; &nbsp; Current Location
+                </Button>
+              </ThemeProvider>
+              <hr className="shorthr" />
+              <Stack direction="row" spacing={2}>
+                <ThemeProvider theme={theme}>
+                  <Button variant="text" color="secondary">
+                    Longitude: {Longitude}
+                  </Button>
+                  <Button variant="text" color="secondary">
+                    Latitude: {Latitude}
+                  </Button>
+                </ThemeProvider>
+              </Stack>
+            </div>
+          </div>
 
-            <Stack direction="row" spacing={2}>
-              <Button variant="text">Longitude: {Longitude}</Button>
-              <Button variant="text">Latitude: {Latitude}</Button>
-            </Stack>
+          <div className="resetLocation">
+            {locationDenied ? (
+              <div style={{ color: "red", marginTop: "10px" }}>
+                Could not display user's location.
+              </div>
+            ) : (
+              <ThemeProvider theme={theme}>
+                <Button
+                  variant="outlined"
+                  onClick={resetToMyLocation}
+                  color="primary"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#ffb700"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-undo"
+                  >
+                    <path d="M3 7v6h6" />
+                    <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
+                  </svg>
+                  &nbsp; &nbsp;{" "}
+                  <span className="sentencebutton">Reset To My Location</span>
+                </Button>
+              </ThemeProvider>
+            )}
           </div>
         </div>
 
         <div className="right">
           <div ref={mapRef} style={{ width: "70vw", height: "80vh" }} />
-
-          {locationDenied ? (
-            <div style={{ color: "red", marginTop: "10px" }}>
-              Could not display user's location.
-            </div>
-          ) : (
-            <Button variant="outlined" onClick={resetToMyLocation}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#236bfb"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-undo"
-              >
-                <path d="M3 7v6h6" />
-                <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
-              </svg>{" "}
-              Reset To My Location
-            </Button>
-          )}
         </div>
       </div>
     </div>

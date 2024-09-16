@@ -16,18 +16,102 @@
 .right {
   display: grid;
   gap: 15px;
-  justify-items: center;
+  justify-content: center;
 }
 
 .left {
-  align-items: center;
+  display: grid;
+  align-self: center;
+  justify-items: center;
   margin-right: 15px;
+  height: fit-content;
+}
+.placeAtTop {
+  display: grid;
+  align-self: self-start;
 }
 .leftdata {
   display: grid;
-  justify-content: center;
+  justify-items: center;
   height: 150px;
   width: 250px;
-  background-color: #ffffff;
-  background-image: linear-gradient(160deg, #d5e16a 0%, #8de1d1 100%);
+}
+/* .everythingCenter {
+  display: grid;
+  justify-items: center;
+  gap: 15px;
+} */
+
+.pinops {
+  gap: 15px;
+}
+
+/* From Uiverse.io by Tiagoadag */
+.card {
+  height: 200px;
+  /* background-image: linear-gradient(163deg, #00ff75 0%, #3700ff 100%); */
+  border-radius: 20px;
+  transition: all 0.3s;
+}
+
+.card2 {
+  height: 200px;
+  background-color: #3d3d3d;
+  /* border-radius: ; */
+  transition: all 0.2s;
+  display: grid;
+  justify-items: center;
+  border-radius: 20px;
+  font-size: 15px;
+}
+.bottomradius {
+  border-radius: 20px 0 0 20px;
+}
+.card2:hover {
+  transform: scale(0.98);
+}
+.bigcard {
+  height: 600px;
+}
+.dynamicheight {
+  height: auto; /* Allow the card to grow based on content */
+  min-height: 15vh;
+  min-width: 13vw;
+  max-height: 60vh;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+.dynamicheight::-webkit-scrollbar {
+  width: 5px;
+  scrollbar-width: thin;
+}
+.dynamicheight::-webkit-scrollbar-thumb {
+  background: red;
+  border-radius: 60px;
+}
+
+.buttontop {
+  display: grid;
+  justify-items: center;
+  margin-top: 15px;
+}
+.buttonbottom {
+  font-size: 15px;
+  /* margin-bottom: -45px; */
+}
+
+.shorthr {
+  width: 100px;
+  height: 1px;
+  background-color: black;
+}
+
+.routeCords {
+  height: auto; /* Allow the card to grow based on content */
+  max-height: 55vh;
+  min-width: 13vw;
+}
+
+.sentencebutton {
+  text-transform: none;
 }

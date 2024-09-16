@@ -1,14 +1,18 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./maptalks.css";
 
 import * as maptalks from "maptalks"; //npm i maptalks --save
 import Stack from "@mui/material/Stack"; // npm install @mui/material @emotion/react @emotion/styled
 import Button from "@mui/material/Button";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { blue, yellow } from "@mui/material/colors";
 
 const MaptalksPin = () => {
   const mapRef = useRef(null);
   const mapInstance = useRef(null); // Ref to store the map instance
   const markers = useRef([]); // Ref to store all markers
+
+  const [pinplaces, setpinplaces] = useState([]); // Track all pinned places
 
   const initializeMap = (center, zoomLevel = 10) => {
     // If a map instance already exists, remove it
@@ -56,6 +60,9 @@ const MaptalksPin = () => {
       // Store the marker in the markers array
       markers.current.push(marker);
 
+      // Update the pinned places array
+      setpinplaces((prev) => [...prev, clickedCoords]);
+
       // Log the coordinates or use them as needed
       console.log("Pinned coordinates:", clickedCoords);
     });
@@ -66,6 +73,10 @@ const MaptalksPin = () => {
       // Remove the last marker from the marker layer
       const lastMarker = markers.current.pop();
       lastMarker.remove();
+
+      // Update pinned places by removing the last one
+      setpinplaces((prev) => prev.slice(0, -1));
+
       console.log("Undone last marker.");
     } else {
       console.log("No markers to undo.");
@@ -75,6 +86,8 @@ const MaptalksPin = () => {
   const clearAllMarkers = () => {
     markers.current.forEach((marker) => marker.remove());
     markers.current = []; // Clear the markers array
+
+    setpinplaces([]); // Clear pinned places
     console.log("Cleared all markers.");
   };
 
@@ -119,48 +132,111 @@ const MaptalksPin = () => {
     };
   }, []);
 
+  // material Ui
+  const theme = createTheme({
+    typography: {
+      // In Chinese and Japanese the characters are usually larger,
+      // so a smaller fontsize may be appropriate.
+      fontSize: 12,
+    },
+    palette: {
+      primary: blue,
+      secondary: yellow,
+    },
+  });
+
   return (
     <div className="matalksContainer">
-      <div ref={mapRef} style={{ width: "70vw", height: "80vh" }} />
+      <div className="sideBySide">
+        <div className="left placeAtTop">
+          <div className="leftdata pinops">
+            <Stack spacing={2}>
+              <Button variant="outlined" onClick={undoLastMarker}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#236bfb"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-undo"
+                >
+                  <path d="M3 7v6h6" />
+                  <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
+                </svg>
+                &nbsp; &nbsp; <span className="sentencebutton">Undo Last</span>
+              </Button>
 
-      <Stack spacing={2} direction="row">
-        <Button variant="outlined" onClick={undoLastMarker}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#236bfb"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-undo"
-          >
-            <path d="M3 7v6h6" />
-            <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
-          </svg>{" "}
-          Undo Last Marker
-        </Button>
-        <Button variant="outlined" onClick={clearAllMarkers}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#236bfb"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-rotate-ccw"
-          >
-            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-            <path d="M3 3v5h5" />
-          </svg>{" "}
-          Clear All Markers
-        </Button>
-      </Stack>
+              <Button variant="outlined" onClick={clearAllMarkers}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#236bfb"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-rotate-ccw"
+                >
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                  <path d="M3 3v5h5" />
+                </svg>
+                &nbsp; &nbsp; <span className="sentencebutton">Clear All</span>
+              </Button>
+            </Stack>
+
+            <div className="card bottomradius bigcard everythingCenter">
+              <div className="card2 dynamicheight bottomradius bigcard">
+                <ThemeProvider theme={theme}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className="buttonbottom"
+                    style={{
+                      width: "180px",
+                      height: "50px",
+                    }}
+                  >
+                    All Coordinates
+                  </Button>
+                </ThemeProvider>
+
+                <div className="pindata">
+                  <ThemeProvider theme={theme}>
+                    <Stack className="">
+                      {pinplaces.length > 0 && (
+                        <div className="listOfPin">
+                          {pinplaces.map((place, index) => (
+                            <p key={index}>
+                              <Button variant="text" color="secondary">
+                                {index + 1}. Longitude: {place[0]}, Latitude:{" "}
+                                {place[1]}
+                              </Button>
+                            </p>
+                          ))}
+                        </div>
+                      )}
+                    </Stack>
+                  </ThemeProvider>
+                </div>
+              </div>
+              <div className="buttontop">
+                <Button variant="contained" color="success">
+                  Save
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="right">
+          <div ref={mapRef} style={{ width: "70vw", height: "80vh" }} />
+        </div>
+      </div>
     </div>
   );
 };
