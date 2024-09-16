@@ -7,7 +7,7 @@
   /* display: grid; */
   /* grid-template-columns: 1fr; */
   /* text-align: center; */
-  background-color: rgb(187, 187, 187);
+  background-color: #f2f4f3;
 }
 
 @media (prefers-reduced-motion: no-preference) {
