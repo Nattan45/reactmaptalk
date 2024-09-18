@@ -115,3 +115,25 @@
 .sentencebutton {
   text-transform: none;
 }
+.colorRed {
+  color: red;
+}
+
+.darkWhiteColor {
+  color: rgb(152, 152, 152);
+}
+
+.areaGreen {
+  color: rgb(6, 193, 3);
+}
+.CpTitle {
+  color: rgb(205, 205, 16);
+  display: grid;
+  justify-content: center;
+}
+.margintop3 {
+  margin-top: 3%;
+}
+.block {
+  display: block;
+}

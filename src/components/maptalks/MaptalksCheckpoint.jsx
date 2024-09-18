@@ -1,9 +1,12 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+
 import * as maptalks from "maptalks";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue, yellow } from "@mui/material/colors";
+
+import { calculateAreaOfRectangle } from "./calculateAreaOfRectangle";
 
 const MaptalksCheckpoint = () => {
   const mapRef = useRef(null); // Ref to store the map DOM element
@@ -12,21 +15,31 @@ const MaptalksCheckpoint = () => {
   const startPoint = useRef(null); // useRef to store start point
   const currentShape = useRef(null); // Ref to store the current drawn shape
   const layerRef = useRef(null); // Ref to store the layer
+  const shapesRef = useRef([]); // Array to store all drawn shapes
+
+  // State to store the coordinates and area of the rectangles
+  const [rectangleData, setRectangleData] = useState([]);
+
+  const [rectangleNames, setRectangleNames] = useState({}); // State to track rectangle names
 
   // Handle mouse down event when user starts drawing
   const handleMouseDown = (e) => {
+    // Ignore drawing when the shift key is pressed for zooming/panning
+    if (e.domEvent.shiftKey) {
+      return;
+    }
     drawing.current = true; // Set drawing mode to true
     startPoint.current = e.coordinate.toArray(); // Save the starting point
-    console.log("Mouse Down at", startPoint.current); // Debug starting point
+    // console.log("Mouse Down at", startPoint.current); // Debug starting point
     mapInstance.current.config("draggable", false); // Disable map dragging while drawing
   };
 
   // Handle mouse move event to update the shape as the user drags the mouse
   const handleMouseMove = (e) => {
-    if (!drawing.current || !startPoint.current) return;
+    if (!drawing.current || !startPoint.current || e.domEvent.shiftKey) return;
 
     const endPoint = e.coordinate.toArray(); // Get the current point during drag
-    console.log("Mouse Move at", endPoint); // Debug end point
+    // console.log("Mouse Move at", endPoint); // Debug end point
 
     // Check for NaN values
     if (endPoint.some(isNaN) || startPoint.current.some(isNaN)) {
@@ -50,7 +63,7 @@ const MaptalksCheckpoint = () => {
       Math.max(startPoint.current[1], endPoint[1]),
     ];
 
-    console.log("lowerLeft", lowerLeft, "upperRight", upperRight); // Debug coordinates
+    // console.log("lowerLeft", lowerLeft, "upperRight", upperRight); // Debug coordinates
 
     // Ensure valid coordinates before creating the polygon
     if (lowerLeft.some(isNaN) || upperRight.some(isNaN)) {
@@ -77,17 +90,63 @@ const MaptalksCheckpoint = () => {
       },
     });
 
-    console.log("Shape added:", currentShape.current); // Debug shape
+    // console.log("Shape added:", currentShape.current); // Debug shape
 
     layerRef.current.addGeometry(currentShape.current); // Add the shape to the layer
   };
 
   // Handle mouse up event to finish drawing
-  const handleMouseUp = () => {
+  const handleMouseUp = (e) => {
+    // Ignore if the shift key is pressed
+    if (e.domEvent.shiftKey) {
+      return;
+    }
+
+    const endPoint = e.coordinate.toArray(); // Get the current end point
+
+    // Calculate the lower-left and upper-right corners for the rectangle
+    const lowerLeft = [
+      Math.min(startPoint.current[0], endPoint[0]),
+      Math.min(startPoint.current[1], endPoint[1]),
+    ];
+
+    const upperRight = [
+      Math.max(startPoint.current[0], endPoint[0]),
+      Math.max(startPoint.current[1], endPoint[1]),
+    ];
+
+    // Calculate the area of the rectangle
+    const area = calculateAreaOfRectangle(lowerLeft, upperRight);
+    // const formattedArea = `${area.toFixed(2)} m²`; // Format the area and add the unit
+    // console.log(formattedArea);
+
+    // Store the rectangle's coordinates and area in the state
+    setRectangleData((prevData) => [
+      ...prevData,
+      { lowerLeft, upperRight, area },
+    ]);
+
     drawing.current = false; // Set drawing mode to false
     startPoint.current = null; // Reset the starting point
     mapInstance.current.config("draggable", true); // Re-enable map dragging
+
+    // Store the current shape into the shapes array
+    if (currentShape.current) {
+      shapesRef.current.push(currentShape.current); // Save the shape in the array
+    }
+
     currentShape.current = null; // Clear the current shape reference
+  };
+
+  // Handle resetting the last drawn shape
+  const resetLastShape = () => {
+    if (shapesRef.current.length > 0) {
+      const lastShape = shapesRef.current.pop(); // Remove the last shape from the array
+      layerRef.current.removeGeometry(lastShape); // Remove the shape from the map layer
+      console.log("Removed last shape");
+    } else {
+      console.log("No shapes to remove");
+    }
   };
 
   // useEffect to initialize the map and attach event listeners
@@ -169,17 +228,96 @@ const MaptalksCheckpoint = () => {
       secondary: yellow,
     },
   });
+
+  const resetToMyLocation = () => {
+    const savedCoords = sessionStorage.getItem("userCoordinates");
+    if (savedCoords) {
+      const userCenter = JSON.parse(savedCoords);
+      mapInstance.current.setCenter(userCenter);
+      mapInstance.current.setZoom(16); // Reset zoom to a closer view
+    } else {
+      alert("User location not available.");
+    }
+  };
+
+  // Handle name change
+  const handleNameChange = (index, newName) => {
+    setRectangleNames((prevNames) => ({
+      ...prevNames,
+      [index]: newName, // Update the name for the specific rectangle
+    }));
+  };
+
+  // Handle Save button click
+  const handleSave = () => {
+    rectangleData.forEach((data, index) => {
+      const rectangleName = rectangleNames[index] || `Rectangle ${index + 1}`; // Use custom name or fallback to default
+      console.log(`Rectangle Name: ${rectangleName}`);
+      console.log(`Lower Left: ${data.lowerLeft.join(", ")}`);
+      console.log(`Upper Right: ${data.upperRight.join(", ")}`);
+      console.log(
+        `Area: ${data.area ? `${data.area.toFixed(2)} m²` : "No area data"}`
+      );
+    });
+  };
+
   return (
     <div className="matalksContainer">
       <div className="sideBySide">
         <div className="left placeAtTop">
           <div className="leftdata pinops">
             <Stack spacing={2}>
-              <Button variant="outlined">Draw Rectangle</Button>
+              <Button>
+                <p className="sentencebutton">
+                  <b className="sentencebutton colorRed">NB</b> &nbsp;
+                  Checkpoints are drawn in rectangle
+                </p>
+              </Button>
 
-              <Button variant="outlined">Reset Shape</Button>
+              {/* Add the onClick handler to reset the last shape */}
+              <Button variant="outlined" onClick={resetLastShape}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="red"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-undo"
+                >
+                  <path d="M3 7v6h6" />
+                  <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
+                </svg>
+                &nbsp; &nbsp;
+                <span className="sentencebutton">Reset Shape</span>
+              </Button>
 
-              <Button variant="outlined">Remove Last Cp</Button>
+              <Button
+                variant="outlined"
+                onClick={resetToMyLocation}
+                color="primary"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="28"
+                  height="28"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="red"
+                  strokeWidth="0.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-map-pin-check-inside"
+                >
+                  <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+                  <path d="m9 10 2 2 4-4" />
+                </svg>
+                &nbsp; &nbsp;{" "}
+                <span className="sentencebutton">Reset To My Location</span>
+              </Button>
             </Stack>
             <div className="card bottomradius bigcard everythingCenter">
               <div className="card2 dynamicheight bottomradius bigcard routeCords">
@@ -197,10 +335,51 @@ const MaptalksCheckpoint = () => {
                   </Button>
                 </ThemeProvider>
 
-                <div className="pindata">cp</div>
+                {/* Display rectangle data */}
+                <div className="pindata">
+                  <div className="margintop3">
+                    {rectangleData.map((data, index) => (
+                      <div key={index}>
+                        {" "}
+                        <div className="CpTitle">
+                          <input
+                            className="center"
+                            type="text"
+                            placeholder={`Rectangle ${index + 1}`}
+                            value={rectangleNames[index] || ""} // Controlled input
+                            onChange={(e) =>
+                              handleNameChange(index, e.target.value)
+                            } // Update name on change
+                          />
+                        </div>
+                        <Button variant="text">
+                          <p className="darkWhiteColor">
+                            <span className="block">
+                              Lower Left: {data.lowerLeft.join(", ")}
+                            </span>
+                            <span className="block">
+                              Upper Right: {data.upperRight.join(", ")}
+                            </span>
+
+                            <span className="block">
+                              <span className="areaGreen">Area:</span>
+                              {data.area
+                                ? `${data.area.toFixed(2)} m²`
+                                : "No area data"}
+                            </span>
+                          </p>
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
               <div className="buttontop">
-                <Button variant="contained" color="success">
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={handleSave}
+                >
                   Save
                 </Button>
               </div>
