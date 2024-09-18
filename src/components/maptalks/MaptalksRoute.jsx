@@ -113,6 +113,16 @@ const MaptalksRoute = () => {
     setDistance(calculatedDistance); // Update distance state with the calculated values
   }, [routeCoordinates]);
 
+
+  const removeLastCoordinate = () => {
+    setRouteCoordinates((prevCoords) =>
+      prevCoords.length > 0
+        ? prevCoords.slice(0, prevCoords.length - 1)
+        : prevCoords
+    );
+  };
+
+  
   // material Ui
   const theme = createTheme({
     palette: {
@@ -120,6 +130,8 @@ const MaptalksRoute = () => {
       secondary: yellow,
     },
   });
+
+  
   return (
     <div className="matalksContainer">
       <div className="sideBySide">
@@ -147,7 +159,7 @@ const MaptalksRoute = () => {
                   <path d="M19 17V5a2 2 0 0 0-2-2H4" />
                   <path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3" />
                 </svg>
-                &nbsp; &nbsp; Log Route
+                &nbsp; &nbsp; <span className="sentencebutton">Log Route</span>
               </Button>
 
               <Button variant="outlined">
@@ -169,12 +181,20 @@ const MaptalksRoute = () => {
                   <path d="m8.5 6.5 2-2" />
                   <path d="m17.5 15.5 2-2" />
                 </svg>
-                &nbsp; &nbsp; Distance {distance.totalDistance.toFixed(2)} m /{" "}
+
+                &nbsp; &nbsp;{" "}
+                <span className="sentencebutton">Distance &nbsp;</span>{" "}
+                {distance.totalDistance.toFixed(2)} m /{" "}
                 {distance.totalDistanceKm.toFixed(2)} km
+              </Button>
+
+              <Button variant="outlined" onClick={removeLastCoordinate}>
+                <span className="sentencebutton">Remove Last Point</span>
               </Button>
             </Stack>
             <div className="card bottomradius bigcard everythingCenter">
-              <div className="card2 dynamicheight bottomradius bigcard">
+              <div className="card2 dynamicheight bottomradius bigcard routeCords">
+
                 <ThemeProvider theme={theme}>
                   <Button
                     variant="contained"
@@ -185,11 +205,43 @@ const MaptalksRoute = () => {
                       height: "50px",
                     }}
                   >
-                    Route Coordinates
+                    Designed Route
                   </Button>
                 </ThemeProvider>
 
-                <div className="pindata">all this route coords</div>
+                {/* Display route coordinates in the pindata div */}
+                <div className="pindata">
+                  <div>
+                    {routeCoordinates.length > 0 ? (
+                      routeCoordinates.map((coords, index) => (
+                        <p className="">
+                          <Button
+                            variant="text"
+                            style={{
+                              color:
+                                index === 0
+                                  ? "green" // First coordinate - green
+                                  : index === routeCoordinates.length - 1
+                                  ? "red" // Last coordinate - red
+                                  : "black", // All other coordinates - black
+                            }}
+                          >
+                            {index === 0
+                              ? `Start Point: Longitude: ${coords[0]}, Latitude: ${coords[1]}`
+                              : index === routeCoordinates.length - 1
+                              ? `End Point: Longitude: ${coords[0]}, Latitude: ${coords[1]}`
+                              : `${index + 1}: Lon: ${coords[0]}, Lat: ${
+                                  coords[1]
+                                }`}
+                          </Button>
+                        </p>
+                      ))
+                    ) : (
+                      <p>No coordinates yet.</p>
+                    )}
+                  </div>
+                </div>
+
               </div>
               <div className="buttontop">
                 <Button variant="contained" color="success">

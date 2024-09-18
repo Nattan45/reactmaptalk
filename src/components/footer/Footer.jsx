@@ -16,10 +16,10 @@ const Footer = () => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="#8cff00"
-            stroke-width="0.75"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-truck"
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-truck"
           >
             <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" />
             <path d="M15 18H9" />
@@ -41,10 +41,10 @@ const Footer = () => {
               viewBox="0 0 24 24"
               fill="none"
               stroke="#bee9e8"
-              stroke-width="0.75"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-map"
+              strokeWidth="0.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-map"
             >
               <path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" />
               <path d="M15 5.764v15" />
@@ -62,10 +62,10 @@ const Footer = () => {
               viewBox="0 0 24 24"
               fill="none"
               stroke="#bee9e8"
-              stroke-width="0.75"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-waypoints"
+              strokeWidth="0.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-waypoints"
             >
               <circle cx="12" cy="4.5" r="2.5" />
               <path d="m10.2 6.3-3.9 3.9" />
@@ -87,10 +87,10 @@ const Footer = () => {
               viewBox="0 0 24 24"
               fill="none"
               stroke="#bee9e8"
-              stroke-width="0.75"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-land-plot"
+              strokeWidth="0.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-land-plot"
             >
               <path d="m12 8 6-3-6-3v10" />
               <path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" />
@@ -109,10 +109,10 @@ const Footer = () => {
               viewBox="0 0 24 24"
               fill="none"
               stroke="#bee9e8"
-              stroke-width="0.75"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-book-a"
+              strokeWidth="0.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-book-a"
             >
               <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" />
               <path d="m8 13 4-7 4 7" />
@@ -134,10 +134,10 @@ const Footer = () => {
               viewBox="0 0 24 24"
               fill="none"
               stroke="#0072b1"
-              stroke-width="0.75"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-linkedin"
+              strokeWidth="0.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-linkedin"
             >
               <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
               <rect width="4" height="12" x="2" y="9" />
@@ -153,7 +153,7 @@ const Footer = () => {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
             >
-              <g fill-rule="evenodd" clip-rule="evenodd">
+              <g fillRule="evenodd" clipRule="evenodd">
                 <path
                   fill="#E01E5A"
                   d="M2.471 11.318a1.474 1.474 0 001.47-1.471v-1.47h-1.47A1.474 1.474 0 001 9.846c.001.811.659 1.469 1.47 1.47zm3.682-2.942a1.474 1.474 0 00-1.47 1.471v3.683c.002.811.66 1.468 1.47 1.47a1.474 1.474 0 001.47-1.47V9.846a1.474 1.474 0 00-1.47-1.47z"
@@ -186,32 +186,32 @@ const Footer = () => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M16 16C16 13.7909 17.7909 12 20 12C22.2091 12 24 13.7909 24 16C24 18.2091 22.2091 20 20 20C17.7909 20 16 18.2091 16 16Z"
                 fill="#1ABCFE"
               />
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M8 24C8 21.7909 9.79086 20 12 20H16V24C16 26.2091 14.2091 28 12 28C9.79086 28 8 26.2091 8 24Z"
                 fill="#0ACF83"
               />
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M16 4V12H20C22.2091 12 24 10.2091 24 8C24 5.79086 22.2091 4 20 4H16Z"
                 fill="#FF7262"
               />
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M8 8C8 10.2091 9.79086 12 12 12H16V4H12C9.79086 4 8 5.79086 8 8Z"
                 fill="#F24E1E"
               />
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M8 16C8 18.2091 9.79086 20 12 20H16V12H12C9.79086 12 8 13.7909 8 16Z"
                 fill="#A259FF"
               />
@@ -226,10 +226,10 @@ const Footer = () => {
               viewBox="0 0 24 24"
               fill="none"
               stroke="#0033ff"
-              stroke-width="0.75"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-github"
+              strokeWidth="0.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-github"
             >
               <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
               <path d="M9 18c-4.51 2-5-2-7-2" />
@@ -271,10 +271,10 @@ const Footer = () => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="#ffffff"
-            stroke-width="0.75"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-copyright"
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-copyright"
           >
             <circle cx="12" cy="12" r="10" />
             <path d="M14.83 14.83a4 4 0 1 1 0-5.66" />

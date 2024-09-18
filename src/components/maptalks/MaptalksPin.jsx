@@ -167,7 +167,7 @@ const MaptalksPin = () => {
                   <path d="M3 7v6h6" />
                   <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
                 </svg>
-                &nbsp; &nbsp; Undo Last
+                &nbsp; &nbsp; <span className="sentencebutton">Undo Last</span>
               </Button>
               <Button variant="outlined" onClick={clearAllMarkers}>
                 <svg
@@ -185,9 +185,10 @@ const MaptalksPin = () => {
                   <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
                   <path d="M3 3v5h5" />
                 </svg>
-                &nbsp; &nbsp; Clear All
+                &nbsp; &nbsp; <span className="sentencebutton">Clear All</span>
               </Button>
             </Stack>
+
             <div className="card bottomradius bigcard everythingCenter">
               <div className="card2 dynamicheight bottomradius bigcard">
                 <ThemeProvider theme={theme}>

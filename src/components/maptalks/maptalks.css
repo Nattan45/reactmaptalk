@@ -105,3 +105,13 @@
   height: 1px;
   background-color: black;
 }
+
+.routeCords {
+  height: auto; /* Allow the card to grow based on content */
+  max-height: 55vh;
+  min-width: 13vw;
+}
+
+.sentencebutton {
+  text-transform: none;
+}
