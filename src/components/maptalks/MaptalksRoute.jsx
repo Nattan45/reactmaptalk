@@ -113,7 +113,6 @@ const MaptalksRoute = () => {
     setDistance(calculatedDistance); // Update distance state with the calculated values
   }, [routeCoordinates]);
 
-
   const removeLastCoordinate = () => {
     setRouteCoordinates((prevCoords) =>
       prevCoords.length > 0
@@ -122,7 +121,6 @@ const MaptalksRoute = () => {
     );
   };
 
-  
   // material Ui
   const theme = createTheme({
     palette: {
@@ -131,7 +129,6 @@ const MaptalksRoute = () => {
     },
   });
 
-  
   return (
     <div className="matalksContainer">
       <div className="sideBySide">
@@ -181,7 +178,6 @@ const MaptalksRoute = () => {
                   <path d="m8.5 6.5 2-2" />
                   <path d="m17.5 15.5 2-2" />
                 </svg>
-
                 &nbsp; &nbsp;{" "}
                 <span className="sentencebutton">Distance &nbsp;</span>{" "}
                 {distance.totalDistance.toFixed(2)} m /{" "}
@@ -194,7 +190,6 @@ const MaptalksRoute = () => {
             </Stack>
             <div className="card bottomradius bigcard everythingCenter">
               <div className="card2 dynamicheight bottomradius bigcard routeCords">
-
                 <ThemeProvider theme={theme}>
                   <Button
                     variant="contained"
@@ -223,7 +218,7 @@ const MaptalksRoute = () => {
                                   ? "green" // First coordinate - green
                                   : index === routeCoordinates.length - 1
                                   ? "red" // Last coordinate - red
-                                  : "black", // All other coordinates - black
+                                  : "rgb(152, 152, 152)", // All other coordinates - black
                             }}
                           >
                             {index === 0
@@ -241,7 +236,6 @@ const MaptalksRoute = () => {
                     )}
                   </div>
                 </div>
-
               </div>
               <div className="buttontop">
                 <Button variant="contained" color="success">
