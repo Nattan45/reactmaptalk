@@ -169,7 +169,6 @@ const MaptalksPin = () => {
                 </svg>
                 &nbsp; &nbsp; <span className="sentencebutton">Undo Last</span>
               </Button>
-
               <Button variant="outlined" onClick={clearAllMarkers}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
