@@ -7,6 +7,8 @@ import { Select, MenuItem } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue, yellow } from "@mui/material/colors";
 
+import { calculatePolygonDetails } from "./calculatePolygonDetails";
+
 const MaptalksWarehouse = () => {
   const mapRef = useRef(null); // Ref to store the map DOM element
   const mapInstance = useRef(null); // Ref to store the map instance
@@ -16,7 +18,17 @@ const MaptalksWarehouse = () => {
   const layerRef = useRef(null); // Ref to store the layer
   const shapesRef = useRef([]); // Array to store all drawn shapes
 
-  const [sides, setSides] = useState(6); // Default to 6 sides (hexagon)
+  const [polygonData, setPolygonData] = useState(null); // State to store polygon data
+  // const [isOpen, setIsOpen] = useState(false);
+
+  const [coordinatesd, setcoordinatesd] = useState(null); // State to store polygon data
+
+  const [sides, setSides] = useState(5); // Default to 6 sides (hexagon)
+  const sidesRef = useRef(sides); // Create a ref to store sides
+  // Update sidesRef whenever sides state changes
+  useEffect(() => {
+    sidesRef.current = sides;
+  }, [sides]);
 
   // Handle mouse down event when user starts drawing
   const handleMouseDown = (e) => {
@@ -37,30 +49,6 @@ const MaptalksWarehouse = () => {
       return;
     }
 
-    // const endPoint = e.coordinate.toArray(); // Get the current end point
-
-    // // Calculate the lower-left and upper-right corners for the rectangle
-    // const lowerLeft = [
-    //   Math.min(startPoint.current[0], endPoint[0]),
-    //   Math.min(startPoint.current[1], endPoint[1]),
-    // ];
-
-    // const upperRight = [
-    //   Math.max(startPoint.current[0], endPoint[0]),
-    //   Math.max(startPoint.current[1], endPoint[1]),
-    // ];
-
-    // Calculate the area of the rectangle
-    // const area = calculateAreaOfRectangle(lowerLeft, upperRight);
-    // const formattedArea = `${area.toFixed(2)} m²`; // Format the area and add the unit
-    // console.log(formattedArea);
-
-    // Store the rectangle's coordinates and area in the state
-    // setRectangleData((prevData) => [
-    //   ...prevData,
-    //   { lowerLeft, upperRight, area },
-    // ]);
-
     drawing.current = false; // Set drawing mode to false
     startPoint.current = null; // Reset the starting point
     mapInstance.current.config("draggable", true); // Re-enable map dragging
@@ -68,6 +56,10 @@ const MaptalksWarehouse = () => {
     // Store the current shape into the shapes array
     if (currentShape.current) {
       shapesRef.current.push(currentShape.current); // Save the shape in the array
+
+      // Get the polygon's coordinates and update the state
+      // const coordinates = currentShape.current.getCoordinates();
+      // setPolygonData(coordinates);
     }
 
     currentShape.current = null; // Clear the current shape reference
@@ -89,8 +81,10 @@ const MaptalksWarehouse = () => {
       layerRef.current.removeGeometry(currentShape.current);
     }
 
-    // Use the selected number of sides for the polygon
-    const numberOfSides = sides; // Dynamically use the selected sides
+    // Get the latest sides value from sidesRef
+    const numberOfSides = sidesRef.current;
+    console.log("Number of sides (ref):", numberOfSides); // Check if sidesRef is updated
+
     const angleStep = (2 * Math.PI) / numberOfSides;
 
     // Calculate the radius and center for the polygon
@@ -122,6 +116,14 @@ const MaptalksWarehouse = () => {
     });
 
     layerRef.current.addGeometry(currentShape.current); // Add the shape to the layer
+
+    // console.log("sides", sides);
+
+    const coordinates = currentShape.current.getCoordinates()[0]; // Ensure you are grabbing the correct coordinates array
+    const polygonDetails = calculatePolygonDetails(coordinates); // Pass coordinates to the function
+    setPolygonData(polygonDetails); // Store the result in state
+
+    setcoordinatesd(coordinates);
   };
 
   // Handle resetting the last drawn shape
@@ -218,6 +220,18 @@ const MaptalksWarehouse = () => {
       secondary: yellow,
     },
   });
+
+  const resetToMyLocation = () => {
+    const savedCoords = sessionStorage.getItem("userCoordinates");
+    if (savedCoords) {
+      const userCenter = JSON.parse(savedCoords);
+      mapInstance.current.setCenter(userCenter);
+      mapInstance.current.setZoom(16); // Reset zoom to a closer view
+    } else {
+      alert("User location not available.");
+    }
+  };
+
   return (
     <div className="matalksContainer">
       <div className="sideBySide">
@@ -236,7 +250,6 @@ const MaptalksWarehouse = () => {
                 <MenuItem value={5}>Pentagon</MenuItem>
                 <MenuItem value={6}>Hexagon</MenuItem>
                 <MenuItem value={9}>Nonagon</MenuItem>
-                {/* Add more options as needed */}
               </Select>
 
               {/* Add the onClick handler to reset the last shape */}
@@ -259,6 +272,30 @@ const MaptalksWarehouse = () => {
                 &nbsp; &nbsp;
                 <span className="sentencebutton">Reset Shape</span>
               </Button>
+
+              <Button
+                variant="outlined"
+                onClick={resetToMyLocation}
+                color="primary"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="28"
+                  height="28"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="red"
+                  strokeWidth="0.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-map-pin-check-inside"
+                >
+                  <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+                  <path d="m9 10 2 2 4-4" />
+                </svg>
+                &nbsp; &nbsp;{" "}
+                <span className="sentencebutton">Reset To My Location</span>
+              </Button>
             </Stack>
             <div className="card bottomradius bigcard everythingCenter">
               <div className="card2 dynamicheight bottomradius bigcard routeCords">
@@ -276,7 +313,20 @@ const MaptalksWarehouse = () => {
                   </Button>
                 </ThemeProvider>
 
-                <div className="pindata">cp</div>
+                <div className="pindata">
+                  {polygonData ? (
+                    <>
+                      <p>{sides}-sided polygon</p>
+                      <p>Area: {polygonData.area}</p>
+                      <details>
+                        <summary>Coordinates</summary>
+                        <pre>{JSON.stringify(coordinatesd, null, 2)}</pre>
+                      </details>
+                    </>
+                  ) : (
+                    <p>No polygon drawn yet.</p>
+                  )}
+                </div>
               </div>
               <div className="buttontop">
                 <Button variant="contained" color="success">
