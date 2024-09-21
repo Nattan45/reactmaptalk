@@ -134,6 +134,31 @@
 .margintop3 {
   margin-top: 3%;
 }
+.margintop5 {
+  margin-top: 5%;
+}
 .block {
   display: block;
+}
+
+.coordinatesDetail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.coordinatesDetail ul {
+  padding: 0;
+  list-style: none;
+}
+
+.coordinateColor1 {
+  color: rgb(193, 169, 139);
+}
+.coordinateColor2 {
+  color: rgb(126, 149, 167);
+}
+.polygonsList {
+  height: 30px;
+  outline: 1px solid rgb(35, 210, 184);
 }
