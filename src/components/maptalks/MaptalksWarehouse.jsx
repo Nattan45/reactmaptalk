@@ -142,7 +142,16 @@ const MaptalksWarehouse = () => {
     if (shapesRef.current.length > 0) {
       const lastShape = shapesRef.current.pop(); // Remove the last shape from the array
       layerRef.current.removeGeometry(lastShape); // Remove the shape from the map layer
-      console.log("Removed last shape");
+
+      // Remove the last polygon data entry from allPolygonData
+      setAllPolygonData((prevData) => {
+        if (prevData.length > 0) {
+          return prevData.slice(0, -1); // Remove the last item
+        }
+        return prevData; // Return unchanged if no data
+      });
+
+      console.log("Removed last shape and updated polygon data");
     } else {
       console.log("No shapes to remove");
     }
@@ -231,17 +240,6 @@ const MaptalksWarehouse = () => {
       secondary: yellow,
     },
   });
-
-  // const resetToMyLocation = () => {
-  //   const savedCoords = sessionStorage.getItem("userCoordinates");
-  //   if (savedCoords) {
-  //     const userCenter = JSON.parse(savedCoords);
-  //     mapInstance.current.setCenter(userCenter);
-  //     mapInstance.current.setZoom(16); // Reset zoom to a closer view
-  //   } else {
-  //     alert("User location not available.");
-  //   }
-  // };
 
   const [polygonNames, setPolygonNames] = useState({}); // State to track Polygon names
 

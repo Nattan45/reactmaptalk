@@ -144,7 +144,16 @@ const MaptalksCheckpoint = () => {
     if (shapesRef.current.length > 0) {
       const lastShape = shapesRef.current.pop(); // Remove the last shape from the array
       layerRef.current.removeGeometry(lastShape); // Remove the shape from the map layer
-      console.log("Removed last shape");
+
+      // Remove the last RectangleData data entry from RectangleData
+      setRectangleData((prevData) => {
+        if (prevData.length > 0) {
+          return prevData.slice(0, -1); // Remove the last item
+        }
+        return prevData; // Return unchanged if no data
+      });
+
+      console.log("Removed last shape and updated RectangleData data");
     } else {
       console.log("No shapes to remove");
     }
