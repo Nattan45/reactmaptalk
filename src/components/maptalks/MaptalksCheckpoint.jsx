@@ -7,6 +7,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue, yellow } from "@mui/material/colors";
 
 import { calculateAreaOfRectangle } from "./calculateAreaOfRectangle";
+import ResetToMyLocation from "./ResetToMyLocation";
 
 const MaptalksCheckpoint = () => {
   const mapRef = useRef(null); // Ref to store the map DOM element
@@ -143,7 +144,16 @@ const MaptalksCheckpoint = () => {
     if (shapesRef.current.length > 0) {
       const lastShape = shapesRef.current.pop(); // Remove the last shape from the array
       layerRef.current.removeGeometry(lastShape); // Remove the shape from the map layer
-      console.log("Removed last shape");
+
+      // Remove the last RectangleData data entry from RectangleData
+      setRectangleData((prevData) => {
+        if (prevData.length > 0) {
+          return prevData.slice(0, -1); // Remove the last item
+        }
+        return prevData; // Return unchanged if no data
+      });
+
+      console.log("Removed last shape and updated RectangleData data");
     } else {
       console.log("No shapes to remove");
     }
@@ -163,10 +173,14 @@ const MaptalksCheckpoint = () => {
       mapInstance.current = new maptalks.Map(mapRef.current, {
         center: center,
         zoom: zoom,
+        minZoom: 3, // set map's min zoom to
+        attribution: true,
+        scaleControl: true, // add scale control
+        overviewControl: true, // add overview control
         baseLayer: new maptalks.TileLayer("base", {
           urlTemplate: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
           subdomains: ["a", "b", "c"],
-          attribution: "© OpenStreetMap contributors",
+          attribution: "Vehicle Tracking",
         }),
       });
 
@@ -229,17 +243,6 @@ const MaptalksCheckpoint = () => {
     },
   });
 
-  const resetToMyLocation = () => {
-    const savedCoords = sessionStorage.getItem("userCoordinates");
-    if (savedCoords) {
-      const userCenter = JSON.parse(savedCoords);
-      mapInstance.current.setCenter(userCenter);
-      mapInstance.current.setZoom(16); // Reset zoom to a closer view
-    } else {
-      alert("User location not available.");
-    }
-  };
-
   // Handle name change
   const handleNameChange = (index, newName) => {
     setRectangleNames((prevNames) => ({
@@ -250,15 +253,22 @@ const MaptalksCheckpoint = () => {
 
   // Handle Save button click
   const handleSave = () => {
-    rectangleData.forEach((data, index) => {
+    const rectanglesWithNames = rectangleData.map((data, index) => {
       const rectangleName = rectangleNames[index] || `Rectangle ${index + 1}`; // Use custom name or fallback to default
-      console.log(`Rectangle Name: ${rectangleName}`);
-      console.log(`Lower Left: ${data.lowerLeft.join(", ")}`);
-      console.log(`Upper Right: ${data.upperRight.join(", ")}`);
-      console.log(
-        `Area: ${data.area ? `${data.area.toFixed(2)} m²` : "No area data"}`
-      );
+
+      return {
+        RectangleName: rectangleName,
+        LowerLeft: data.lowerLeft, // Keep coordinates as an array
+        UpperRight: data.upperRight,
+        Area: data.area ? `${data.area.toFixed(2)} m²` : "No area data",
+      };
     });
+
+    console.log(
+      "All drawn rectangles with their saved names:",
+      // rectanglesWithNames,  // in array format
+      JSON.stringify(rectanglesWithNames, null, 2) // in json format
+    );
   };
 
   return (
@@ -295,29 +305,7 @@ const MaptalksCheckpoint = () => {
                 <span className="sentencebutton">Reset Shape</span>
               </Button>
 
-              <Button
-                variant="outlined"
-                onClick={resetToMyLocation}
-                color="primary"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="28"
-                  height="28"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="red"
-                  strokeWidth="0.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-map-pin-check-inside"
-                >
-                  <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
-                  <path d="m9 10 2 2 4-4" />
-                </svg>
-                &nbsp; &nbsp;{" "}
-                <span className="sentencebutton">Reset To My Location</span>
-              </Button>
+              <ResetToMyLocation mapInstance={mapInstance} />
             </Stack>
             <div className="card bottomradius bigcard everythingCenter">
               <div className="card2 dynamicheight bottomradius bigcard routeCords">
@@ -353,22 +341,25 @@ const MaptalksCheckpoint = () => {
                           />
                         </div>
                         <Button variant="text">
-                          <p className="darkWhiteColor">
-                            <span className="block">
-                              Lower Left: {data.lowerLeft.join(", ")}
-                            </span>
-                            <span className="block">
-                              Upper Right: {data.upperRight.join(", ")}
-                            </span>
-
-                            <span className="block">
-                              <span className="areaGreen">Area:</span>
-                              {data.area
-                                ? `${data.area.toFixed(2)} m²`
-                                : "No area data"}
-                            </span>
-                          </p>
+                          <details className="coordinatesDetail sentencebutton">
+                            <summary>Coordinates</summary>
+                            <ul style={{ textAlign: "center" }}>
+                              <li>
+                                Lower Left: {data.lowerLeft.join(", ")}
+                                , <br /> Upper Right:{" "}
+                                {data.upperRight.join(", ")}
+                              </li>
+                            </ul>
+                          </details>
                         </Button>
+                        <p className="darkWhiteColor">
+                          <span className="block">
+                            <span className="areaGreen">Area:</span>
+                            {data.area
+                              ? `${data.area.toFixed(2)} m²`
+                              : "No area data"}
+                          </span>
+                        </p>
                       </div>
                     ))}
                   </div>

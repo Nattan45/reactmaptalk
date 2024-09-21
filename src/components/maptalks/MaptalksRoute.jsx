@@ -27,10 +27,11 @@ const MaptalksRoute = () => {
       mapInstance.current = new maptalks.Map(mapRef.current, {
         center: center,
         zoom: zoom,
+        minZoom: 3, // set map's min zoom to
         baseLayer: new maptalks.TileLayer("base", {
           urlTemplate: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
           subdomains: ["a", "b", "c"],
-          attribution: "© OpenStreetMap contributors",
+          attribution: "Vehicle Tracking",
         }),
       });
 
@@ -80,6 +81,7 @@ const MaptalksRoute = () => {
     };
   }, []);
 
+  // route
   useEffect(() => {
     if (mapInstance.current && routeCoordinates.length > 1) {
       const layerId = "routeLayer";

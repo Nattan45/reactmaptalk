@@ -1,16 +1,43 @@
-export const calculatePolygonDetails = (coordinates) => {
-  if (!coordinates || coordinates.length === 0) return null;
+export function calculatePolygonDetails(coordinates) {
+  const R = 6371e3; // Radius of the Earth in meters
 
-  // Dummy calculation for area, you can replace this with the actual formula
-  const area = Math.abs(
-    coordinates.reduce((sum, coord, index, arr) => {
-      if (index === arr.length - 1) return sum;
-      const nextCoord = arr[index + 1];
-      return sum + (coord[0] * nextCoord[1] - nextCoord[0] * coord[1]);
-    }, 0) / 2
-  );
+  // Convert degrees to radians
+  const toRadians = (degrees) => (degrees * Math.PI) / 180;
+
+  let area = 0;
+  const numPoints = coordinates.length;
+
+  for (let i = 0; i < numPoints; i++) {
+    const [lon1, lat1] = coordinates[i];
+    const [lon2, lat2] = coordinates[(i + 1) % numPoints];
+
+    const lat1Rad = toRadians(lat1);
+    const lat2Rad = toRadians(lat2);
+    const deltaLonRad = toRadians(lon2 - lon1);
+
+    // Haversine formula to calculate the length of each side
+    const a =
+      Math.sin(deltaLonRad / 2) *
+      Math.sin(deltaLonRad / 2) *
+      Math.cos(lat1Rad) *
+      Math.cos(lat2Rad);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    // Calculate the segment area
+    const segmentArea = R * R * c;
+
+    area += segmentArea;
+  }
+
+  area = Math.abs(area) / 2;
+
+  const areaInKm2 = area / 1e6; // Convert to square kilometers
+
+  // Format the area to three decimal places
+  const formattedArea = areaInKm2.toFixed(3);
 
   return {
-    area: area.toFixed(2),
+    area: formattedArea,
+    unit: "km²",
   };
-};
+}
