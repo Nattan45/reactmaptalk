@@ -250,15 +250,22 @@ const MaptalksCheckpoint = () => {
 
   // Handle Save button click
   const handleSave = () => {
-    rectangleData.forEach((data, index) => {
+    const rectanglesWithNames = rectangleData.map((data, index) => {
       const rectangleName = rectangleNames[index] || `Rectangle ${index + 1}`; // Use custom name or fallback to default
-      console.log(`Rectangle Name: ${rectangleName}`);
-      console.log(`Lower Left: ${data.lowerLeft.join(", ")}`);
-      console.log(`Upper Right: ${data.upperRight.join(", ")}`);
-      console.log(
-        `Area: ${data.area ? `${data.area.toFixed(2)} m²` : "No area data"}`
-      );
+
+      return {
+        RectangleName: rectangleName,
+        LowerLeft: data.lowerLeft, // Keep coordinates as an array
+        UpperRight: data.upperRight,
+        Area: data.area ? `${data.area.toFixed(2)} m²` : "No area data",
+      };
     });
+
+    console.log(
+      "All drawn rectangles with their saved names:",
+      // rectanglesWithNames,  // in array format
+      JSON.stringify(rectanglesWithNames, null, 2) // in json format
+    );
   };
 
   return (

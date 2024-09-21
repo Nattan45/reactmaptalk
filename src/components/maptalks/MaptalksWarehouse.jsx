@@ -268,7 +268,8 @@ const MaptalksWarehouse = () => {
 
     console.log(
       "All drawn Polygon's with Their Saved Names:",
-      polygonDataWithNames
+      // polygonDataWithNames // in array format
+      JSON.stringify(polygonDataWithNames, null, 2) // in json format
     );
   };
 
