@@ -173,6 +173,10 @@ const MaptalksCheckpoint = () => {
       mapInstance.current = new maptalks.Map(mapRef.current, {
         center: center,
         zoom: zoom,
+        minZoom: 3, // set map's min zoom to
+        attribution: true,
+        scaleControl: true, // add scale control
+        overviewControl: true, // add overview control
         baseLayer: new maptalks.TileLayer("base", {
           urlTemplate: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
           subdomains: ["a", "b", "c"],
@@ -337,22 +341,25 @@ const MaptalksCheckpoint = () => {
                           />
                         </div>
                         <Button variant="text">
-                          <p className="darkWhiteColor">
-                            <span className="block">
-                              Lower Left: {data.lowerLeft.join(", ")}
-                            </span>
-                            <span className="block">
-                              Upper Right: {data.upperRight.join(", ")}
-                            </span>
-
-                            <span className="block">
-                              <span className="areaGreen">Area:</span>
-                              {data.area
-                                ? `${data.area.toFixed(2)} m²`
-                                : "No area data"}
-                            </span>
-                          </p>
+                          <details className="coordinatesDetail sentencebutton">
+                            <summary>Coordinates</summary>
+                            <ul style={{ textAlign: "center" }}>
+                              <li>
+                                Lower Left: {data.lowerLeft.join(", ")}
+                                , <br /> Upper Right:{" "}
+                                {data.upperRight.join(", ")}
+                              </li>
+                            </ul>
+                          </details>
                         </Button>
+                        <p className="darkWhiteColor">
+                          <span className="block">
+                            <span className="areaGreen">Area:</span>
+                            {data.area
+                              ? `${data.area.toFixed(2)} m²`
+                              : "No area data"}
+                          </span>
+                        </p>
                       </div>
                     ))}
                   </div>

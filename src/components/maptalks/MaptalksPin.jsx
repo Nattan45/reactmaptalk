@@ -24,6 +24,7 @@ const MaptalksPin = () => {
     mapInstance.current = new maptalks.Map(mapRef.current, {
       center: center,
       zoom: zoomLevel, // Initial zoom level
+      minZoom: 3, // set map's min zoom to
       baseLayer: new maptalks.TileLayer("base", {
         urlTemplate: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         subdomains: ["a", "b", "c"],

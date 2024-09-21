@@ -171,6 +171,10 @@ const MaptalksWarehouse = () => {
       mapInstance.current = new maptalks.Map(mapRef.current, {
         center: center,
         zoom: zoom,
+        minZoom: 3, // set map's min zoom to
+        attribution: true,
+        scaleControl: true, // add scale control
+        overviewControl: true, // add overview control
         baseLayer: new maptalks.TileLayer("base", {
           urlTemplate: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
           subdomains: ["a", "b", "c"],
@@ -382,8 +386,6 @@ const MaptalksWarehouse = () => {
                           <details className="coordinatesDetail">
                             <summary>Coordinates</summary>
                             <ul style={{ textAlign: "center" }}>
-                              {" "}
-                              {/* Center the text */}
                               {polygon.coordinates.map((coord, idx) => (
                                 <li key={idx}>
                                   <span className="coordinateColor1">
