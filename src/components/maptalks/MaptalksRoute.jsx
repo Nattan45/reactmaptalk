@@ -30,7 +30,7 @@ const MaptalksRoute = () => {
         baseLayer: new maptalks.TileLayer("base", {
           urlTemplate: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
           subdomains: ["a", "b", "c"],
-          attribution: "© OpenStreetMap contributors",
+          attribution: "Vehicle Tracking",
         }),
       });
 

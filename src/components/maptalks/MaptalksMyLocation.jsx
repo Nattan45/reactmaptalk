@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { yellow } from "@mui/material/colors";
+import ResetToMyLocation from "./ResetToMyLocation";
 
 const MaptalksMyLocation = () => {
   const mapRef = useRef(null);
@@ -62,17 +63,6 @@ const MaptalksMyLocation = () => {
     console.log(
       `User location: Longitude: ${coords[0]}, Latitude: ${coords[1]}`
     );
-  };
-
-  const resetToMyLocation = () => {
-    const savedCoords = sessionStorage.getItem("userCoordinates");
-    if (savedCoords) {
-      const userCenter = JSON.parse(savedCoords);
-      mapInstance.current.setCenter(userCenter);
-      mapInstance.current.setZoom(16); // Reset zoom to a closer view
-    } else {
-      alert("User location not available.");
-    }
   };
 
   useEffect(() => {
@@ -184,30 +174,7 @@ const MaptalksMyLocation = () => {
               </div>
             ) : (
               <ThemeProvider theme={theme}>
-                <Button
-                  variant="outlined"
-                  onClick={resetToMyLocation}
-                  color="primary"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#ffb700"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="lucide lucide-undo"
-                  >
-                    <path d="M3 7v6h6" />
-                    <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
-                  </svg>
-
-                  &nbsp; &nbsp;{" "}
-                  <span className="sentencebutton">Reset To My Location</span>
-                </Button>
+                <ResetToMyLocation mapInstance={mapInstance} />
               </ThemeProvider>
             )}
           </div>

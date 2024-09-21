@@ -8,6 +8,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue, yellow } from "@mui/material/colors";
 
 import { calculatePolygonDetails } from "./calculatePolygonDetails";
+import ResetToMyLocation from "./ResetToMyLocation";
 
 const MaptalksWarehouse = () => {
   const mapRef = useRef(null); // Ref to store the map DOM element
@@ -164,7 +165,7 @@ const MaptalksWarehouse = () => {
         baseLayer: new maptalks.TileLayer("base", {
           urlTemplate: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
           subdomains: ["a", "b", "c"],
-          attribution: "© OpenStreetMap contributors",
+          attribution: "Vehicle Tracking",
         }),
       });
 
@@ -231,16 +232,16 @@ const MaptalksWarehouse = () => {
     },
   });
 
-  const resetToMyLocation = () => {
-    const savedCoords = sessionStorage.getItem("userCoordinates");
-    if (savedCoords) {
-      const userCenter = JSON.parse(savedCoords);
-      mapInstance.current.setCenter(userCenter);
-      mapInstance.current.setZoom(16); // Reset zoom to a closer view
-    } else {
-      alert("User location not available.");
-    }
-  };
+  // const resetToMyLocation = () => {
+  //   const savedCoords = sessionStorage.getItem("userCoordinates");
+  //   if (savedCoords) {
+  //     const userCenter = JSON.parse(savedCoords);
+  //     mapInstance.current.setCenter(userCenter);
+  //     mapInstance.current.setZoom(16); // Reset zoom to a closer view
+  //   } else {
+  //     alert("User location not available.");
+  //   }
+  // };
 
   const [polygonNames, setPolygonNames] = useState({}); // State to track Polygon names
 
@@ -318,7 +319,7 @@ const MaptalksWarehouse = () => {
                 <span className="sentencebutton">Reset Shape</span>
               </Button>
 
-              <Button
+              {/* <Button
                 variant="outlined"
                 onClick={resetToMyLocation}
                 color="primary"
@@ -340,7 +341,8 @@ const MaptalksWarehouse = () => {
                 </svg>
                 &nbsp; &nbsp;{" "}
                 <span className="sentencebutton">Reset To My Location</span>
-              </Button>
+              </Button> */}
+              <ResetToMyLocation mapInstance={mapInstance} />
             </Stack>
             <div className="card bottomradius bigcard everythingCenter">
               <div className="card2 dynamicheight bottomradius bigcard routeCords">
