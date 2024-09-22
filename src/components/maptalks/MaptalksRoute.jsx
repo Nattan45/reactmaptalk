@@ -224,10 +224,10 @@ const MaptalksRoute = () => {
                             }}
                           >
                             {index === 0
-                              ? `Start Point: Longitude: ${coords[0]}, Latitude: ${coords[1]}`
+                              ? `Start Point: X: ${coords[0]}, Y: ${coords[1]}`
                               : index === routeCoordinates.length - 1
-                              ? `End Point: Longitude: ${coords[0]}, Latitude: ${coords[1]}`
-                              : `${index + 1}: Lon: ${coords[0]}, Lat: ${
+                              ? `End Point: X: ${coords[0]}, Y: ${coords[1]}`
+                              : `${index + 1}: x: ${coords[0]}, y: ${
                                   coords[1]
                                 }`}
                           </Button>
