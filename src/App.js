@@ -7,6 +7,7 @@ import MaptalksPinPage from "./page/MaptalksPinPage";
 import MaptalksRoutePage from "./page/MaptalksRoutePage";
 import MaptalksCheckpointPage from "./page/MaptalksCheckpointPage";
 import MaptalksWarehousePage from "./page/MaptalksWarehousePage";
+import SavedLocationsPage from "./page/SavedLocationsPage";
 
 function App() {
   return (
@@ -38,6 +39,11 @@ function App() {
           path="/MaptalksWarehousePage"
           exact
           element={<MaptalksWarehousePage />}
+        ></Route>
+        <Route
+          path="/SavedLocationsPage"
+          exact
+          element={<SavedLocationsPage />}
         ></Route>
       </Routes>
       {/* </AuthProvider> */}
