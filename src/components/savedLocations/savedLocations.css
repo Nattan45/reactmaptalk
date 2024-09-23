@@ -1,0 +1,11 @@
+.savedLocationContainer {
+  display: grid;
+  justify-items: center;
+  margin-bottom: 5%;
+}
+.firstSection {
+  margin: 3% 0 3% 5%;
+  display: grid;
+  justify-items: center;
+  width: fit-content;
+}
