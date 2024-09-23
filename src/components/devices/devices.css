@@ -1,0 +1,187 @@
+.devicesContainer {
+  display: grid;
+  justify-items: center;
+  margin-top: 3%;
+}
+.DeviceStasticsContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  justify-self: center;
+  gap: 40px;
+}
+
+.secondSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 5%;
+  gap: 20px;
+}
+
+/* From Uiverse.io by Yaya12085 */
+.form {
+  display: grid;
+  justify-content: center;
+
+  gap: 10px;
+  width: fit-content;
+  background-color: #fff;
+  padding: 50px;
+  border-radius: 20px;
+}
+
+.title {
+  font-size: 22px;
+  color: royalblue;
+  font-weight: 600;
+  letter-spacing: -1px;
+}
+
+.form-flex {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-self: space-between;
+  gap: 26px;
+}
+
+.form label {
+  position: relative;
+}
+
+.form label .input {
+  width: 100%;
+  padding: 10px 10px 20px 10px;
+  outline: 0;
+  border: 1px solid rgba(105, 105, 105, 0.397);
+  border-radius: 10px;
+}
+
+.form label .input + span {
+  position: absolute;
+  left: 10px;
+  top: 15px;
+  color: grey;
+  font-size: 0.9em;
+  cursor: text;
+  transition: 0.3s ease;
+}
+
+.form label .input:placeholder-shown + span {
+  top: 15px;
+  font-size: 0.9em;
+}
+
+.form label .input:focus + span,
+.form label .input:valid + span {
+  top: 30px;
+  font-size: 0.7em;
+  font-weight: 600;
+}
+
+.form label .input:valid + span {
+  color: green;
+}
+
+/* .smallinputs {
+  width: 50px;
+  outline: 1px solid red;
+} */
+.submit {
+  border: none;
+  outline: none;
+  background-color: royalblue;
+  padding: 10px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+  transform: 0.3s ease;
+}
+
+.submit:hover {
+  background-color: rgb(56, 90, 194);
+}
+.submit-rfid {
+  border: none;
+  outline: none;
+  background-color: rgb(18, 189, 152);
+  padding: 10px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 12px;
+}
+
+.newrfids {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  gap: 10px;
+}
+.pendingRfidLists {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  justify-content: center;
+}
+.remove-rfid {
+  border: none;
+  outline: none;
+  background-color: rgb(212, 46, 17);
+  padding: 10px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 12px;
+  width: fit-content;
+}
+
+/* Table container styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Arial", sans-serif;
+  margin-top: 20px;
+}
+
+/* Header styling */
+thead {
+  background-color: #3c245d;
+  color: white;
+}
+
+thead th {
+  padding: 12px;
+  text-align: left;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Body styling */
+tbody tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+tbody td {
+  padding: 12px;
+  text-align: left;
+  font-size: 15px;
+}
+
+/* Border for table cells */
+th,
+td {
+  border-bottom: 1px solid #ddd;
+}
+
+/* Total column font style (if you want a special style for the total column) */
+tbody td:nth-child(6) {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Hover effect */
+tbody tr:hover {
+  background-color: #ececec;
+  cursor: pointer;
+}

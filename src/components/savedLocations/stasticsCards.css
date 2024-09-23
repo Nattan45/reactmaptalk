@@ -57,6 +57,10 @@
   border-color: #008bf8;
   box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
 }
+.red-card-outline:hover {
+  border-color: #f80000;
+  box-shadow: 0 4px 18px 0 rgba(114, 3, 3, 0.25);
+}
 
 .Stastics-card:hover .Stastics-card-button {
   transform: translate(-50%, 50%);

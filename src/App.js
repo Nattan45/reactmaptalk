@@ -8,6 +8,7 @@ import MaptalksRoutePage from "./page/MaptalksRoutePage";
 import MaptalksCheckpointPage from "./page/MaptalksCheckpointPage";
 import MaptalksWarehousePage from "./page/MaptalksWarehousePage";
 import SavedLocationsPage from "./page/SavedLocationsPage";
+import DevicesPage from "./page/DevicesPage";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
           exact
           element={<SavedLocationsPage />}
         ></Route>
+        <Route path="/DevicesPage" exact element={<DevicesPage />}></Route>
       </Routes>
       {/* </AuthProvider> */}
     </>
