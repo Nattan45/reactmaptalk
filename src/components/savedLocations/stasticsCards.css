@@ -1,0 +1,76 @@
+.StasticsContainer {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  justify-content: center;
+  gap: 15px;
+  width: fit-content;
+}
+
+.Stastics-card {
+  width: 150px;
+  height: 214px;
+  border-radius: 20px;
+  background: #f5f5f5;
+  position: relative;
+  padding: 1.8rem;
+  border: 2px solid #c3c6ce;
+  transition: 0.5s ease-out;
+  overflow: visible;
+}
+
+.Stastics-card-details {
+  color: black;
+  height: 100%;
+  gap: 0.5em;
+  display: grid;
+  place-content: center;
+}
+
+.Stastics-card-button {
+  transform: translate(-50%, 125%);
+  width: 60%;
+  border-radius: 1rem;
+  border: none;
+  background-color: #008bf8;
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 0.5rem 1rem;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  opacity: 0;
+  transition: 0.3s ease-out;
+}
+
+.Stastics-text-body {
+  color: rgb(134, 134, 134);
+}
+
+/*Text*/
+.Stastics-text-title {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+/*Hover*/
+.Stastics-card:hover {
+  border-color: #008bf8;
+  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+}
+
+.Stastics-card:hover .Stastics-card-button {
+  transform: translate(-50%, 50%);
+  opacity: 1;
+}
+.textcenter {
+  text-align: center;
+}
+.textend {
+  text-align: end;
+}
+.smallfonts {
+  font-size: 12px;
+}
+.Stastics-text-title-icon {
+  text-align: center;
+}

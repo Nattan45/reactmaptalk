@@ -10,34 +10,37 @@ const Header = () => {
     <div className="headerClass">
       <div className="headerComponents">
         <div className="company">
-          <Button color="success">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#8cff00"
-              strokeWidth="0.75"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-truck"
-            >
-              <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" />
-              <path d="M15 18H9" />
-              <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14" />
-              <circle cx="17" cy="18" r="2" />
-              <circle cx="7" cy="18" r="2" />
-            </svg>
-            &nbsp; &nbsp;
-            <h3>Vehicle Tracking</h3>
-          </Button>
+          <NavLink exact="true" to="/">
+            <Button color="success">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#8cff00"
+                strokeWidth="0.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-truck"
+              >
+                <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" />
+                <path d="M15 18H9" />
+                <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14" />
+                <circle cx="17" cy="18" r="2" />
+                <circle cx="7" cy="18" r="2" />
+              </svg>
+              &nbsp; &nbsp;
+              <h3>Vehicle Tracking</h3>
+            </Button>
+          </NavLink>
         </div>
 
         <div className="headernaves">
           <Stack spacing={2} direction="row">
-            <Button color="secondary">
-              <NavLink exact="true" to="/SavedLocationsPage">
+            {/* SavedLocationsPage */}
+            <NavLink exact="true" to="/SavedLocationsPage">
+              <Button color="secondary">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="32"
@@ -56,76 +59,81 @@ const Header = () => {
                 </svg>
                 &nbsp;
                 <h5 className="ddcolor">Saved&nbsp;Location</h5>
-              </NavLink>
-            </Button>
+              </Button>
+            </NavLink>
 
-            <Button color="secondary">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#bee9e8"
-                strokeWidth="0.75"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-waypoints"
-              >
-                <circle cx="12" cy="4.5" r="2.5" />
-                <path d="m10.2 6.3-3.9 3.9" />
-                <circle cx="4.5" cy="12" r="2.5" />
-                <path d="M7 12h10" />
-                <circle cx="19.5" cy="12" r="2.5" />
-                <path d="m13.8 17.7 3.9-3.9" />
-                <circle cx="12" cy="19.5" r="2.5" />
-              </svg>
-              &nbsp;
-              <h5 className="ddcolor">Saved&nbsp;Routes</h5>
-            </Button>
+            <NavLink exact="true" to="/">
+              <Button color="secondary">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#bee9e8"
+                  strokeWidth="0.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-waypoints"
+                >
+                  <circle cx="12" cy="4.5" r="2.5" />
+                  <path d="m10.2 6.3-3.9 3.9" />
+                  <circle cx="4.5" cy="12" r="2.5" />
+                  <path d="M7 12h10" />
+                  <circle cx="19.5" cy="12" r="2.5" />
+                  <path d="m13.8 17.7 3.9-3.9" />
+                  <circle cx="12" cy="19.5" r="2.5" />
+                </svg>
+                &nbsp;
+                <h5 className="ddcolor">Saved&nbsp;Routes</h5>
+              </Button>
+            </NavLink>
 
-            <Button color="secondary">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#bee9e8"
-                strokeWidth="0.75"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-land-plot"
-              >
-                <path d="m12 8 6-3-6-3v10" />
-                <path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" />
-                <path d="m6.49 12.85 11.02 6.3" />
-                <path d="M17.51 12.85 6.5 19.15" />
-              </svg>
-              &nbsp;
-              <h5 className="ddcolor">Track</h5>
-            </Button>
-
-            <Button color="secondary">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#bee9e8"
-                strokeWidth="0.75"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-book-a"
-              >
-                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" />
-                <path d="m8 13 4-7 4 7" />
-                <path d="M9.1 11h5.7" />
-              </svg>
-              &nbsp;
-              <h5 className="ddcolor">About</h5>
-            </Button>
+            <NavLink exact="true" to="/">
+              <Button color="secondary">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#bee9e8"
+                  strokeWidth="0.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-land-plot"
+                >
+                  <path d="m12 8 6-3-6-3v10" />
+                  <path d="m8 11.99-5.5 3.14a1 1 0 0 0 0 1.74l8.5 4.86a2 2 0 0 0 2 0l8.5-4.86a1 1 0 0 0 0-1.74L16 12" />
+                  <path d="m6.49 12.85 11.02 6.3" />
+                  <path d="M17.51 12.85 6.5 19.15" />
+                </svg>
+                &nbsp;
+                <h5 className="ddcolor">Track</h5>
+              </Button>
+            </NavLink>
+            <NavLink exact="true" to="/">
+              <Button color="secondary">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#bee9e8"
+                  strokeWidth="0.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-book-a"
+                >
+                  <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" />
+                  <path d="m8 13 4-7 4 7" />
+                  <path d="M9.1 11h5.7" />
+                </svg>
+                &nbsp;
+                <h5 className="ddcolor">About</h5>
+              </Button>
+            </NavLink>
           </Stack>
         </div>
 
