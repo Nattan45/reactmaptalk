@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./savedLocations.css";
 import StasticsCards from "./StasticsCards";
 
@@ -8,6 +8,7 @@ const SavedLocations = () => {
   const mapRef = useRef(null);
   const mapInstance = useRef(null); // Ref to store the map instance
   const markerLayerRef = useRef(null); // Ref for marker layer
+  const [locationDenied, setLocationDenied] = useState(false); // To handle location denied
 
   const initializeMap = (center, zoomLevel = 10) => {
     // If a map instance already exists, remove it
@@ -87,6 +88,7 @@ const SavedLocations = () => {
           addMarker(newUserCenter); // Add marker for current position
         },
         () => {
+          setLocationDenied(true); // Set location denied to true if permission denied
           initializeMap(defaultCenter); // Use default coordinates if permission denied
         }
       );
@@ -108,6 +110,11 @@ const SavedLocations = () => {
         <StasticsCards />
       </div>
       <div className="">
+        {locationDenied && (
+          <div style={{ color: "red", marginTop: "10px" }}>
+            Could not display your location.
+          </div>
+        )}
         display items on map
         <div ref={mapRef} style={{ width: "70vw", height: "60vh" }} />
       </div>

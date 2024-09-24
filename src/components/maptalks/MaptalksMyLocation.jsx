@@ -171,7 +171,7 @@ const MaptalksMyLocation = () => {
           <div className="resetLocation">
             {locationDenied ? (
               <div style={{ color: "red", marginTop: "10px" }}>
-                Could not display user's location.
+                Could not display your location.
               </div>
             ) : (
               <ThemeProvider theme={theme}>
