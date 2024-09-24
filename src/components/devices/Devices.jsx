@@ -4,6 +4,8 @@ import DeviceStastics from "./DeviceStastics";
 import RegisterGpsTrackerForm from "./RegisterGpsTrackerForm ";
 import GpsTrackerTable from "./GpsTrackerTable";
 import RegisterFridForm from "./RegisterFridForm";
+import ActiveDevices from "./ActiveDevices";
+import InactiveDevices from "./InactiveDevices";
 
 const Devices = () => {
   return (
@@ -14,8 +16,8 @@ const Devices = () => {
       <div className="secondSection">
         <RegisterGpsTrackerForm />
         <RegisterFridForm />
-        <h1>active devices</h1>
-        <h1>inactive devices</h1>
+        <ActiveDevices />
+        <InactiveDevices />
       </div>
       <div className="thirdSection">
         <GpsTrackerTable />

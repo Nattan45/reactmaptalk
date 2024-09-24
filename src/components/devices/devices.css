@@ -132,56 +132,10 @@
   width: fit-content;
 }
 
-/* Table container styling */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: "Arial", sans-serif;
-  margin-top: 20px;
+.wh-fit-content {
+  height: fit-content;
+  width: fit-content;
 }
-
-/* Header styling */
-thead {
-  background-color: #3c245d;
-  color: white;
-}
-
-thead th {
-  padding: 12px;
-  text-align: left;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-/* Body styling */
-tbody tr:nth-child(even) {
-  background-color: #f8f8f8;
-}
-
-tbody tr:nth-child(odd) {
-  background-color: #fff;
-}
-
-tbody td {
-  padding: 12px;
-  text-align: left;
-  font-size: 15px;
-}
-
-/* Border for table cells */
-th,
-td {
-  border-bottom: 1px solid #ddd;
-}
-
-/* Total column font style (if you want a special style for the total column) */
-tbody td:nth-child(6) {
-  font-weight: bold;
-  color: #333;
-}
-
-/* Hover effect */
-tbody tr:hover {
-  background-color: #ececec;
-  cursor: pointer;
+.placeEnd {
+  justify-self: end;
 }

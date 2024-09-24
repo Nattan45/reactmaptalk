@@ -18,8 +18,10 @@ const RegisterFridForm = () => {
   };
 
   return (
-    <form className="form" onSubmit={handleSubmit}>
+    <form className="form wh-fit-content" onSubmit={handleSubmit}>
       <p className="title textcenter">RFID Registration Form</p>
+      <br />
+      <br />
 
       <div className="form-flex">
         {/* Brand */}
@@ -60,7 +62,7 @@ const RegisterFridForm = () => {
       </label>
 
       {/* Submit Button */}
-      <button type="submit" className="submit">
+      <button type="submit" className="submit wh-fit-content placeEnd">
         Register Device
       </button>
     </form>

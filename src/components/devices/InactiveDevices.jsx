@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Eseal from "../../data/Eseal"; // Importing dummy data
+import "./tableStyle.css";
 
-const GpsTrackerTable = () => {
+import Eseal from "../../data/Eseal";
+import Button from "@mui/material/Button";
+
+const InactiveDevices = () => {
   const [deviceData, setDeviceData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
@@ -15,13 +18,18 @@ const GpsTrackerTable = () => {
     fetchData(); // Call the fetch function
   }, []);
 
+  // **Filter the deviceData to show only "Active" devices**
+  const inactiveDevices = deviceData.filter(
+    (device) => device.status === "Inactive"
+  );
+
   // Calculate the current items to display on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = deviceData.slice(indexOfFirstItem, indexOfLastItem); // Slice the data based on current page
+  const currentItems = inactiveDevices.slice(indexOfFirstItem, indexOfLastItem); // Slice the filtered data based on current page
 
-  // Calculate the total number of pages
-  const totalPages = Math.ceil(deviceData.length / itemsPerPage);
+  // Calculate the total number of pages for active devices
+  const totalPages = Math.ceil(inactiveDevices.length / itemsPerPage);
 
   // Function to handle page change
   const handlePageChange = (pageNumber) => {
@@ -31,7 +39,7 @@ const GpsTrackerTable = () => {
   // Pagination control buttons with ellipses
   const renderPageNumbers = () => {
     const pageNumbers = [];
-    const maxPagesToShow = 2; // Show 3 page numbers before ellipses
+    const maxPagesToShow = 3; // Show 3 page numbers before ellipses
 
     if (totalPages <= maxPagesToShow + 2) {
       // Show all pages if total is small
@@ -101,16 +109,17 @@ const GpsTrackerTable = () => {
 
   return (
     <div>
-      <h2>All GPS Tracker Devices</h2>
-      <table border="1" cellPadding="10">
-        <thead>
+      <h2>
+        <span>{inactiveDevices.length}</span> Inactive GPS Tracker Devices
+      </h2>
+      <table border="1" cellPadding="10" className="inactivedevicesTable">
+        <thead className="inactivedevicesTable-header">
           <tr>
             <th>Device Name</th>
             <th>Brand</th>
             <th>Model</th>
             <th>RFID Keys</th>
-            <th>Status</th>
-            <th>Ops</th>
+            <th>Activate</th>
           </tr>
         </thead>
         <tbody>
@@ -121,13 +130,20 @@ const GpsTrackerTable = () => {
                 <td>{device.brand}</td>
                 <td>{device.model}</td>
                 <td>{device.rfidKeys.join(", ")}</td>
-                <td>{device.status}</td>
-                <td>Delete, update RFID</td>
+                <td>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    className="smallbutton"
+                  >
+                    <span className="sentencebutton">Activate</span>
+                  </Button>
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="4">No data available</td>
+              <td colSpan="4">No active devices available</td>
             </tr>
           )}
         </tbody>
@@ -153,4 +169,4 @@ const GpsTrackerTable = () => {
   );
 };
 
-export default GpsTrackerTable;
+export default InactiveDevices;
