@@ -61,30 +61,37 @@ const Footer = () => {
             </Button>
           </NavLink>
 
-          <NavLink exact="true" to="/">
+          <NavLink exact="true" to="/DevicesPage">
             <Button color="secondary">
               <svg
+                fill="#bee9e8"
+                version="1.1"
+                id="Capa_1"
                 xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#bee9e8"
-                strokeWidth="0.75"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-waypoints"
+                xlink="http://www.w3.org/1999/xlink"
+                width="32px"
+                height="32px"
+                viewBox="0 0 54.9 54.9"
+                space="preserve"
               >
-                <circle cx="12" cy="4.5" r="2.5" />
-                <path d="m10.2 6.3-3.9 3.9" />
-                <circle cx="4.5" cy="12" r="2.5" />
-                <path d="M7 12h10" />
-                <circle cx="19.5" cy="12" r="2.5" />
-                <path d="m13.8 17.7 3.9-3.9" />
-                <circle cx="12" cy="19.5" r="2.5" />
+                <g id="SVGRepo_bgCarrier" strokeWidth="0" />
+
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+
+                <g id="SVGRepo_iconCarrier">
+                  {" "}
+                  <g>
+                    {" "}
+                    <path d="M44.885,12.23c-0.842-2.599-1.994-4.456-4.455-4.456H20.618V3.523c0-1.946-1.684-3.523-3.76-3.523 c-2.077,0-3.761,1.577-3.761,3.523c0,1.254,0,3.272,0,4.555c-1.513,0.641-2.407,2.263-2.972,4.152c0,0-1.633,11.68-1.633,19.108 c0,7.427,1.633,19.105,1.633,19.105c0.761,2.492,1.996,4.457,4.456,4.457H40.43c2.461,0,3.676-1.938,4.455-4.457 c0,0,1.594-12.272,1.521-19.105C46.364,23.687,44.885,12.23,44.885,12.23z M40.614,15.055v19.45c0,0.974-0.789,1.761-1.761,1.761 H15.97c-0.973,0-1.761-0.787-1.761-1.761v-19.45c0-0.973,0.788-1.76,1.761-1.76h22.883C39.825,13.296,40.614,14.083,40.614,15.055z M21.453,46.357h-6.398c-0.922,0-1.669-0.748-1.669-1.67s0.747-1.668,1.669-1.668h6.398c0.921,0,1.669,0.746,1.669,1.668 C23.121,45.609,22.373,46.357,21.453,46.357z M27.45,47.654c-1.639,0-2.967-1.326-2.967-2.967c0-1.64,1.328-2.967,2.967-2.967 c1.64,0,2.967,1.327,2.967,2.967C30.416,46.328,29.089,47.654,27.45,47.654z M40.227,46.357h-6.397 c-0.921,0-1.669-0.748-1.669-1.67s0.748-1.668,1.669-1.668h6.397c0.922,0,1.67,0.746,1.67,1.668S41.148,46.357,40.227,46.357z" />{" "}
+                  </g>{" "}
+                </g>
               </svg>
               &nbsp;
-              <h5 className="ddcolor">Saved&nbsp;Routes</h5>
+              <h5 className="ddcolor">Devices</h5>
             </Button>
           </NavLink>
 

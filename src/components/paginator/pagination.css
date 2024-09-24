@@ -1,0 +1,59 @@
+/* pagination */
+.pagination {
+  display: grid;
+  justify-items: center;
+  margin-top: 2%;
+}
+
+.paginationButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px; /* Adds space between buttons */
+}
+
+.paginationButtons button {
+  background-color: #007bff; /* Button background */
+  color: white; /* Text color */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Slight rounding for next/previous buttons */
+  padding: 10px 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.paginationButtons button:hover {
+  background-color: #0056b3; /* Darker color on hover */
+}
+
+.paginationButtons button:disabled {
+  background-color: #d3d3d3; /* Disabled state color */
+  cursor: not-allowed; /* Show "not allowed" cursor */
+}
+
+.paginationButtons .pageNumber {
+  background-color: #f8f9fa; /* Light background for page numbers */
+  color: #007bff; /* Blue text */
+  border: 1px solid #007bff; /* Border for page numbers */
+  border-radius: 50%; /* Make buttons circular */
+  width: 10px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.paginationButtons .pageNumber:hover {
+  background-color: #007bff; /* Darker background on hover */
+  color: white; /* White text on hover */
+}
+
+.paginationButtons .active {
+  background-color: #007bff; /* Active page background */
+  color: white; /* Active page text color */
+  border-color: #007bff; /* Same as background for active */
+}
