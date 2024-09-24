@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./tableStyle.css";
 
+import Paginator from "../paginator/Paginator";
 import Eseal from "../../data/Eseal";
 import Button from "@mui/material/Button";
 
@@ -36,77 +37,6 @@ const ActiveDevices = () => {
     setCurrentPage(pageNumber); // Set the new page number
   };
 
-  // Pagination control buttons with ellipses
-  const renderPageNumbers = () => {
-    const pageNumbers = [];
-    const maxPagesToShow = 3; // Show 3 page numbers before ellipses
-
-    if (totalPages <= maxPagesToShow + 2) {
-      // Show all pages if total is small
-      for (let i = 1; i <= totalPages; i++) {
-        pageNumbers.push(
-          <button
-            key={i}
-            onClick={() => handlePageChange(i)}
-            className={currentPage === i ? "active" : ""}
-          >
-            {i}
-          </button>
-        );
-      }
-    } else {
-      // Always show the first page
-      pageNumbers.push(
-        <button
-          key={1}
-          onClick={() => handlePageChange(1)}
-          className={currentPage === 1 ? "active" : ""}
-        >
-          1
-        </button>
-      );
-
-      // Show ellipses if needed before the current page
-      if (currentPage > maxPagesToShow) {
-        pageNumbers.push(<span key="left-ellipsis">...</span>);
-      }
-
-      // Show middle page numbers (current and adjacent ones)
-      const startPage = Math.max(2, currentPage - 1); // One before current page
-      const endPage = Math.min(totalPages - 1, currentPage + 1); // One after current page
-
-      for (let i = startPage; i <= endPage; i++) {
-        pageNumbers.push(
-          <button
-            key={i}
-            onClick={() => handlePageChange(i)}
-            className={currentPage === i ? "active" : ""}
-          >
-            {i}
-          </button>
-        );
-      }
-
-      // Show ellipses if needed after the current page
-      if (currentPage < totalPages - maxPagesToShow) {
-        pageNumbers.push(<span key="right-ellipsis">...</span>);
-      }
-
-      // Always show the last page
-      pageNumbers.push(
-        <button
-          key={totalPages}
-          onClick={() => handlePageChange(totalPages)}
-          className={currentPage === totalPages ? "active" : ""}
-        >
-          {totalPages}
-        </button>
-      );
-    }
-
-    return pageNumbers;
-  };
-
   return (
     <div>
       <h2>
@@ -118,53 +48,44 @@ const ActiveDevices = () => {
             <th>Device Name</th>
             <th>Brand</th>
             <th>Model</th>
+
             <th>RFID Keys</th>
+            <th>Vehicle</th>
+
             <th>Deactivate</th>
           </tr>
         </thead>
         <tbody>
-          {currentItems.length > 0 ? (
-            currentItems.map((device) => (
-              <tr key={device.id}>
-                <td>{device.deviceName}</td>
-                <td>{device.brand}</td>
-                <td>{device.model}</td>
-                <td>{device.rfidKeys.join(", ")}</td>
-                <td>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    className="smallbutton"
-                  >
-                    <span className="sentencebutton">Deactivate</span>
-                  </Button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4">No active devices available</td>
-            </tr>
-          )}
+          {currentItems.length > 0
+            ? currentItems.map((device) => (
+                <tr key={device.id}>
+                  <td>{device.deviceName}</td>
+                  <td>{device.brand}</td>
+                  <td>{device.model}</td>
+                  <td>{device.rfidKeys.join(", ")}</td>
+                  <td>{device.vehicle}</td>
+                  <td>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      className="smallbutton"
+                    >
+                      <span className="sentencebutton">Deactivate</span>
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            : null}{" "}
+          {/* No need to display "No active devices available" */}
         </tbody>
       </table>
 
-      {/* Pagination controls */}
-      <div className="pagination">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          {"<"} Previous
-        </button>
-        {renderPageNumbers()}
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          Next {">"}
-        </button>
-      </div>
+      {/* Using the Paginator component */}
+      <Paginator
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };

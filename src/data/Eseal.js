@@ -6,6 +6,7 @@ const Eseal = [
     model: "Model X",
     rfidKeys: ["1235", "7890"],
     status: "Active",
+    vehicle: "AA-13694-4",
   },
   {
     id: 2,
@@ -14,6 +15,7 @@ const Eseal = [
     model: "Model Y",
     rfidKeys: ["1111", "2222", "3333", "4444", "5555"],
     status: "Active",
+    vehicle: "AA-13694-4",
   },
   {
     id: 3,
@@ -22,6 +24,7 @@ const Eseal = [
     model: "Model Y",
     rfidKeys: ["4452", "1533", "9554"],
     status: "Active",
+    vehicle: "AA-13334-3",
   },
   {
     id: 4,
@@ -30,6 +33,7 @@ const Eseal = [
     model: "Model X",
     rfidKeys: ["2342", "5243", "1223"],
     status: "Active",
+    vehicle: "AA-13334-3",
   },
   {
     id: 5,
@@ -46,6 +50,7 @@ const Eseal = [
     model: "Model W",
     rfidKeys: ["6754", "9865"],
     status: "Active",
+    vehicle: "AA-44334-4",
   },
   {
     id: 7,
@@ -62,6 +67,7 @@ const Eseal = [
     model: "Model X",
     rfidKeys: ["1453", "2366"],
     status: "Active",
+    vehicle: "AA-44334-4",
   },
   {
     id: 9,
@@ -70,6 +76,7 @@ const Eseal = [
     model: "Model Y",
     rfidKeys: ["3124", "6254", "7854"],
     status: "Active",
+    vehicle: "AA-44323-4",
   },
   {
     id: 10,
@@ -86,6 +93,7 @@ const Eseal = [
     model: "Model Z",
     rfidKeys: ["3467", "7583"],
     status: "Active",
+    vehicle: "AA-44323-4",
   },
   {
     id: 12,
@@ -102,6 +110,7 @@ const Eseal = [
     model: "Model Y",
     rfidKeys: ["2124", "3146"],
     status: "Active",
+    vehicle: "AA-43323-3",
   },
   {
     id: 14,
@@ -118,6 +127,7 @@ const Eseal = [
     model: "Model Z",
     rfidKeys: ["9867", "5432", "2345"],
     status: "Active",
+    vehicle: "AA-43323-3",
   },
   {
     id: 16,
@@ -126,6 +136,7 @@ const Eseal = [
     model: "Model X",
     rfidKeys: ["3475", "8597"],
     status: "Active",
+    vehicle: "AA-11323-3",
   },
   {
     id: 17,
@@ -134,6 +145,7 @@ const Eseal = [
     model: "Model Y",
     rfidKeys: ["1453", "7856"],
     status: "Active",
+    vehicle: "AA-11323-3",
   },
   {
     id: 18,

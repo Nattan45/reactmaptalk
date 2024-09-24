@@ -74,3 +74,17 @@ tbody tr:hover {
 .inactivedevicesTable-header {
   background-color: #572e33;
 }
+
+.rfidData {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rfidOps {
+  margin-left: auto; /* Pushes the edit icon to the far right */
+}
+
+.dfdf {
+  border-right: 5px;
+}

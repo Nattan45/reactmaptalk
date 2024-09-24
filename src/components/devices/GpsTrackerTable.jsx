@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
+
+import Paginator from "../paginator/Paginator";
 import Eseal from "../../data/Eseal"; // Importing dummy data
+import Button from "@mui/material/Button";
 
 const GpsTrackerTable = () => {
   const [deviceData, setDeviceData] = useState([]); // State for the full data
@@ -28,77 +31,6 @@ const GpsTrackerTable = () => {
     setCurrentPage(pageNumber); // Set the new page number
   };
 
-  // Pagination control buttons with ellipses
-  const renderPageNumbers = () => {
-    const pageNumbers = [];
-    const maxPagesToShow = 2; // Show 3 page numbers before ellipses
-
-    if (totalPages <= maxPagesToShow + 2) {
-      // Show all pages if total is small
-      for (let i = 1; i <= totalPages; i++) {
-        pageNumbers.push(
-          <button
-            key={i}
-            onClick={() => handlePageChange(i)}
-            className={currentPage === i ? "active" : ""}
-          >
-            {i}
-          </button>
-        );
-      }
-    } else {
-      // Always show the first page
-      pageNumbers.push(
-        <button
-          key={1}
-          onClick={() => handlePageChange(1)}
-          className={currentPage === 1 ? "active" : ""}
-        >
-          1
-        </button>
-      );
-
-      // Show ellipses if needed before the current page
-      if (currentPage > maxPagesToShow) {
-        pageNumbers.push(<span key="left-ellipsis">...</span>);
-      }
-
-      // Show middle page numbers (current and adjacent ones)
-      const startPage = Math.max(2, currentPage - 1); // One before current page
-      const endPage = Math.min(totalPages - 1, currentPage + 1); // One after current page
-
-      for (let i = startPage; i <= endPage; i++) {
-        pageNumbers.push(
-          <button
-            key={i}
-            onClick={() => handlePageChange(i)}
-            className={currentPage === i ? "active" : ""}
-          >
-            {i}
-          </button>
-        );
-      }
-
-      // Show ellipses if needed after the current page
-      if (currentPage < totalPages - maxPagesToShow) {
-        pageNumbers.push(<span key="right-ellipsis">...</span>);
-      }
-
-      // Always show the last page
-      pageNumbers.push(
-        <button
-          key={totalPages}
-          onClick={() => handlePageChange(totalPages)}
-          className={currentPage === totalPages ? "active" : ""}
-        >
-          {totalPages}
-        </button>
-      );
-    }
-
-    return pageNumbers;
-  };
-
   return (
     <div>
       <h2>All GPS Tracker Devices</h2>
@@ -110,7 +42,8 @@ const GpsTrackerTable = () => {
             <th>Model</th>
             <th>RFID Keys</th>
             <th>Status</th>
-            <th>Ops</th>
+            <th>Vehicle</th>
+            <th>Operations</th>
           </tr>
         </thead>
         <tbody>
@@ -120,9 +53,51 @@ const GpsTrackerTable = () => {
                 <td>{device.deviceName}</td>
                 <td>{device.brand}</td>
                 <td>{device.model}</td>
-                <td>{device.rfidKeys.join(", ")}</td>
+                <td className="">{device.rfidKeys.join(", ")}</td>
                 <td>{device.status}</td>
-                <td>Delete, update RFID</td>
+                <td>{device.status === "Active" ? device.vehicle : ""}</td>
+                <td>
+                  {device.status === "Inactive" ? (
+                    <Button
+                      variant="contained"
+                      color="error"
+                      className="smallbutton"
+                    >
+                      &nbsp; &nbsp;
+                      <span className="sentencebutton">Delete</span>
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+
+                  {device.status === "Active" ? (
+                    <Button
+                      variant="contained"
+                      color="success"
+                      className="smallbutton"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#ffffff"
+                        stroke-width="1.25"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-pencil"
+                      >
+                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+                        <path d="m15 5 4 4" />
+                      </svg>
+                      &nbsp; &nbsp;
+                      <span className="sentencebutton">Rfid</span>
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+                </td>
               </tr>
             ))
           ) : (
@@ -133,22 +108,11 @@ const GpsTrackerTable = () => {
         </tbody>
       </table>
 
-      {/* Pagination controls */}
-      <div className="pagination">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          {"<"} Previous
-        </button>
-        {renderPageNumbers()}
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          Next {">"}
-        </button>
-      </div>
+      <Paginator
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };
