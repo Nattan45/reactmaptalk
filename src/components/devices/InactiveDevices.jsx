@@ -50,6 +50,7 @@ const InactiveDevices = () => {
             <th>Model</th>
             <th>RFID Keys</th>
             <th>Activate</th>
+            <th>Edit Rfid</th>
           </tr>
         </thead>
         <tbody>
@@ -68,6 +69,35 @@ const InactiveDevices = () => {
                   >
                     <span className="sentencebutton">Activate</span>
                   </Button>
+                </td>
+                <td>
+                  {device.status === "Inactive" ? (
+                    <Button
+                      variant="contained"
+                      color="success"
+                      className="smallbutton"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#ffffff"
+                        stroke-width="1.25"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-pencil"
+                      >
+                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+                        <path d="m15 5 4 4" />
+                      </svg>
+                      &nbsp; &nbsp;
+                      <span className="sentencebutton">Rfid</span>
+                    </Button>
+                  ) : (
+                    ""
+                  )}
                 </td>
               </tr>
             ))

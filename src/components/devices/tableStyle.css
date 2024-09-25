@@ -14,7 +14,7 @@ thead {
 
 thead th {
   padding: 12px;
-  text-align: left;
+  text-align: center;
   font-weight: bold;
   font-size: 16px;
 }
@@ -30,8 +30,11 @@ tbody tr:nth-child(odd) {
 
 tbody td {
   padding: 12px;
-  text-align: left;
+  text-align: center;
   font-size: 15px;
+  white-space: nowrap; /* Prevent text from wrapping to a new line */
+  overflow: hidden; /* Hide overflow if text exceeds the cell */
+  text-overflow: ellipsis; /* Add ellipsis (...) for long text */
 }
 
 /* Border for table cells */

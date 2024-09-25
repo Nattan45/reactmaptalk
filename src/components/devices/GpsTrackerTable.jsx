@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import Paginator from "../paginator/Paginator";
 import Eseal from "../../data/Eseal"; // Importing dummy data
-import Button from "@mui/material/Button";
+// import Button from "@mui/material/Button";
 
 const GpsTrackerTable = () => {
   const [deviceData, setDeviceData] = useState([]); // State for the full data
@@ -33,7 +33,7 @@ const GpsTrackerTable = () => {
 
   return (
     <div>
-      <h2>All GPS Tracker Devices</h2>
+      <h2>All {deviceData.length} GPS Tracker Devices Status</h2>
       <table border="1" cellPadding="10">
         <thead>
           <tr>
@@ -43,7 +43,10 @@ const GpsTrackerTable = () => {
             <th>RFID Keys</th>
             <th>Status</th>
             <th>Vehicle</th>
-            <th>Operations</th>
+            <th>Speed</th>
+            <th>Installation Date</th>
+            <th>Battery</th>
+            {/* <th>Operations</th> */}
           </tr>
         </thead>
         <tbody>
@@ -56,7 +59,10 @@ const GpsTrackerTable = () => {
                 <td className="">{device.rfidKeys.join(", ")}</td>
                 <td>{device.status}</td>
                 <td>{device.status === "Active" ? device.vehicle : ""}</td>
-                <td>
+                <td>{device.speed}</td>
+                <td>{device.InstallationDate}</td>
+                <td>{device.BatteryLevel}</td>
+                {/* <td>
                   {device.status === "Inactive" ? (
                     <Button
                       variant="contained"
@@ -69,35 +75,7 @@ const GpsTrackerTable = () => {
                   ) : (
                     ""
                   )}
-
-                  {device.status === "Active" ? (
-                    <Button
-                      variant="contained"
-                      color="success"
-                      className="smallbutton"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="32"
-                        height="32"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#ffffff"
-                        stroke-width="1.25"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="lucide lucide-pencil"
-                      >
-                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
-                        <path d="m15 5 4 4" />
-                      </svg>
-                      &nbsp; &nbsp;
-                      <span className="sentencebutton">Rfid</span>
-                    </Button>
-                  ) : (
-                    ""
-                  )}
-                </td>
+                </td> */}
               </tr>
             ))
           ) : (
