@@ -169,7 +169,7 @@ const VehicleStastics = () => {
       </div>
       {/* inactive Deivers */}
       <div className="allStastics">
-        <div className="Stastics-card yellow-card-outline">
+        <div className="Stastics-card red-card-outline">
           <div className="Stastics-card-details">
             <p className="Stastics-text-title-icon">
               <svg

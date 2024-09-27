@@ -9,6 +9,7 @@ const Header = () => {
   return (
     <div className="headerClass">
       <div className="headerComponents">
+        {/* Vehicle Tracking */}
         <div className="company">
           <NavLink exact="true" to="/">
             <Button color="success">
@@ -62,6 +63,7 @@ const Header = () => {
               </Button>
             </NavLink>
 
+            {/* Devices */}
             <NavLink exact="true" to="/DevicesPage">
               <Button color="secondary">
                 <svg
@@ -96,6 +98,7 @@ const Header = () => {
               </Button>
             </NavLink>
 
+            {/* Vehicle */}
             <NavLink exact="true" to="/VehiclesPage">
               <Button color="secondary">
                 <svg
@@ -142,6 +145,7 @@ const Header = () => {
               </Button>
             </NavLink>
 
+            {/* Track */}
             <NavLink exact="true" to="/">
               <Button color="secondary">
                 <svg
@@ -167,7 +171,6 @@ const Header = () => {
             </NavLink>
           </Stack>
         </div>
-
         <div className="jumper">
           <Button variant="contained" color="success">
             <svg
