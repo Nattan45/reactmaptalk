@@ -26,7 +26,7 @@ const Vehicle = [
     model: "Model X",
     plateNumber: "AA-3-42657",
     driverId: "BT-3757",
-    status: "InActive",
+    status: "Inactive",
     eSeal: "1,4,6,7",
   },
 ];

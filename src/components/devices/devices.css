@@ -155,9 +155,16 @@
 
 .formNav {
   display: flex;
+  flex-direction: row;
   gap: 10px;
   margin-bottom: 20px;
   justify-self: center;
+}
+
+.left,
+.right {
+  display: flex;
+  flex-direction: row;
 }
 
 .formNav button {
@@ -175,7 +182,7 @@
 
 .formContainer {
   display: grid;
-  justify-content: start;
+  justify-content: center;
   margin-top: 20px;
 }
 

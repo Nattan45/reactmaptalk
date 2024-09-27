@@ -5,3 +5,31 @@
 .show {
   display: block;
 }
+
+.tableDataHeaderTitle {
+  background-color: #ccc;
+  border-radius: 20px;
+  text-align: center;
+  margin-bottom: -1%;
+}
+
+/* popups Style */
+/* Blur background when modal is open */
+.blur-background {
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+/* Modal styling */
+.modalBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: white;
+  padding: 20px;
+  box-shadow: 24px;
+  border-radius: 10px;
+  outline: none;
+}

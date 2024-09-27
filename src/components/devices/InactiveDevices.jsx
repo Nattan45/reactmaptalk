@@ -39,7 +39,7 @@ const InactiveDevices = () => {
 
   return (
     <div>
-      <h2>
+      <h2 className="tableDataHeaderTitle">
         <span>{inactiveDevices.length}</span> Inactive GPS Tracker Devices
       </h2>
       <table border="1" cellPadding="10" className="inactivedevicesTable">

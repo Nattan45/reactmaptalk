@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 
 import Paginator from "../paginator/Paginator";
 import Drivers from "../../data/Drivers";
-import Button from "@mui/material/Button";
 
 const FreeDrivers = () => {
   const [FreeDriversData, setFreeDriversData] = useState([]); // State for the full data
@@ -40,8 +39,8 @@ const FreeDrivers = () => {
 
   return (
     <div>
-      <h2>
-        <span>{inactiveFreeDrivers.length}</span> Free Drivers
+      <h2 className="tableDataHeaderTitle">
+        <span>{inactiveFreeDrivers.length}</span> Inactive Drivers
       </h2>
       <table border="1" cellPadding="10" className="activedevicesTable">
         <thead className="activedevicesTable-header">
@@ -60,18 +59,10 @@ const FreeDrivers = () => {
                     {Driver.lastName}
                   </td>
                   <td>{Driver.driverId}</td>
-                  <td>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      className="smallbutton"
-                    >
-                      <span className="sentencebutton">Delete</span>
-                    </Button>
-                  </td>
+                  <td>{Driver.status}</td>
                 </tr>
               ))
-            : null}{" "}
+            : null}
         </tbody>
       </table>
 

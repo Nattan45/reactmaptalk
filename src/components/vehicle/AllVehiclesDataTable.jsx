@@ -33,7 +33,9 @@ const AllVehiclesDataTable = () => {
 
   return (
     <div>
-      <h2>All {vehicleData.length} Vehicles Status</h2>
+      <h2 className="tableDataHeaderTitle">
+        All {vehicleData.length} Vehicles Status
+      </h2>
       <table border="1" cellPadding="10">
         <thead>
           <tr>

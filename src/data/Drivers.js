@@ -6,6 +6,8 @@ const Drivers = [
     lastName: "Doe",
     driverId: "BT-1397",
     phoneNumber: "+251916975646",
+    email: "",
+    emergencyContact: "",
     status: "Active",
   },
   {
@@ -15,6 +17,8 @@ const Drivers = [
     lastName: "Tomas",
     driverId: "BT-1356",
     phoneNumber: "+4469786315846",
+    email: "",
+    emergencyContact: "",
     status: "Inactive",
   },
   {
@@ -24,6 +28,8 @@ const Drivers = [
     lastName: "Smith",
     driverId: "BT-1457",
     phoneNumber: "+251911234567",
+    email: "",
+    emergencyContact: "",
     status: "Active",
   },
   {
@@ -33,6 +39,8 @@ const Drivers = [
     lastName: "Brown",
     driverId: "BT-1458",
     phoneNumber: "+251912345678",
+    email: "",
+    emergencyContact: "",
     status: "Active",
   },
   {
@@ -42,6 +50,8 @@ const Drivers = [
     lastName: "Johnson",
     driverId: "BT-1459",
     phoneNumber: "+251913456789",
+    email: "",
+    emergencyContact: "",
     status: "Inactive",
   },
   {
@@ -51,6 +61,8 @@ const Drivers = [
     lastName: "Williams",
     driverId: "BT-1460",
     phoneNumber: "+251914567890",
+    email: "",
+    emergencyContact: "",
     status: "Active",
   },
   {
@@ -60,6 +72,8 @@ const Drivers = [
     lastName: "Jones",
     driverId: "BT-1461",
     phoneNumber: "+251915678901",
+    email: "",
+    emergencyContact: "",
     status: "Active",
   },
   {
@@ -69,6 +83,8 @@ const Drivers = [
     lastName: "Garcia",
     driverId: "BT-1462",
     phoneNumber: "+251916789012",
+    email: "",
+    emergencyContact: "",
     status: "Inactive",
   },
   {
@@ -78,6 +94,8 @@ const Drivers = [
     lastName: "Martinez",
     driverId: "BT-1463",
     phoneNumber: "+251917890123",
+    email: "",
+    emergencyContact: "",
     status: "Active",
   },
   {
@@ -87,6 +105,8 @@ const Drivers = [
     lastName: "Robinson",
     driverId: "BT-1464",
     phoneNumber: "+251918901234",
+    email: "",
+    emergencyContact: "",
     status: "Inactive",
   },
   {
@@ -96,6 +116,8 @@ const Drivers = [
     lastName: "Clark",
     driverId: "BT-1465",
     phoneNumber: "+251919012345",
+    email: "",
+    emergencyContact: "",
     status: "Active",
   },
   {
@@ -105,6 +127,8 @@ const Drivers = [
     lastName: "Rodriguez",
     driverId: "BT-1466",
     phoneNumber: "+251920123456",
+    email: "",
+    emergencyContact: "",
     status: "Active",
   },
   {
@@ -114,6 +138,8 @@ const Drivers = [
     lastName: "Lewis",
     driverId: "BT-1467",
     phoneNumber: "+251921234567",
+    email: "",
+    emergencyContact: "",
     status: "Inactive",
   },
   {
@@ -123,6 +149,8 @@ const Drivers = [
     lastName: "Walker",
     driverId: "BT-1468",
     phoneNumber: "+251922345678",
+    email: "",
+    emergencyContact: "",
     status: "Active",
   },
   {
@@ -132,6 +160,8 @@ const Drivers = [
     lastName: "Hall",
     driverId: "BT-1469",
     phoneNumber: "+251923456789",
+    email: "",
+    emergencyContact: "",
     status: "Active",
   },
   {
@@ -141,6 +171,8 @@ const Drivers = [
     lastName: "Allen",
     driverId: "BT-1470",
     phoneNumber: "+251924567890",
+    email: "",
+    emergencyContact: "",
     status: "Inactive",
   },
   {
@@ -150,6 +182,8 @@ const Drivers = [
     lastName: "Young",
     driverId: "BT-1471",
     phoneNumber: "+251925678901",
+    email: "",
+    emergencyContact: "",
     status: "Active",
   },
   {
@@ -159,6 +193,8 @@ const Drivers = [
     lastName: "Hernandez",
     driverId: "BT-1472",
     phoneNumber: "+251926789012",
+    email: "",
+    emergencyContact: "",
     status: "Active",
   },
   {
@@ -168,6 +204,8 @@ const Drivers = [
     lastName: "King",
     driverId: "BT-1473",
     phoneNumber: "+251927890123",
+    email: "",
+    emergencyContact: "",
     status: "Inactive",
   },
   {
@@ -177,6 +215,8 @@ const Drivers = [
     lastName: "Wright",
     driverId: "BT-1474",
     phoneNumber: "+251928901234",
+    email: "",
+    emergencyContact: "",
     status: "Active",
   },
   {
@@ -186,6 +226,8 @@ const Drivers = [
     lastName: "Lopez",
     driverId: "BT-1475",
     phoneNumber: "+251929012345",
+    email: "",
+    emergencyContact: "",
     status: "Inactive",
   },
   {
@@ -195,6 +237,8 @@ const Drivers = [
     lastName: "Scott",
     driverId: "BT-1476",
     phoneNumber: "+251930123456",
+    email: "ella321@gmail.com",
+    emergencyContact: "+251963498537",
     status: "Active",
   },
   {
@@ -204,6 +248,8 @@ const Drivers = [
     lastName: "Green",
     driverId: "BT-1477",
     phoneNumber: "+251931234567",
+    email: "",
+    emergencyContact: "",
     status: "Active",
   },
   {
@@ -213,6 +259,8 @@ const Drivers = [
     lastName: "Adams",
     driverId: "BT-1478",
     phoneNumber: "+251932345678",
+    email: "",
+    emergencyContact: "",
     status: "Inactive",
   },
   {
@@ -222,6 +270,8 @@ const Drivers = [
     lastName: "Tesfa",
     driverId: "BT-7867",
     phoneNumber: "+251937345678",
+    email: "",
+    emergencyContact: "",
     status: "Inactive",
   },
 ];

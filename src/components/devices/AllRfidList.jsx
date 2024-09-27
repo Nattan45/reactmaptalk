@@ -49,7 +49,7 @@ const AllRfidList = () => {
 
   return (
     <div>
-      <h2>
+      <h2 className="tableDataHeaderTitle">
         <span></span> All Rfid Keys
       </h2>
       <table border="1" cellPadding="10" className="activedevicesTable">
