@@ -5,3 +5,50 @@
   gap: 40px;
   color: #369414;
 }
+.thirdSection {
+  margin-top: 3%;
+}
+
+/* .driverForm {
+  margin-top: 20px;
+} */
+
+.driverLabel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.driverInputSection {
+  display: flex;
+  align-items: center;
+}
+
+.driverInput {
+  width: 150px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.driverLabelText {
+  font-size: 14px;
+  color: #666;
+  margin-right: 10px;
+}
+
+.driverNameSection {
+  flex-grow: 1;
+  text-align: right;
+  font-size: 16px;
+  color: #333;
+}
+
+.driverName {
+  font-weight: bold;
+}

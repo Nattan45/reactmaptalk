@@ -22,6 +22,7 @@ const Devices = () => {
       <div className="firstSection">
         <DeviceStastics />
       </div>
+
       {/* Navigation section */}
       <div className="deviceChoice">
         <nav className="formNav">
@@ -61,7 +62,7 @@ const Devices = () => {
         </div>
       </div>
 
-      <div className="secondSection"></div>
+      {/* <div className="secondSection"></div> */}
       <div className="thirdSection">
         <GpsTrackerTable />
       </div>

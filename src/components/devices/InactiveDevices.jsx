@@ -39,7 +39,7 @@ const InactiveDevices = () => {
 
   return (
     <div>
-      <h2>
+      <h2 className="tableDataHeaderTitle">
         <span>{inactiveDevices.length}</span> Inactive GPS Tracker Devices
       </h2>
       <table border="1" cellPadding="10" className="inactivedevicesTable">
@@ -51,6 +51,7 @@ const InactiveDevices = () => {
             <th>RFID Keys</th>
             <th>Activate</th>
             <th>Edit Rfid</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -98,6 +99,15 @@ const InactiveDevices = () => {
                   ) : (
                     ""
                   )}
+                </td>
+                <td>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    className="smallbutton"
+                  >
+                    <span className="sentencebutton">Delete</span>
+                  </Button>
                 </td>
               </tr>
             ))

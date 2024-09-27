@@ -1,39 +1,36 @@
 import React, { useEffect, useState } from "react";
-import "./tableStyle.css";
 
 import Paginator from "../paginator/Paginator";
-import FreeRfids from "../../data/FreeRfids";
-import Button from "@mui/material/Button";
+import Drivers from "../../data/Drivers";
 
-const FreeRfid = () => {
-  const [FreeRfidsData, setFreeRfidsData] = useState([]); // State for the full data
+const FreeDrivers = () => {
+  const [FreeDriversData, setFreeDriversData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
 
   // Simulating fetching data from a database (replace this with an actual API call)
   useEffect(() => {
     const fetchData = async () => {
-      setFreeRfidsData(FreeRfids); // Load the dummy data into state
+      setFreeDriversData(Drivers); // Load the dummy data into state
     };
 
     fetchData(); // Call the fetch function
   }, []);
 
-  // **Filter the deviceData to show only "Active" devices**
-  const inactiveFreeRfids = FreeRfidsData.filter(
-    (item) => item.status === "free"
+  // **Filter the driver to show only "Active" devices**
+  const inactiveFreeDrivers = FreeDriversData.filter(
+    (item) => item.status === "Inactive"
   );
 
   // Calculate the current items to display on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = inactiveFreeRfids.slice(
+  const currentItems = inactiveFreeDrivers.slice(
     indexOfFirstItem,
     indexOfLastItem
   ); // Slice the filtered data based on current page
 
-  // Calculate the total number of pages for FreeRfids
-  const totalPages = Math.ceil(inactiveFreeRfids.length / itemsPerPage);
+  const totalPages = Math.ceil(inactiveFreeDrivers.length / itemsPerPage);
 
   // Function to handle page change
   const handlePageChange = (pageNumber) => {
@@ -43,33 +40,29 @@ const FreeRfid = () => {
   return (
     <div>
       <h2 className="tableDataHeaderTitle">
-        <span>{inactiveFreeRfids.length}</span> Free Rfid Keys
+        <span>{inactiveFreeDrivers.length}</span> Inactive Drivers
       </h2>
       <table border="1" cellPadding="10" className="activedevicesTable">
         <thead className="activedevicesTable-header">
           <tr>
-            <th>RFID Keys</th>
-            <th>Delete</th>
+            <th>Driver Name</th>
+            <th>Driver ID</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
           {currentItems.length > 0
-            ? currentItems.map((Rfids) => (
-                <tr key={Rfids.id}>
-                  <td>{Rfids.RfidKey}</td>
+            ? currentItems.map((Driver) => (
+                <tr key={Driver.id}>
                   <td>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      className="smallbutton"
-                    >
-                      <span className="sentencebutton">Delete</span>
-                    </Button>
+                    {Driver.firstName}&nbsp;
+                    {Driver.lastName}
                   </td>
+                  <td>{Driver.driverId}</td>
+                  <td>{Driver.status}</td>
                 </tr>
               ))
-            : null}{" "}
-          {/* No need to display "No active devices available" */}
+            : null}
         </tbody>
       </table>
 
@@ -83,4 +76,4 @@ const FreeRfid = () => {
   );
 };
 
-export default FreeRfid;
+export default FreeDrivers;
