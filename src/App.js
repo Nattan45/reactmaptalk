@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 // import Maptalk from './Maptalk'
+import ScrollToTop from "./components/ScrollToTop";
 import MaptalksMyLocationPage from "./page/MaptalksMyLocationPage";
 import MaptalksPinPage from "./page/MaptalksPinPage";
 import MaptalksRoutePage from "./page/MaptalksRoutePage";
@@ -15,6 +16,7 @@ function App() {
   return (
     <>
       {/* <AuthProvider> */}
+      <ScrollToTop />
       <Routes>
         <Route path="/" exact element={<MaptalksMyLocationPage />}></Route>
         <Route
