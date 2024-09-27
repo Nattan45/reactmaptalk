@@ -1,11 +1,11 @@
 .devicesContainer {
   display: grid;
-  justify-items: center;
-  margin-top: 3%;
+  justify-content: center;
+  margin: 3% 0;
 }
 .DeviceStasticsContainer {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   justify-self: center;
   gap: 40px;
 }
@@ -138,4 +138,58 @@
 }
 .placeEnd {
   justify-self: end;
+}
+
+.titleSvg {
+  width: fit-content;
+}
+.formTitle {
+  display: grid;
+  grid-template-columns: 0.1fr 1fr;
+  justify-content: center;
+}
+
+.deviceChoice {
+  display: grid;
+}
+
+.formNav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-self: center;
+}
+
+.formNav button {
+  padding: 10px 20px;
+  background-color: #ccc;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.formNav button.active {
+  background-color: #245d2e;
+  color: white;
+}
+
+.formContainer {
+  display: grid;
+  justify-content: start;
+  margin-top: 20px;
+}
+
+.registrationFormWithTable {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  /* align-items: center; */
+}
+
+.inactiveButton {
+  background-color: #ccc;
+}
+
+.heightfit {
+  height: fit-content;
 }

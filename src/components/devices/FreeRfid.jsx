@@ -2,35 +2,38 @@ import React, { useEffect, useState } from "react";
 import "./tableStyle.css";
 
 import Paginator from "../paginator/Paginator";
-import Eseal from "../../data/Eseal";
+import FreeRfids from "../../data/FreeRfids";
 import Button from "@mui/material/Button";
 
-const ActiveDevices = () => {
-  const [deviceData, setDeviceData] = useState([]); // State for the full data
+const FreeRfid = () => {
+  const [FreeRfidsData, setFreeRfidsData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
 
   // Simulating fetching data from a database (replace this with an actual API call)
   useEffect(() => {
     const fetchData = async () => {
-      setDeviceData(Eseal); // Load the dummy data into state
+      setFreeRfidsData(FreeRfids); // Load the dummy data into state
     };
 
     fetchData(); // Call the fetch function
   }, []);
 
   // **Filter the deviceData to show only "Active" devices**
-  const activeDevices = deviceData.filter(
-    (device) => device.status === "Active"
+  const inactiveFreeRfids = FreeRfidsData.filter(
+    (item) => item.status === "free"
   );
 
   // Calculate the current items to display on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = activeDevices.slice(indexOfFirstItem, indexOfLastItem); // Slice the filtered data based on current page
+  const currentItems = inactiveFreeRfids.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  ); // Slice the filtered data based on current page
 
-  // Calculate the total number of pages for active devices
-  const totalPages = Math.ceil(activeDevices.length / itemsPerPage);
+  // Calculate the total number of pages for FreeRfids
+  const totalPages = Math.ceil(inactiveFreeRfids.length / itemsPerPage);
 
   // Function to handle page change
   const handlePageChange = (pageNumber) => {
@@ -40,43 +43,27 @@ const ActiveDevices = () => {
   return (
     <div>
       <h2>
-        <span>{activeDevices.length}</span> Active GPS Tracker Devices
+        <span>{inactiveFreeRfids.length}</span> Free Rfid Keys
       </h2>
       <table border="1" cellPadding="10" className="activedevicesTable">
         <thead className="activedevicesTable-header">
           <tr>
-            <th>Device Name</th>
-            <th>Brand</th>
-            <th>Model</th>
-
             <th>RFID Keys</th>
-            <th>Vehicle</th>
-            <th>Speed</th>
-            <th>Installation Date</th>
-            <th>Battery</th>
-
-            <th>Deactivate</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
           {currentItems.length > 0
-            ? currentItems.map((device) => (
-                <tr key={device.id}>
-                  <td>{device.deviceName}</td>
-                  <td>{device.brand}</td>
-                  <td>{device.model}</td>
-                  <td>{device.rfidKeys.join(", ")}</td>
-                  <td>{device.vehicle}</td>
-                  <td>{device.speed}</td>
-                  <td>{device.InstallationDate}</td>
-                  <td>{device.BatteryLevel}</td>
+            ? currentItems.map((Rfids) => (
+                <tr key={Rfids.id}>
+                  <td>{Rfids.RfidKey}</td>
                   <td>
                     <Button
                       variant="contained"
                       color="error"
                       className="smallbutton"
                     >
-                      <span className="sentencebutton">Deactivate</span>
+                      <span className="sentencebutton">Delete</span>
                     </Button>
                   </td>
                 </tr>
@@ -96,4 +83,4 @@ const ActiveDevices = () => {
   );
 };
 
-export default ActiveDevices;
+export default FreeRfid;
