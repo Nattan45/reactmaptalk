@@ -9,6 +9,7 @@ const ActiveDevices = () => {
   const [deviceData, setDeviceData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
+  const [filterText, setFilterText] = useState(""); // State for filtering plate numbers
 
   // Simulating fetching data from a database (replace this with an actual API call)
   useEffect(() => {
@@ -20,9 +21,15 @@ const ActiveDevices = () => {
   }, []);
 
   // **Filter the deviceData to show only "Active" devices**
-  const activeDevices = deviceData.filter(
-    (device) => device.status === "Active"
-  );
+  // const activeDevices = deviceData.filter(
+  //   (device) => device.status === "Active"
+  // );
+
+  const activeDevices = deviceData
+    .filter((item) => item.status === "Active")
+    .filter((item) =>
+      (item.vehicle || "").toLowerCase().includes(filterText.toLowerCase())
+    );
 
   // Calculate the current items to display on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -42,19 +49,27 @@ const ActiveDevices = () => {
       <h2 className="tableDataHeaderTitle">
         <span>{activeDevices.length}</span> Active GPS Tracker Devices
       </h2>
+      <div className="filters nomarginTop">
+        <input
+          placeholder="Plate Number..."
+          type="text"
+          name="text"
+          className="inputFilter"
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+        ></input>
+      </div>
       <table border="1" cellPadding="10" className="activedevicesTable">
         <thead className="activedevicesTable-header">
           <tr>
             <th>Device Name</th>
             <th>Brand</th>
             <th>Model</th>
-
             <th>RFID Keys</th>
-            <th>Vehicle</th>
+            <th>Vehiclettt</th>
             <th>Speed</th>
             <th>Installation Date</th>
             <th>Battery</th>
-
             <th>Deactivate</th>
           </tr>
         </thead>

@@ -15,6 +15,7 @@ const UpdateDriverDetails = () => {
   const [itemsPerPage] = useState(10); // Number of items per page
   const [editDriver, setEditDriver] = useState(null); // State for the driver to be edited
   const [open, setOpen] = useState(false); // Modal open state
+  const [filterText, setFilterText] = useState(""); // State for filtering plate numbers
 
   // Simulating fetching data from a database (replace this with an actual API call)
   useEffect(() => {
@@ -27,12 +28,28 @@ const UpdateDriverDetails = () => {
 
   const allDrivers = driverData;
 
+  // Apply filter based on filterText (name, ID, phone number, or email)
+  const filteredDrivers = allDrivers.filter((driver) => {
+    const fullName = `${driver.firstName} ${driver.lastName}`.toLowerCase();
+    const id = driver.driverId.toLowerCase();
+    const phone = driver.phoneNumber.toLowerCase();
+    const email = driver.email.toLowerCase();
+    const filter = filterText.toLowerCase();
+
+    return (
+      fullName.includes(filter) ||
+      id.includes(filter) ||
+      phone.includes(filter) ||
+      email.includes(filter)
+    );
+  });
+
   // Calculate the current items to display on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = allDrivers.slice(indexOfFirstItem, indexOfLastItem); // Slice the filtered data based on current page
+  const currentItems = filteredDrivers.slice(indexOfFirstItem, indexOfLastItem); // Slice the filtered data based on current page
 
-  const totalPages = Math.ceil(allDrivers.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredDrivers.length / itemsPerPage);
 
   // Function to handle page change
   const handlePageChange = (pageNumber) => {
@@ -84,6 +101,17 @@ const UpdateDriverDetails = () => {
       <h2 className="tableDataHeaderTitle">
         <span></span> All Drivers
       </h2>
+
+      <div className="filters">
+        <input
+          placeholder="Name, ID, phone, email ..."
+          type="text"
+          name="text"
+          className="inputFilter"
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+        ></input>
+      </div>
       <table border="1" cellPadding="10" className="activedevicesTable">
         <thead className="activedevicesTable-header">
           <tr>

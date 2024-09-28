@@ -145,7 +145,7 @@ const Eseal = [
     model: "Model Y",
     rfidKeys: ["1453", "7856"],
     status: "Active",
-    vehicle: "AA-11323-3",
+    vehicle: "AA-11323-4",
   },
   {
     id: 18,

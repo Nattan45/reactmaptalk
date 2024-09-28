@@ -14,6 +14,7 @@ const UpdateVehicleDetails = () => {
   const [itemsPerPage] = useState(10); // Number of items per page
   const [editVehicle, setEditVehicle] = useState(null); // State for the Vehicle to be edited
   const [open, setOpen] = useState(false); // Modal open state
+  const [filterText, setFilterText] = useState(""); // State for filtering plate numbers
 
   // Simulating fetching data from a database (replace this with an actual API call)
   useEffect(() => {
@@ -25,9 +26,11 @@ const UpdateVehicleDetails = () => {
   }, []);
 
   // filter
-  const inactiveVehicles = vehicleData.filter(
-    (item) => item.status === "Inactive"
-  );
+  const inactiveVehicles = vehicleData
+    .filter((item) => item.status === "Inactive")
+    .filter((item) =>
+      item.plateNumber.toLowerCase().includes(filterText.toLowerCase())
+    );
 
   // Calculate the current items to display on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -87,6 +90,16 @@ const UpdateVehicleDetails = () => {
   return (
     <div className={open ? "blur-background" : ""}>
       <h2 className="tableDataHeaderTitle">Inactive Vehicles Update Form</h2>
+      <div className="filters">
+        <input
+          placeholder="Plate Number..."
+          type="text"
+          name="text"
+          className="inputFilter"
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+        ></input>
+      </div>
       <table border="1" cellPadding="10" className="activedevicesTable">
         <thead className="activedevicesTable-header">
           <tr>
