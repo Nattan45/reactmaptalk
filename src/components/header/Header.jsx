@@ -146,7 +146,7 @@ const Header = () => {
             </NavLink>
 
             {/* Track */}
-            <NavLink exact="true" to="/">
+            <NavLink exact="true" to="/TrackerPage">
               <Button color="secondary">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

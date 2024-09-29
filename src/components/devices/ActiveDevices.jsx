@@ -66,7 +66,7 @@ const ActiveDevices = () => {
             <th>Brand</th>
             <th>Model</th>
             <th>RFID Keys</th>
-            <th>Vehiclettt</th>
+            <th>Vehicle</th>
             <th>Speed</th>
             <th>Installation Date</th>
             <th>Battery</th>
