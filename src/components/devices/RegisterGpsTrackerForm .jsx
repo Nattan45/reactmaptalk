@@ -5,7 +5,7 @@ import FreeRfid from "./FreeRfid";
 const RegisterGpsTrackerForm = () => {
   const [deviceName, setDeviceName] = useState("");
   const [brand, setBrand] = useState("");
-  const [model, setModel] = useState("");
+  const [gpsId, setGpsId] = useState("");
   const [rfidKeys, setRfidKeys] = useState([""]); // Initialize with an empty field for RFID key
 
   // Function to handle adding a new RFID key input field
@@ -32,7 +32,7 @@ const RegisterGpsTrackerForm = () => {
     const formData = {
       deviceName,
       brand,
-      model,
+      gpsId,
       rfidKeys, // This will contain all RFID keys entered by the user
     };
     console.log("Form Data:", formData);
@@ -109,16 +109,16 @@ const RegisterGpsTrackerForm = () => {
             <span>Brand</span>
           </label>
 
-          {/* Model */}
+          {/* gpsId */}
           <label className="smallinputs">
             <input
               type="text"
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
+              value={gpsId}
+              onChange={(e) => setGpsId(e.target.value)}
               required
               className="input"
             />
-            <span>Model</span>
+            <span>gpsId</span>
           </label>
         </div>
 

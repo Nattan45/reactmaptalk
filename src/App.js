@@ -11,6 +11,7 @@ import MaptalksWarehousePage from "./page/MaptalksWarehousePage";
 import SavedLocationsPage from "./page/SavedLocationsPage";
 import DevicesPage from "./page/DevicesPage";
 import VehiclesPage from "./page/VehiclesPage";
+import TrackerPage from "./page/TrackerPage";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
         ></Route>
         <Route path="/DevicesPage" exact element={<DevicesPage />}></Route>
         <Route path="/VehiclesPage" exact element={<VehiclesPage />}></Route>
+        <Route path="/TrackerPage" exact element={<TrackerPage />}></Route>
       </Routes>
       {/* </AuthProvider> */}
     </>

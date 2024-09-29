@@ -47,7 +47,7 @@ const InactiveDevices = () => {
           <tr>
             <th>Device Name</th>
             <th>Brand</th>
-            <th>Model</th>
+            <th>Gps Id</th>
             <th>RFID Keys</th>
             <th>Activate</th>
             <th>Edit Rfid</th>
@@ -60,7 +60,7 @@ const InactiveDevices = () => {
               <tr key={device.id}>
                 <td>{device.deviceName}</td>
                 <td>{device.brand}</td>
-                <td>{device.model}</td>
+                <td>{device.gpsId}</td>
                 <td>{device.rfidKeys.join(", ")}</td>
                 <td>
                   <Button
