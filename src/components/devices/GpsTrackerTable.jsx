@@ -41,7 +41,7 @@ const GpsTrackerTable = () => {
           <tr>
             <th>Device Name</th>
             <th>Brand</th>
-            <th>Model</th>
+            <th>GPS ID</th>
             <th>RFID Keys</th>
             <th>Status</th>
             <th>Vehicle</th>
@@ -57,7 +57,7 @@ const GpsTrackerTable = () => {
               <tr key={device.id}>
                 <td>{device.deviceName}</td>
                 <td>{device.brand}</td>
-                <td>{device.model}</td>
+                <td>{device.gpsId}</td>
                 <td className="">{device.rfidKeys.join(", ")}</td>
                 <td>{device.status}</td>
                 <td>{device.status === "Active" ? device.vehicle : ""}</td>

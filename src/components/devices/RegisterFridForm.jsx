@@ -4,7 +4,7 @@ import AllRfidList from "./AllRfidList";
 const RegisterFridForm = () => {
   const [deviceName, setDeviceName] = useState("");
   const [brand, setBrand] = useState("");
-  const [model, setModel] = useState("");
+  const [gpsId, setGpsId] = useState("");
 
   // Function to handle form submission
   const handleSubmit = (e) => {
@@ -12,7 +12,7 @@ const RegisterFridForm = () => {
     const formData = {
       deviceName,
       brand,
-      model,
+      gpsId,
     };
     console.log("Form Data:", formData);
     // Here you can send the formData to your API or backend
@@ -57,16 +57,16 @@ const RegisterFridForm = () => {
             <span>Tag Name</span>
           </label>
 
-          {/* Model */}
+          {/* gpsId */}
           <label className="smallinputs">
             <input
               type="text"
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
+              value={gpsId}
+              onChange={(e) => setGpsId(e.target.value)}
               required
               className="input"
             />
-            <span>Model</span>
+            <span>gpsId</span>
           </label>
         </div>
 
