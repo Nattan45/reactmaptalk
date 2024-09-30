@@ -2,12 +2,21 @@
   font-family: "Roboto Slab", serif;
   color: #a3a3a3;
 }
+.redTitle {
+  color: #ff2e2e;
+}
 
-.threeGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  width: fit-content;
-  outline: 1px solid red;
+.greenTitle {
+  color: #269b56;
+}
+
+.boldTitle {
+  font-size: large;
+  font-weight: 800;
+  text-decoration: underline;
+}
+.width500 {
+  width: 500px;
 }
 
 .roleContainer {
@@ -92,4 +101,8 @@
 
 .userCard p {
   margin: 5px 0;
+}
+
+.zindex {
+  z-index: 9;
 }

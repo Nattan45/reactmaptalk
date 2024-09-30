@@ -25,9 +25,11 @@ const RemoveAccount = () => {
     <div>
       {/* Filter Input */}
       <div className="filters">
-        <label className="textcenter formSectionTitles">
-          Enter the user details
+        <label className="textcenter formSectionTitles redTitle">
+          Enter the User Details to{" "}
+          <span className="boldTitle">Delete Account</span>
         </label>
+        <br />
         <input
           placeholder="Name, ID, phone, email ..."
           type="text"
@@ -70,6 +72,12 @@ const RemoveAccount = () => {
           </p>
           <p>
             <strong>User ID:</strong> {selectedUser.userId}
+          </p>
+          <p>
+            <strong>Location:</strong> {selectedUser.accountlocation}
+          </p>
+          <p>
+            <strong>Department:</strong> {selectedUser.department}
           </p>
           <Button
             variant="text"

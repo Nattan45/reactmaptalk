@@ -4,6 +4,8 @@ import AccountStastics from "./AccountStastics";
 import RegisterUserForm from "./RegisterUserForm";
 import AllAccounts from "./AllAccounts";
 import RemoveAccount from "./RemoveAccount";
+import UpdateAccounts from "./UpdateAccounts";
+import AccountSetting from "./AccountSetting";
 
 const Accounts = () => {
   // State to track which form is selected
@@ -23,41 +25,57 @@ const Accounts = () => {
       <div className="deviceChoice">
         <nav className="formNav">
           {/* Buttons for selecting the form */}
+          <div className="leftSide">
+            <button
+              className={selectedForm === "RegisterUser" ? "active" : ""}
+              onClick={() => handleFormChange("RegisterUser")}
+            >
+              Register Users
+            </button>
+            <button
+              className={selectedForm === "RemoveAccount" ? "active" : ""}
+              onClick={() => handleFormChange("RemoveAccount")}
+            >
+              Remove User
+            </button>
+            <button
+              className={selectedForm === "UpdateAccounts" ? "active" : ""}
+              onClick={() => handleFormChange("UpdateAccounts")}
+            >
+              Update Accounts
+            </button>
+          </div>
+          <hr />
+          <div className="rightSide"></div>
           <button
-            className={selectedForm === "RegisterUser" ? "active" : ""}
-            onClick={() => handleFormChange("RegisterUser")}
+            className={selectedForm === "AccountSetting" ? "active" : ""}
+            onClick={() => handleFormChange("AccountSetting")}
           >
-            Register Users
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-settings"
+            >
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            &nbsp; Account Setting
           </button>
-
-          <button
-            className={selectedForm === "RemoveAccount" ? "active" : ""}
-            onClick={() => handleFormChange("RemoveAccount")}
-          >
-            Remove User
-          </button>
-
-          {/* <button
-            className={selectedForm === "ActiveGPS" ? "active" : ""}
-            onClick={() => handleFormChange("ActiveGPS")}
-          >
-            Active GPS
-          </button> */}
-
-          {/* <button
-            className={selectedForm === "InactiveGPS" ? "active" : ""}
-            onClick={() => handleFormChange("InactiveGPS")}
-          >
-            Inactive GPS
-          </button> */}
         </nav>
 
         {/* Conditionally render the form based on user choice */}
         <div className="formContainer">
           {selectedForm === "RegisterUser" && <RegisterUserForm />}
           {selectedForm === "RemoveAccount" && <RemoveAccount />}
-          {/* {selectedForm === "ActiveGPS" && <ActiveDevices />} */}
-          {/* {selectedForm === "InactiveGPS" && <InactiveDevices />} */}
+          {selectedForm === "UpdateAccounts" && <UpdateAccounts />}
+          {selectedForm === "AccountSetting" && <AccountSetting />}
         </div>
       </div>
 
