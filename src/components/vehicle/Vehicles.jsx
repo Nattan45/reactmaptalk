@@ -30,7 +30,7 @@ const Vehicles = () => {
       <div className="deviceChoice">
         <nav className="formNav">
           {/* Buttons for selecting the form */}
-          <div className="left">
+          <div className="leftSide">
             <button
               className={selectedForm === "vehicleRegistration" ? "active" : ""}
               onClick={() => handleFormChange("vehicleRegistration")}
@@ -61,7 +61,7 @@ const Vehicles = () => {
 
           <hr />
 
-          <div className="right">
+          <div className="rightSide">
             <button
               className={selectedForm === "ActiveVehicles" ? "active" : ""}
               onClick={() => handleFormChange("ActiveVehicles")}
