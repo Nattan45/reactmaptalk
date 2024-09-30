@@ -14,7 +14,8 @@
 
 .headernaves {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr 0.2fr 1fr;
+  justify-items: center;
 }
 
 .jumper {
@@ -27,4 +28,11 @@
 
 .ddcolor {
   color: #bee9e8;
+}
+
+.headerhr {
+  width: fit-content;
+  text-align: center;
+  margin-right: -55px;
+  border: 1px solid #bee9e8;
 }

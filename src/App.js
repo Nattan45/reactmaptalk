@@ -12,6 +12,8 @@ import SavedLocationsPage from "./page/SavedLocationsPage";
 import DevicesPage from "./page/DevicesPage";
 import VehiclesPage from "./page/VehiclesPage";
 import TrackerPage from "./page/TrackerPage";
+import AccountPage from "./page/AccountPage";
+import NotFoundPage from "./page/NotFoundPage";
 
 function App() {
   return (
@@ -53,6 +55,10 @@ function App() {
         <Route path="/DevicesPage" exact element={<DevicesPage />}></Route>
         <Route path="/VehiclesPage" exact element={<VehiclesPage />}></Route>
         <Route path="/TrackerPage" exact element={<TrackerPage />}></Route>
+        <Route path="/AccountPage" exact element={<AccountPage />}></Route>
+
+        {/* Catch-all route for 404 page */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       {/* </AuthProvider> */}
     </>
