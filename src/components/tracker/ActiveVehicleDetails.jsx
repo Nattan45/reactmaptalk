@@ -1,51 +1,173 @@
 const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
+  // Check for vapd vehicleData and vehicleId
   if (!vehicleData || vehicleData.length === 0 || !vehicleId) {
     return (
-      <div className="vehicleDetails" style={{ color: "red" }}>
-        <h3>Vehicle Details</h3>
-        <ul>
-          <li>Trip ID: Not selected</li>
-          <li>Driver ID: Not selected</li>
-          <li>Plate Number: Not selected</li>
-          <li>Brand: Not selected</li>
-          <li>Model: Not selected</li>
-          <li>GPS: Not selected</li>
-        </ul>
+      <div className="vehicleDetails vehicle-card" style={{ color: "red" }}>
+        <div className="trip-id">
+          <p>Trip ID: Not selected</p>
+        </div>
+        <br />
+        <p>Driver ID: Not selected</p>
+        <p>Plate Number: Not selected</p>
+        <p>Brand: Not selected</p>
+        <p>Model: Not selected</p>
+        <p>GPS: Not selected</p>
+        <p>GPS Mounted On: Not selected</p>
+        <p>Trip Starting Date: Not selected</p>
+        <p>Checkpoints: Not selected</p>
+        <p>Trip: Not selected</p>
+        <br />
+        <div className="signal-section">
+          <p>Signal: Not selected</p>
+          <p>Warnings: Not selected</p>
+          <p>Problems: Not selected</p>
+        </div>
       </div>
     );
   }
 
+  // Find the selected vehicle
   const selectedVehicle = vehicleData.find(
     (vehicle) => vehicle.id === vehicleId
   );
 
+  // If the selected vehicle is not found, display a message
   if (!selectedVehicle) {
     return (
-      <div className="vehicleDetails" style={{ color: "red" }}>
-        <h3>Vehicle Details</h3>
-        <ul>
-          <li>Trip ID: Not selected</li>
-          <li>Driver ID: Not selected</li>
-          <li>Plate Number: Not selected</li>
-          <li>Brand: Not selected</li>
-          <li>Model: Not selected</li>
-          <li>GPS: Not selected</li>
-        </ul>
+      <div className="vehicleDetails vehicle-card" style={{ color: "red" }}>
+        <div className="trip-id">
+          <p>Trip ID: Not selected</p>
+        </div>
+        <br />
+        <p>Driver ID: Not selected</p>
+        <p>Plate Number: Not selected</p>
+        <p>Brand: Not selected</p>
+        <p>Model: Not selected</p>
+        <p>GPS: Not selected</p>
+        <p>GPS Mounted On: Not selected</p>
+        <p>Trip Starting Date: Not selected</p>
+        <p>Checkpoints: Not selected</p>
+        <p>Trip: Not selected</p>
+        <br />
+        <div className="signal-section">
+          <p>Signal: Not selected</p>
+          <p>Warnings: Not selected</p>
+          <p>Problems: Not selected</p>
+        </div>
       </div>
     );
   }
-
+  // Render the details of the selected vehicle
   return (
-    <div className="vehicleDetails">
-      <h3>Vehicle Details</h3>
-      <ul>
-        <li>Trip ID: {selectedVehicle.tripId}</li>
-        <li>Driver ID: {selectedVehicle.driverId}</li>
-        <li>Plate Number: {selectedVehicle.plateNumber}</li>
-        <li>Brand: {selectedVehicle.brand}</li>
-        <li>Model: {selectedVehicle.model}</li>
-        <li>GPS: {selectedVehicle.eSeal}</li>
-      </ul>
+    <div className="vehicle-card">
+      <div className="trip-id">
+        {/* <h3>Vehicle Details</h3> */}
+        <p>
+          Trip ID:{" "}
+          <span className="darktext">
+            {selectedVehicle.tripId || "Not available"}
+          </span>
+        </p>
+      </div>
+      <br />
+      <div className="statuslists">
+        <p>
+          Driver ID:{" "}
+          <span className="darktext">
+            {selectedVehicle.driverId || "Not available"}
+          </span>
+        </p>
+        <p>
+          Plate Number:{" "}
+          <span className="darktext">
+            {selectedVehicle.plateNumber || "Not available"}
+          </span>
+        </p>
+        <p>
+          Brand:{" "}
+          <span className="darktext">
+            {selectedVehicle.brand || "Not available"}
+          </span>
+        </p>
+        <p>
+          Model:{" "}
+          <span className="darktext">
+            {selectedVehicle.model || "Not available"}
+          </span>
+        </p>
+        <p>
+          GPS:
+          {Array.isArray(selectedVehicle.eSeal) &&
+          selectedVehicle.eSeal.length > 0 ? (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+              {selectedVehicle.eSeal.map((eSealItem) => (
+                <button
+                  key={eSealItem.id}
+                  style={{
+                    padding: "5px 10px",
+                    border: "1px solid #ccc",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    backgroundColor: "#f0f0f0", // Optional: background color
+                    color: "#333", // Optional: text color
+                  }}
+                >
+                  {eSealItem.gpsId}
+                </button>
+              ))}
+            </div>
+          ) : (
+            "Not available"
+          )}
+        </p>
+        <p>
+          GPS Mounted Date:{" "}
+          <span className="darktext">
+            {selectedVehicle.gpsMountedDate || "Not available"}
+          </span>
+        </p>
+        <p>
+          Trip Starting Date:{" "}
+          <span className="darktext">
+            {selectedVehicle.tripStartingDate || "Not available"}
+          </span>
+        </p>
+        <p>
+          Checkpoints:{" "}
+          <span className="darktext">
+            {selectedVehicle.Checkpoints
+              ? selectedVehicle.Checkpoints.join(", ")
+              : "Not available"}
+          </span>
+        </p>
+        <p>
+          Trip:{" "}
+          <span className="darktext">
+            {selectedVehicle.fromto || "Not available"}
+          </span>
+        </p>
+      </div>
+      <br />
+      <div className="signal-section">
+        <p>
+          Signal:{" "}
+          <span className="darktext">
+            {selectedVehicle.Signal || "Not available"}
+          </span>
+        </p>
+        <p>
+          Warnings:{" "}
+          <span className="darktext">
+            {selectedVehicle.Warnings || "Not available"}
+          </span>
+        </p>
+        <p>
+          Problems:{" "}
+          <span className="darktext">
+            {selectedVehicle.Problems || "Not available"}
+          </span>
+        </p>
+      </div>
     </div>
   );
 };

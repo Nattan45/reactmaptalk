@@ -24,12 +24,17 @@ const TrackParameters = ({ onVehicleSelect }) => {
   const filteredVehicles = allVehicle.filter((vehicle) => {
     const tripId = vehicle.tripId ? vehicle.tripId.toLowerCase() : "";
     const driverId = vehicle.driverId ? vehicle.driverId.toLowerCase() : "";
-    const platenumber = vehicle.platenumber
-      ? vehicle.platenumber.toLowerCase()
+    const platenumber = vehicle.plateNumber
+      ? vehicle.plateNumber.toLowerCase()
       : "";
     const brand = vehicle.brand ? vehicle.brand.toLowerCase() : "";
     const model = vehicle.model ? vehicle.model.toLowerCase() : "";
-    const eSeal = vehicle.eSeal ? vehicle.eSeal.toLowerCase() : "";
+
+    // Check if eSeal is an array, and map through it to extract gpsIds
+    const eSeal = Array.isArray(vehicle.eSeal)
+      ? vehicle.eSeal.map((eSealItem) => eSealItem.gpsId.toLowerCase())
+      : []; // Default to an empty array if eSeal is not an array
+
     const filter = filterText.toLowerCase();
 
     return (
@@ -38,7 +43,7 @@ const TrackParameters = ({ onVehicleSelect }) => {
       platenumber.includes(filter) ||
       brand.includes(filter) ||
       model.includes(filter) ||
-      eSeal.includes(filter)
+      eSeal.some((gpsId) => gpsId.includes(filter)) // Check if any gpsId matches
     );
   });
 
@@ -61,8 +66,7 @@ const TrackParameters = ({ onVehicleSelect }) => {
 
   // existing handleViewClick function
   const handleViewClick = (vehicle) => {
-    // setSelectedVehicleId(vehicle.id);
-    onVehicleSelect(vehicle.id, vehicleData); // Pass selected vehicle to parent
+    onVehicleSelect(vehicle.id, vehicleData); // Ensure that vehicleData does not contain the entire vehicle object
   };
 
   return (
@@ -73,7 +77,7 @@ const TrackParameters = ({ onVehicleSelect }) => {
 
       <div className="filters">
         <input
-          placeholder="TripID, plate Number"
+          placeholder="Trip ID, Plate Number"
           type="text"
           name="text"
           className="inputFilter"
@@ -97,12 +101,41 @@ const TrackParameters = ({ onVehicleSelect }) => {
           {currentItems.length > 0
             ? currentItems.map((vehicle) => (
                 <tr key={vehicle.id}>
-                  <td> {vehicle.tripId} </td>
+                  <td>{vehicle.tripId}</td>
                   <td>{vehicle.driverId}</td>
                   <td>{vehicle.plateNumber}</td>
                   <td>{vehicle.brand}</td>
                   <td>{vehicle.model}</td>
-                  <td>{vehicle.eSeal}</td>
+                  <td>
+                    {Array.isArray(vehicle.eSeal) &&
+                    vehicle.eSeal.length > 0 ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: "5px",
+                        }}
+                      >
+                        {" "}
+                        {/* Flex container */}
+                        {vehicle.eSeal.map((eSealItem) => (
+                          <button
+                            key={eSealItem.id}
+                            style={{
+                              padding: "5px 10px",
+                              border: "1px solid #ccc",
+                              borderRadius: "5px",
+                              cursor: "pointer",
+                            }}
+                          >
+                            {eSealItem.gpsId}
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <div>No GPS data</div> // Optional: Message if no eSeal data
+                    )}
+                  </td>
                   <td>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -144,52 +177,3 @@ const TrackParameters = ({ onVehicleSelect }) => {
 };
 
 export default TrackParameters;
-
-//     <div className="trackParametersContainer">
-//       <div className="plateNumberQuerryForm">
-//         <form className="form wh-fit-content zerozero firstzerozero">
-//           <label>
-//             <input type="text" required className="input" />
-//             <span>Plate Number</span>
-//           </label>
-//           <button type="submit" className="submit wh-fit-content placeEnd">
-//             Track
-//           </button>
-//         </form>
-//       </div>
-//       <div className="driverIdQueryForm">
-//         <form className="form wh-fit-content zerozero">
-//           <label>
-//             <input type="text" required className="input" />
-//             <span>Driver ID</span>
-//           </label>
-//           <button type="submit" className="submit wh-fit-content placeEnd">
-//             Track
-//           </button>
-//         </form>
-//       </div>
-//       <div className="gpsIdQueryForm">
-//         <form className="form wh-fit-content zerozero">
-//           <label>
-//             <input type="text" required className="input" />
-//             <span>Gps ID</span>
-//           </label>
-//           <button type="submit" className="submit wh-fit-content placeEnd">
-//             Track
-//           </button>
-//         </form>
-//       </div>
-//       <div className="driverIdQueryForm">
-//         <form className="form wh-fit-content zerozero">
-//           <label>
-//             <input type="text" required className="input" />
-//             <span>Trip ID</span>
-//           </label>
-//           <button type="submit" className="submit wh-fit-content placeEnd">
-//             Track
-//           </button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// };

@@ -101,7 +101,7 @@ const DriverRegistration = () => {
           </label>
         </div>
 
-        {/* Device Name */}
+        {/* Device ID */}
         <label>
           <input
             type="text"

@@ -1,5 +1,4 @@
-// import React, { useState } from "react";
-import React from "react";
+import React, { useState } from "react";
 
 // import VehicleRegistration from "./VehicleRegistration";
 // import AllVehiclesDataTable from "./AllVehiclesDataTable";
@@ -11,15 +10,16 @@ import React from "react";
 // import ActiveVehicles from "./ActiveVehicles";
 // import InActiveVehicles from "./InActiveVehicles";
 import ActiveTripStatus from "./ActiveTripStatus";
+import StartTripForm from "./StartTripForm";
 
 const Trip = () => {
-  // // State to track which form is selected
-  // const [selectedForm, setSelectedForm] = useState("vehicleRegistration");
+  // State to track which form is selected
+  const [selectedForm, setSelectedForm] = useState("StartTripForm");
 
-  // // Handler for switching between forms
-  // const handleFormChange = (form) => {
-  //   setSelectedForm(form);
-  // };
+  // Handler for switching between forms
+  const handleFormChange = (form) => {
+    setSelectedForm(form);
+  };
 
   return (
     <div className="devicesContainer">
@@ -32,12 +32,12 @@ const Trip = () => {
         <nav className="formNav">
           {/* Buttons for selecting the form */}
           <div className="leftSide">
-            {/* <button
-              className={selectedForm === "vehicleRegistration" ? "active" : ""}
-              onClick={() => handleFormChange("vehicleRegistration")}
+            <button
+              className={selectedForm === "StartTripForm" ? "active" : ""}
+              onClick={() => handleFormChange("StartTripForm")}
             >
-              Vehicle Registration
-            </button> */}
+              Start Trip Form
+            </button>
 
             {/* <button
               className={
@@ -98,7 +98,7 @@ const Trip = () => {
 
         {/* Conditionally render the form based on user choice */}
         <div className="formContainer">
-          {/* {selectedForm === "vehicleRegistration" && <VehicleRegistration />} */}
+          {selectedForm === "StartTripForm" && <StartTripForm />}
           {/* {selectedForm === "UpdateVehicleDetails" && <UpdateVehicleDetails />} */}
           {/* {selectedForm === "DriverRegistration" && <DriverRegistration />} */}
           {/* {selectedForm === "UpdateDriverDetails" && <UpdateDriverDetails />} */}
