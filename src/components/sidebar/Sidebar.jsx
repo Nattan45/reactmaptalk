@@ -15,6 +15,7 @@ const Sidebar = () => {
   return (
     <div className={sidebarClass}>
       <div className="collapsable">
+        {/* Collapsable */}
         {isOpen ? (
           <svg
             onClick={toggleSidebar}
@@ -54,6 +55,7 @@ const Sidebar = () => {
         )}
 
         <div className="navs">
+          {/* MaptalksMyLocationPage */}
           <div className="nav-item">
             <NavLink exact="true" to="/MaptalksMyLocationPage">
               <svg
@@ -83,6 +85,8 @@ const Sidebar = () => {
               </NavLink>
             )}
           </div>
+
+          {/* MaptalksPinPage */}
           <div className="nav-item">
             <NavLink exact="true" to="/MaptalksPinPage">
               <svg
@@ -111,6 +115,8 @@ const Sidebar = () => {
               </NavLink>
             )}
           </div>
+
+          {/* MaptalksRoutePage */}
           <div className="nav-item">
             <NavLink exact="true" to="/MaptalksRoutePage">
               <svg
@@ -140,6 +146,8 @@ const Sidebar = () => {
               </NavLink>
             )}
           </div>
+
+          {/* MaptalksCheckpointPage */}
           <div className="nav-item">
             <NavLink exact="true" to="/MaptalksCheckpointPage">
               <svg
@@ -170,6 +178,7 @@ const Sidebar = () => {
             )}
           </div>
 
+          {/* MaptalksWarehousePage */}
           <div className="nav-item">
             <NavLink exact="true" to="/MaptalksWarehousePage">
               <svg

@@ -1,0 +1,24 @@
+.StatusCardContainer {
+  display: grid;
+}
+
+.fourCardRowContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: fit-content;
+  gap: 15px;
+}
+
+.fiveCardRowContainer {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  width: fit-content;
+  gap: 15px;
+}
+
+.sixCardRowContainer {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  width: fit-content;
+  gap: 15px;
+}

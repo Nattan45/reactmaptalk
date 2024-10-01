@@ -1,8 +1,9 @@
 import React from "react";
+import ActiveUsers from "../activeStatusCards/ActiveUsers";
 
 const AccountStastics = () => {
   return (
-    <div className="DeviceStasticsContainer">
+    <div className="DeviceStasticsContainer fourCardRowContainer">
       {/* actives */}
       <div className="allStastics">
         <div className="Stastics-card">
@@ -33,7 +34,7 @@ const AccountStastics = () => {
           <button className="Stastics-card-button">More info</button>
         </div>
       </div>
-      {/* inactives */}
+      {/* Admin Account */}
       <div className="allStastics">
         <div className="Stastics-card yellow-card-outline">
           <div className="Stastics-card-details">
@@ -61,7 +62,7 @@ const AccountStastics = () => {
           <button className="Stastics-card-button">More info</button>
         </div>
       </div>
-      {/* Vehicle */}
+      {/* Operators */}
       <div className="allStastics">
         <div className="Stastics-card yellow-card-outline">
           <div className="Stastics-card-details">
@@ -89,6 +90,7 @@ const AccountStastics = () => {
           <button className="Stastics-card-button">More info</button>
         </div>
       </div>
+      <ActiveUsers />
     </div>
   );
 };
