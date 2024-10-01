@@ -1,6 +1,12 @@
 .StatusCardContainer {
   display: grid;
 }
+.threeCardRowContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: fit-content;
+  gap: 15px;
+}
 
 .fourCardRowContainer {
   display: grid;
