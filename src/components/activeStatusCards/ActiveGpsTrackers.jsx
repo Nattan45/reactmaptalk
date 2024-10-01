@@ -1,19 +1,15 @@
 import React from "react";
-import ActiveGpsTrackers from "../activeStatusCards/ActiveGpsTrackers";
-import ActiveVehicleStatus from "../activeStatusCards/ActiveVehicleStatus";
 
-const DeviceStastics = () => {
+const ActiveGpsTrackers = () => {
   return (
-    <div className="DeviceStasticsContainer">
-      {/* actives Gps trackers / E-seal */}
-      <ActiveGpsTrackers />
-      {/* inactives */}
+    <div className="">
+      {/* actives E-seals / Gps */}
       <div className="allStastics">
-        <div className="Stastics-card red-card-outline">
+        <div className="Stastics-card">
           <div className="Stastics-card-details">
             <p className="Stastics-text-title-icon">
               <svg
-                fill="red"
+                fill="green"
                 version="1.1"
                 id="Capa_1"
                 xmlns="http://www.w3.org/2000/svg"
@@ -44,17 +40,15 @@ const DeviceStastics = () => {
                 </g>
               </svg>
             </p>
-            <p className="Stastics-text-title textcenter">Inactive Devices</p>
+            <p className="Stastics-text-title textcenter">Active Gps</p>
 
-            <p className="Stastics-text-body textcenter">6</p>
+            <p className="Stastics-text-body textcenter">49</p>
           </div>
           <button className="Stastics-card-button">More info</button>
         </div>
       </div>
-      {/* Active Vehicles */}
-      <ActiveVehicleStatus />
     </div>
   );
 };
 
-export default DeviceStastics;
+export default ActiveGpsTrackers;

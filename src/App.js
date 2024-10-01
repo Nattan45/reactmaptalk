@@ -14,12 +14,14 @@ import VehiclesPage from "./page/VehiclesPage";
 import TrackerPage from "./page/TrackerPage";
 import AccountPage from "./page/AccountPage";
 import NotFoundPage from "./page/NotFoundPage";
+import TripPage from "./page/TripPage";
 
 function App() {
   return (
     <>
       {/* <AuthProvider> */}
       <ScrollToTop />
+
       <Routes>
         <Route path="/" exact element={<MaptalksMyLocationPage />}></Route>
         <Route
@@ -56,10 +58,12 @@ function App() {
         <Route path="/VehiclesPage" exact element={<VehiclesPage />}></Route>
         <Route path="/TrackerPage" exact element={<TrackerPage />}></Route>
         <Route path="/AccountPage" exact element={<AccountPage />}></Route>
+        <Route path="/TripPage" exact element={<TripPage />}></Route>
 
         {/* Catch-all route for 404 page */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+
       {/* </AuthProvider> */}
     </>
   );

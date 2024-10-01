@@ -1,13 +1,26 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import "./tracker.css";
 import * as maptalks from "maptalks";
 import TrackParameters from "./TrackParameters";
+import ActiveTripStatus from "../trip/ActiveTripStatus";
+import ActiveVehicleDetails from "./ActiveVehicleDetails";
 
 const Tracker = () => {
   const mapRef = useRef(null);
   const mapInstance = useRef(null); // Ref to store the map instance
   const markerLayerRef = useRef(null); // Ref for marker layer
   const [locationDenied, setLocationDenied] = useState(false); // To handle location denied
+
+  // get the selected vehicle from TrackParameters
+  const [selectedVehicleId, setSelectedVehicleId] = useState(null);
+  const [vehicleData, setVehicleData] = useState([]);
+
+  // Function to handle vehicle selection from TrackParameters
+  const handleVehicleSelect = (id, data) => {
+    setSelectedVehicleId(id); // Set the selected vehicle ID
+    setVehicleData(data); // Pass the full vehicle data
+  };
 
   const initializeMap = (center, zoomLevel = 10) => {
     // If a map instance already exists, remove it
@@ -106,16 +119,29 @@ const Tracker = () => {
   return (
     <div className="savedLocationContainer">
       <div className="firstSection">
-        <TrackParameters />
+        <ActiveTripStatus />
+        <br />
+        <TrackParameters
+          onVehicleSelect={handleVehicleSelect} // Keep only the vehicle selection handler
+        />
       </div>
-      <div className="">
-        {locationDenied && (
-          <div style={{ color: "red", marginTop: "10px" }}>
-            Could not display your location.
-          </div>
-        )}
-        Track Vehicles
-        <div ref={mapRef} style={{ width: "70vw", height: "60vh" }} />
+      <div className="viewTrackData">
+        {/* Pass selectedVehicleId and vehicleData as props */}
+        <ActiveVehicleDetails
+          vehicleId={selectedVehicleId}
+          vehicleData={vehicleData}
+        />
+        <div className="viewTrackerDataOnMap">
+          {locationDenied && (
+            <div
+              className="textdivcenter"
+              style={{ color: "red", marginTop: "10px" }}
+            >
+              Could not display your location.
+            </div>
+          )}
+          <div ref={mapRef} style={{ width: "70vw", height: "60vh" }} />
+        </div>
       </div>
     </div>
   );

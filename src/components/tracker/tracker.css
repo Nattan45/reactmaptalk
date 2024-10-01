@@ -1,4 +1,4 @@
-.trackParametersContainer {
+/* .trackParametersContainer {
   display: flex;
   flex-direction: row;
   gap: 25px;
@@ -64,4 +64,23 @@
   outline: none;
   border: 2px solid var(--main-focus);
   border-right: 0;
+} */
+
+.viewTrackData {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: center;
+}
+.viewTrackerDataOnMap {
+  display: grid;
+  justify-content: start;
+  margin-right: 50px;
+}
+.vehicleDetails {
+  width: fit-content;
+}
+.textdivcenter {
+  display: grid;
+  justify-content: center;
 }
