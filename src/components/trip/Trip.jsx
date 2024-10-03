@@ -11,6 +11,8 @@ import React, { useState } from "react";
 // import InActiveVehicles from "./InActiveVehicles";
 import ActiveTripStatus from "./ActiveTripStatus";
 import StartTripForm from "./StartTripForm";
+import OngoingTrip from "../tracker/OngoingTrip";
+import CompliteTripForm from "./CompliteTripForm";
 
 const Trip = () => {
   // State to track which form is selected
@@ -39,14 +41,12 @@ const Trip = () => {
               Start Trip Form
             </button>
 
-            {/* <button
-              className={
-                selectedForm === "UpdateVehicleDetails" ? "active" : ""
-              }
-              onClick={() => handleFormChange("UpdateVehicleDetails")}
+            <button
+              className={selectedForm === "CompliteTripForm" ? "active" : ""}
+              onClick={() => handleFormChange("CompliteTripForm")}
             >
-              Update Vehicle
-            </button> */}
+              Complite Trip Form
+            </button>
 
             {/* <button
               className={selectedForm === "DriverRegistration" ? "active" : ""}
@@ -99,7 +99,7 @@ const Trip = () => {
         {/* Conditionally render the form based on user choice */}
         <div className="formContainer">
           {selectedForm === "StartTripForm" && <StartTripForm />}
-          {/* {selectedForm === "UpdateVehicleDetails" && <UpdateVehicleDetails />} */}
+          {selectedForm === "CompliteTripForm" && <CompliteTripForm />}
           {/* {selectedForm === "DriverRegistration" && <DriverRegistration />} */}
           {/* {selectedForm === "UpdateDriverDetails" && <UpdateDriverDetails />} */}
           {/* {selectedForm === "ActiveVehicles" && <ActiveVehicles />} */}
@@ -109,7 +109,9 @@ const Trip = () => {
         </div>
       </div>
 
-      <div className="thirdSection">{/* <AllVehiclesDataTable /> */}</div>
+      <div className="thirdSection">
+        <OngoingTrip />
+      </div>
     </div>
   );
 };

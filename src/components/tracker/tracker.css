@@ -154,3 +154,31 @@
   margin-top: 5%;
   /* border-top: 1px solid black; */
 }
+
+.activeEsealDataContainer {
+  display: grid;
+  justify-content: space-evenly;
+  grid-template-columns: 1fr;
+}
+.activeEsealfirstData {
+  display: flex;
+  justify-content: space-evenly;
+}
+.activeEsealData {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  outline: 1px solid rgb(0, 0, 0);
+  margin-top: 15px;
+}
+.activeEsealData-rfids {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: center;
+  gap: 10px;
+}
+.batterybutton {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}

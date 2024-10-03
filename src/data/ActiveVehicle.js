@@ -13,6 +13,7 @@ const ActiveVehicle = [
         deviceName: "Tracker 1",
         brand: "Brand A",
         gpsId: "78675-X",
+        battery: "70",
         rfidKeys: [
           {
             id: 2,
@@ -33,6 +34,7 @@ const ActiveVehicle = [
         deviceName: "Tracker 4",
         brand: "Brand A",
         gpsId: "58675-X",
+        battery: "79",
         rfidKeys: [
           {
             id: 7,
@@ -58,6 +60,7 @@ const ActiveVehicle = [
         deviceName: "Tracker 6",
         brand: "Brand D",
         gpsId: "58575-W",
+        battery: "69",
         rfidKeys: [
           {
             id: 11,
@@ -78,6 +81,7 @@ const ActiveVehicle = [
         deviceName: "Tracker 8",
         brand: "Brand A",
         gpsId: "56575-X",
+        battery: "90",
         rfidKeys: [
           {
             id: 13,
@@ -99,11 +103,11 @@ const ActiveVehicle = [
         vehicle: "AA-44334-4",
       },
     ],
-    gpsMountedDate: "",
-    tripStartingDate: "",
+    gpsMountedDate: "12-09-2024",
+    tripStartingDate: "13-09-2024",
     Checkpoints: "",
     fromto: "Addis Ababa - Dire Dawa",
-    Signal: "",
+    Signal: "4/4",
     Warnings: "",
     Problems: "",
   },
@@ -116,11 +120,11 @@ const ActiveVehicle = [
     plateNumber: "AA-4-94577",
     driverId: "BT-7867",
     eSeal: "1,4,6,7",
-    gpsMountedDate: "",
-    tripStartingDate: "",
+    gpsMountedDate: "03-10-2024",
+    tripStartingDate: "03-10-2024",
     Checkpoints: "",
     fromto: "",
-    Signal: "",
+    Signal: "4/4",
     Warnings: "",
     Problems: "",
   },
@@ -133,11 +137,11 @@ const ActiveVehicle = [
     plateNumber: "AA-3-42657",
     driverId: "BT-3757",
     eSeal: "1,4,6,7",
-    gpsMountedDate: "",
-    tripStartingDate: "",
+    gpsMountedDate: "08-10-2024",
+    tripStartingDate: "08-10-2024",
     Checkpoints: "",
     fromto: "",
-    Signal: "",
+    Signal: "4/4",
     Warnings: "",
     Problems: "",
   },
