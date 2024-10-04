@@ -24,7 +24,7 @@ const Trip = () => {
   };
 
   return (
-    <div className="devicesContainer">
+    <div className="savedLocationContainer">
       <div className="firstSection">
         <ActiveTripStatus />
       </div>

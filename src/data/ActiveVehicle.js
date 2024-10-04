@@ -6,7 +6,14 @@ const ActiveVehicle = [
     brand: "Brand A",
     model: "Model X",
     plateNumber: "AA-4-13234",
-    driverId: "BT-1397",
+    driver: [
+      {
+        id: 1,
+        driverName: "JohnDoe",
+        driverId: "BT-1397",
+        phoneNumber: "+251916975646",
+      },
+    ],
     eSeal: [
       {
         id: 1,
@@ -118,7 +125,14 @@ const ActiveVehicle = [
     brand: "Brand A",
     model: "Model X",
     plateNumber: "AA-4-94577",
-    driverId: "BT-7867",
+    driver: [
+      {
+        id: 3,
+        driverName: "MichaelSmith",
+        driverId: "BT-1457",
+        phoneNumber: "+251911234567",
+      },
+    ],
     eSeal: "1,4,6,7",
     gpsMountedDate: "03-10-2024",
     tripStartingDate: "03-10-2024",
@@ -135,7 +149,14 @@ const ActiveVehicle = [
     brand: "Brand A",
     model: "Model X",
     plateNumber: "AA-3-42657",
-    driverId: "BT-3757",
+    driver: [
+      {
+        id: 4,
+        driverName: "JessicaBrown",
+        driverId: "BT-1458",
+        phoneNumber: "+251912345678",
+      },
+    ],
     eSeal: "1,4,6,7",
     gpsMountedDate: "08-10-2024",
     tripStartingDate: "08-10-2024",

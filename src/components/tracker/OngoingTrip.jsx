@@ -37,7 +37,7 @@ const OngoingTrip = () => {
   return (
     <div>
       <h2 className="tableDataHeaderTitle">
-        On Trip {vehicleData.length} Vehicles Status
+        {vehicleData.length} - Vehicles On Trip Status
       </h2>
       <table border="1" cellPadding="10">
         <thead>
@@ -66,8 +66,16 @@ const OngoingTrip = () => {
                 <td>{aVehicle.plateNumber}</td>
                 <td>{aVehicle.brand}</td>
                 <td>{aVehicle.model}</td>
-                <td>{aVehicle.driverId}</td>
-                <td>{aVehicle.phoneNumber}</td>
+                <td>
+                  {aVehicle.driver.map((driver, index) => (
+                    <p key={index}>{driver.driverName}</p>
+                  ))}
+                </td>
+                <td>
+                  {aVehicle.driver.map((driver, index) => (
+                    <p key={index}>{driver.phoneNumber}</p>
+                  ))}
+                </td>
                 {/* Number of GPS trackers */}
                 <td>
                   {Array.isArray(aVehicle.eSeal) ? (
