@@ -1,18 +1,11 @@
 import React, { useState } from "react";
 
-// import VehicleRegistration from "./VehicleRegistration";
-// import AllVehiclesDataTable from "./AllVehiclesDataTable";
-// import DriverRegistration from "../driver/DriverRegistration";
-// import UpdateDriverDetails from "../driver/UpdateDriverDetails";
-// import ActiveDrivers from "../driver/ActiveDrivers";
-// import FreeDrivers from "../driver/FreeDrivers";
-// import UpdateVehicleDetails from "./UpdateVehicleDetails";
-// import ActiveVehicles from "./ActiveVehicles";
-// import InActiveVehicles from "./InActiveVehicles";
 import ActiveTripStatus from "./ActiveTripStatus";
 import StartTripForm from "./StartTripForm";
 import OngoingTrip from "../tracker/OngoingTrip";
 import CompliteTripForm from "./CompliteTripForm";
+import Warning from "./Warning";
+import Problems from "./Problems";
 
 const Trip = () => {
   // State to track which form is selected
@@ -34,6 +27,7 @@ const Trip = () => {
         <nav className="formNav">
           {/* Buttons for selecting the form */}
           <div className="leftSide">
+            {/* Start Trip Form */}
             <button
               className={selectedForm === "StartTripForm" ? "active" : ""}
               onClick={() => handleFormChange("StartTripForm")}
@@ -41,58 +35,33 @@ const Trip = () => {
               Start Trip Form
             </button>
 
+            {/* Complite Trip Form */}
             <button
               className={selectedForm === "CompliteTripForm" ? "active" : ""}
               onClick={() => handleFormChange("CompliteTripForm")}
             >
               Complite Trip Form
             </button>
-
-            {/* <button
-              className={selectedForm === "DriverRegistration" ? "active" : ""}
-              onClick={() => handleFormChange("DriverRegistration")}
-            >
-              Driver Registration
-            </button> */}
-
-            {/* <button
-              className={selectedForm === "UpdateDriverDetails" ? "active" : ""}
-              onClick={() => handleFormChange("UpdateDriverDetails")}
-            >
-              Update Driver
-            </button> */}
           </div>
 
           <hr />
 
           <div className="rightSide">
-            {/* <button
-              className={selectedForm === "ActiveVehicles" ? "active" : ""}
-              onClick={() => handleFormChange("ActiveVehicles")}
+            {/* Warning */}
+            <button
+              className={selectedForm === "Warning" ? "active" : ""}
+              onClick={() => handleFormChange("Warning")}
             >
-              Active Vehicles
-            </button> */}
+              Warning
+            </button>
 
-            {/* <button
-              className={selectedForm === "InActiveVehicles" ? "active" : ""}
-              onClick={() => handleFormChange("InActiveVehicles")}
+            {/* Problems */}
+            <button
+              className={selectedForm === "Problems" ? "active" : ""}
+              onClick={() => handleFormChange("Problems")}
             >
-              Inactive Vehicles
-            </button> */}
-
-            {/* <button
-              className={selectedForm === "ActiveDrivers" ? "active" : ""}
-              onClick={() => handleFormChange("ActiveDrivers")}
-            >
-              Active Drivers
-            </button> */}
-
-            {/* <button
-              className={selectedForm === "FreeDrivers" ? "active" : ""}
-              onClick={() => handleFormChange("FreeDrivers")}
-            >
-              Inactive Drivers
-            </button> */}
+              Problems
+            </button>
           </div>
         </nav>
 
@@ -100,12 +69,8 @@ const Trip = () => {
         <div className="formContainer">
           {selectedForm === "StartTripForm" && <StartTripForm />}
           {selectedForm === "CompliteTripForm" && <CompliteTripForm />}
-          {/* {selectedForm === "DriverRegistration" && <DriverRegistration />} */}
-          {/* {selectedForm === "UpdateDriverDetails" && <UpdateDriverDetails />} */}
-          {/* {selectedForm === "ActiveVehicles" && <ActiveVehicles />} */}
-          {/* {selectedForm === "InActiveVehicles" && <InActiveVehicles />} */}
-          {/* {selectedForm === "ActiveDrivers" && <ActiveDrivers />} */}
-          {/* {selectedForm === "FreeDrivers" && <FreeDrivers />} */}
+          {selectedForm === "Warning" && <Warning />}
+          {selectedForm === "Problems" && <Problems />}
         </div>
       </div>
 

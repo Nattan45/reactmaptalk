@@ -13,7 +13,7 @@ const Sidebar = () => {
   const sidebarClass = isOpen ? "sidebar open" : "sidebar";
 
   return (
-    <div className={sidebarClass}>
+    <div className={sidebarClass} style={{ zIndex: "5" }}>
       <div className="collapsable">
         {/* Collapsable */}
         {isOpen ? (

@@ -4,8 +4,12 @@
 }
 :root {
   --main-header-background-color: #282c34;
+  --editable-header-color: #2e5736;
+  --warning-header-color: #a92736;
 }
-
+.borderBottom {
+  border-bottom: 1px solid red;
+}
 .App {
   /* display: grid; */
   /* grid-template-columns: 1fr; */
@@ -25,10 +29,6 @@
   /* justify-content: center; */
   font-size: calc(10px + 1vmin);
   color: white;
-}
-
-.App-link {
-  color: #61dafb;
 }
 
 .pageContainer {
