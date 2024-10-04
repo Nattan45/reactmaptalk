@@ -99,7 +99,7 @@ const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
           GPS:
           {Array.isArray(selectedVehicle.eSeal) &&
           selectedVehicle.eSeal.length > 0 ? (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+            <span style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
               {selectedVehicle.eSeal.map((eSealItem) => (
                 <button
                   key={eSealItem.id}
@@ -115,7 +115,7 @@ const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
                   {eSealItem.gpsId}
                 </button>
               ))}
-            </div>
+            </span>
           ) : (
             "Not available"
           )}

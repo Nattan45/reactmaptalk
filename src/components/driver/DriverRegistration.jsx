@@ -82,7 +82,7 @@ const DriverRegistration = () => {
               type="text"
               value={firstname}
               onChange={(e) => setFirstName(e.target.value)}
-              requiblack
+              requiblack="true"
               className="input"
             />
             <span>First Name</span>
@@ -94,7 +94,7 @@ const DriverRegistration = () => {
               type="text"
               value={lastname}
               onChange={(e) => setLastname(e.target.value)}
-              requiblack
+              requiblack="true"
               className="input"
             />
             <span>Last Name</span>
@@ -107,7 +107,7 @@ const DriverRegistration = () => {
             type="text"
             value={driverId}
             onChange={(e) => setDriverId(e.target.value)}
-            requiblack
+            requiblack="true"
             className="input"
           />
           <span>Driver Id</span>
@@ -117,7 +117,7 @@ const DriverRegistration = () => {
             type="text"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            requiblack
+            requiblack="true"
             className="input"
           />
           <span>Phone Number</span>

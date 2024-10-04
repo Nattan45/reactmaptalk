@@ -2,6 +2,9 @@
   margin: 0;
   padding: 0;
 }
+:root {
+  --main-header-background-color: #282c34;
+}
 
 .App {
   /* display: grid; */
@@ -17,7 +20,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: var(--main-header-background-color);
   display: grid;
   /* justify-content: center; */
   font-size: calc(10px + 1vmin);
@@ -46,5 +49,5 @@
   /* border-top: 1px solid rgb(199, 199, 199); */
   display: grid;
   justify-content: center;
-  background-color: #282c34;
+  background-color: var(--main-header-background-color);
 }

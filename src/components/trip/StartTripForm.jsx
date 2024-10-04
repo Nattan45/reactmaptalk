@@ -114,10 +114,10 @@ const StartTripForm = () => {
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-tickets-plane"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="lucide lucide-tickets-plane"
         >
           <path d="M10.5 17h1.227a2 2 0 0 0 1.345-.52L18 12" />
           <path d="m12 13.5 3.75.5" />

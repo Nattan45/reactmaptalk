@@ -6,13 +6,21 @@ const ActiveVehicle = [
     brand: "Brand A",
     model: "Model X",
     plateNumber: "AA-4-13234",
-    driverId: "BT-1397",
+    driver: [
+      {
+        id: 1,
+        driverName: "JohnDoe",
+        driverId: "BT-1397",
+        phoneNumber: "+251916975646",
+      },
+    ],
     eSeal: [
       {
         id: 1,
         deviceName: "Tracker 1",
         brand: "Brand A",
         gpsId: "78675-X",
+        battery: "70",
         rfidKeys: [
           {
             id: 2,
@@ -33,6 +41,7 @@ const ActiveVehicle = [
         deviceName: "Tracker 4",
         brand: "Brand A",
         gpsId: "58675-X",
+        battery: "79",
         rfidKeys: [
           {
             id: 7,
@@ -58,6 +67,7 @@ const ActiveVehicle = [
         deviceName: "Tracker 6",
         brand: "Brand D",
         gpsId: "58575-W",
+        battery: "69",
         rfidKeys: [
           {
             id: 11,
@@ -78,6 +88,7 @@ const ActiveVehicle = [
         deviceName: "Tracker 8",
         brand: "Brand A",
         gpsId: "56575-X",
+        battery: "90",
         rfidKeys: [
           {
             id: 13,
@@ -99,11 +110,11 @@ const ActiveVehicle = [
         vehicle: "AA-44334-4",
       },
     ],
-    gpsMountedDate: "",
-    tripStartingDate: "",
+    gpsMountedDate: "12-09-2024",
+    tripStartingDate: "13-09-2024",
     Checkpoints: "",
     fromto: "Addis Ababa - Dire Dawa",
-    Signal: "",
+    Signal: "4/4",
     Warnings: "",
     Problems: "",
   },
@@ -114,13 +125,20 @@ const ActiveVehicle = [
     brand: "Brand A",
     model: "Model X",
     plateNumber: "AA-4-94577",
-    driverId: "BT-7867",
+    driver: [
+      {
+        id: 3,
+        driverName: "MichaelSmith",
+        driverId: "BT-1457",
+        phoneNumber: "+251911234567",
+      },
+    ],
     eSeal: "1,4,6,7",
-    gpsMountedDate: "",
-    tripStartingDate: "",
+    gpsMountedDate: "03-10-2024",
+    tripStartingDate: "03-10-2024",
     Checkpoints: "",
     fromto: "",
-    Signal: "",
+    Signal: "4/4",
     Warnings: "",
     Problems: "",
   },
@@ -131,13 +149,20 @@ const ActiveVehicle = [
     brand: "Brand A",
     model: "Model X",
     plateNumber: "AA-3-42657",
-    driverId: "BT-3757",
+    driver: [
+      {
+        id: 4,
+        driverName: "JessicaBrown",
+        driverId: "BT-1458",
+        phoneNumber: "+251912345678",
+      },
+    ],
     eSeal: "1,4,6,7",
-    gpsMountedDate: "",
-    tripStartingDate: "",
+    gpsMountedDate: "08-10-2024",
+    tripStartingDate: "08-10-2024",
     Checkpoints: "",
     fromto: "",
-    Signal: "",
+    Signal: "4/4",
     Warnings: "",
     Problems: "",
   },

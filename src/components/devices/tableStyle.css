@@ -8,7 +8,7 @@ table {
 
 /* Header styling */
 thead {
-  background-color: #3c245d;
+  background-color: var(--main-header-background-color);
   color: white;
 }
 

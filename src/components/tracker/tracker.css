@@ -146,11 +146,92 @@
 .margindata {
   margin-left: 35px;
 }
-
+.marginTB {
+  margin: 2% 0;
+}
 .selected {
   font-weight: 500;
 }
 .displayAddedeSeals {
   margin-top: 5%;
   /* border-top: 1px solid black; */
+}
+
+.activeEsealDataContainer {
+  display: grid;
+  justify-content: space-evenly;
+  grid-template-columns: 1fr;
+}
+.activeEsealfirstData {
+  display: flex;
+  justify-content: space-evenly;
+}
+.activeEsealfirstData-start {
+  display: flex;
+  justify-content: start;
+  margin-top: 2%;
+}
+.activeEsealData {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  outline: 1px solid rgb(0, 0, 0);
+  margin-top: 15px;
+}
+.activeEsealData-deactivate {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  /* border-top: 1px solid rgb(0, 0, 0); */
+  border-left: 1px solid rgb(0, 0, 0);
+  margin-top: 15px;
+}
+.activeEsealData-openBtn {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 5px;
+  /* outline: 1px solid rgb(0, 0, 0); */
+  /* margin-top: 15px; */
+}
+.activeEsealData-rfids {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: center;
+  gap: 10px;
+}
+.list {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-content: start;
+}
+.batterybutton {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.trackParametersContainer-WithReport {
+  display: grid;
+  justify-items: center;
+  gap: 15px;
+  /* outline: 1px solid red; */
+}
+.searchedVehicles {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+.compliteTripform {
+  display: flex;
+  justify-content: flex-end;
+}
+.searchedVehicles-Title {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-content: space-between;
+  gap: 15px;
+  /* width: fit-content; */
+}
+.green {
+  color: green;
 }

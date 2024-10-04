@@ -96,7 +96,7 @@ const ActiveDevices = () => {
                   </td>
                 </tr>
               ))
-            : null}{" "}
+            : null}
           {/* No need to display "No active devices available" */}
         </tbody>
       </table>
