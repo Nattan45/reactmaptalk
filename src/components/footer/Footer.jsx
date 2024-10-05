@@ -57,7 +57,7 @@ const Footer = () => {
                 <path d="M9 3.236v15" />
               </svg>
               &nbsp;
-              <h5 className="ddcolor">Saved&nbsp;Location</h5>
+              <h5 className="linkcolor">Saved&nbsp;Location</h5>
             </Button>
           </NavLink>
 
@@ -91,7 +91,7 @@ const Footer = () => {
                 </g>
               </svg>
               &nbsp;
-              <h5 className="ddcolor">Devices</h5>
+              <h5 className="linkcolor">Devices</h5>
             </Button>
           </NavLink>
 
@@ -115,7 +115,7 @@ const Footer = () => {
                 <path d="M17.51 12.85 6.5 19.15" />
               </svg>
               &nbsp;
-              <h5 className="ddcolor">Track</h5>
+              <h5 className="linkcolor">Track</h5>
             </Button>
           </NavLink>
 
@@ -161,7 +161,7 @@ const Footer = () => {
                 </g>
               </svg>
               &nbsp;
-              <h5 className="ddcolor">Vehicle</h5>
+              <h5 className="linkcolor">Vehicle</h5>
             </Button>
           </NavLink>
 
@@ -193,7 +193,7 @@ const Footer = () => {
                 <path d="m20.7 13.8 1-.4" />
               </svg>
               &nbsp;
-              <h5 className="ddcolor">Account</h5>
+              <h5 className="linkcolor">Account</h5>
             </Button>
           </NavLink>
 
@@ -226,7 +226,7 @@ const Footer = () => {
                 <path d="M12 5.5V3.5" stroke="#bee9e8" strokeLinecap="round" />
               </svg>
               &nbsp;
-              <h5 className="ddcolor">Trip</h5>
+              <h5 className="linkcolor">Trip</h5>
             </Button>
           </NavLink>
         </div>
@@ -388,7 +388,7 @@ const Footer = () => {
             <path d="M14.83 14.83a4 4 0 1 1 0-5.66" />
           </svg>
           &nbsp;
-          <h5 className="ddcolor">All Right Recived</h5>
+          <h5 className="linkcolor">All Right Recived</h5>
         </Button>
       </div>
     </div>

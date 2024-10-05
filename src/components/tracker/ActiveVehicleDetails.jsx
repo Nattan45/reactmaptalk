@@ -1,3 +1,5 @@
+import problemData from "../../data/Problem";
+
 const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
   // Check for vapd vehicleData and vehicleId
   if (!vehicleData || vehicleData.length === 0 || !vehicleId) {
@@ -57,11 +59,15 @@ const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
       </div>
     );
   }
+
+  // Helper function to find problem details by problem ID
+  const findProblemDetails = (problemId) => {
+    return problemData.find((problem) => problem.id === problemId);
+  };
   // Render the details of the selected vehicle
   return (
     <div className="vehicle-card">
       <div className="trip-id">
-        {/* <h3>Vehicle Details</h3> */}
         <p>
           Trip ID:{" "}
           <span className="darktext">
@@ -74,7 +80,10 @@ const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
         <p>
           Driver ID:{" "}
           <span className="darktext">
-            {selectedVehicle.driverId || "Not available"}
+            {Array.isArray(selectedVehicle.driver) &&
+              selectedVehicle.driver.map((driver, index) => (
+                <p key={index}>{driver.driverId || "Not available"}</p>
+              ))}
           </span>
         </p>
         <p>
@@ -164,7 +173,23 @@ const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
         <p>
           Problems:{" "}
           <span className="darktext">
-            {selectedVehicle.Problems || "Not available"}
+            {Array.isArray(selectedVehicle.Problems) &&
+            selectedVehicle.Problems.length > 0 ? (
+              selectedVehicle.Problems.map((problem) => {
+                const problemDetails = findProblemDetails(problem.id);
+                return (
+                  <p key={problem.id}>
+                    {problemDetails ? (
+                      <span>{problemDetails.Details}</span>
+                    ) : (
+                      <p>No problem.</p>
+                    )}
+                  </p>
+                );
+              })
+            ) : (
+              <p>No problems.</p>
+            )}
           </span>
         </p>
       </div>

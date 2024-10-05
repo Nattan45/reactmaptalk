@@ -66,7 +66,7 @@ const TrackParameters = ({ onVehicleSelect }) => {
 
   // existing handleViewClick function
   const handleViewClick = (vehicle) => {
-    onVehicleSelect(vehicle.id, vehicleData); // Ensure that vehicleData does not contain the entire vehicle object
+    onVehicleSelect(vehicle.id, vehicleData);
   };
 
   return (
@@ -120,7 +120,6 @@ const TrackParameters = ({ onVehicleSelect }) => {
                           gap: "5px",
                         }}
                       >
-                        {" "}
                         {/* Flex container */}
                         {vehicle.eSeal.map((eSealItem) => (
                           <button
