@@ -6,6 +6,12 @@ import Stack from "@mui/material/Stack"; // npm install @mui/material @emotion/r
 import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue, yellow } from "@mui/material/colors";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import TextField from "@mui/material/TextField";
 
 const MaptalksRoute = () => {
   const mapRef = useRef(null);
@@ -15,6 +21,8 @@ const MaptalksRoute = () => {
     totalDistance: 0,
     totalDistanceKm: 0,
   }); // State to store distance
+  const [dialogOpen, setDialogOpen] = useState(false); // State for dialog visibility
+  const [routeName, setRouteName] = useState(""); // State for route name
 
   useEffect(() => {
     const defaultCenter = [39.7823, 9.145]; // Ethiopian coordinates [Longitude, Latitude]
@@ -131,6 +139,32 @@ const MaptalksRoute = () => {
     },
   });
 
+  const handleSaveClick = () => {
+    setDialogOpen(true); // Open the dialog when the Save button is clicked
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false); // Close the dialog
+    setRouteName(""); // Clear the input field
+  };
+
+  const handleRouteNameChange = (event) => {
+    setRouteName(event.target.value); // Update route name state
+  };
+
+  const handleSave = () => {
+    const routeData = {
+      routeName: routeName,
+      routeCoordinates: routeCoordinates,
+      totalDistance: distance.totalDistance,
+      totalDistanceKm: distance.totalDistanceKm,
+    };
+
+    // Log the route data in JSON format
+    console.log(JSON.stringify(routeData, null, 2)); // Pretty-print JSON with 2 spaces
+    handleDialogClose(); // Close the dialog after saving
+  };
+
   return (
     <div className="matalksContainer">
       <div className="sideBySide">
@@ -240,7 +274,11 @@ const MaptalksRoute = () => {
                 </div>
               </div>
               <div className="buttontop">
-                <Button variant="contained" color="success">
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={handleSaveClick}
+                >
                   Save
                 </Button>
               </div>
@@ -251,6 +289,33 @@ const MaptalksRoute = () => {
           <div ref={mapRef} style={{ width: "70vw", height: "80vh" }} />
         </div>
       </div>
+      {/* Dialog for entering route name */}
+      <Dialog open={dialogOpen} onClose={handleDialogClose}>
+        <DialogTitle>Save Route</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please enter a name for your route.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Route Name"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={routeName}
+            onChange={handleRouteNameChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleSave} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

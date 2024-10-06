@@ -6,11 +6,19 @@ import Stack from "@mui/material/Stack"; // npm install @mui/material @emotion/r
 import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue, yellow } from "@mui/material/colors";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import TextField from "@mui/material/TextField";
 
 const MaptalksPin = () => {
   const mapRef = useRef(null);
   const mapInstance = useRef(null); // Ref to store the map instance
   const markers = useRef([]); // Ref to store all markers
+  const [dialogOpen, setDialogOpen] = useState(false); // State for dialog visibility
+  const [pinName, setPinName] = useState(""); // State for pin name
 
   const [pinplaces, setpinplaces] = useState([]); // Track all pinned places
 
@@ -146,6 +154,39 @@ const MaptalksPin = () => {
     },
   });
 
+  const handleSaveClick = () => {
+    setDialogOpen(true); // Open the dialog when the Save button is clicked
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false); // Close the dialog
+    setPinName(""); // Clear the input field
+  };
+
+  const handlePinNameChange = (event) => {
+    setPinName(event.target.value); // Update pin name state
+  };
+
+  const handleSave = () => {
+    // Get the last pinned coordinates
+    // const lastPinnedCoords = pinplaces[pinplaces.length - 1];
+
+    if (pinplaces) {
+      // Create route data with the pin name and last coordinates
+      const routeData = {
+        pinName: pinName,
+        pinCoordinates: pinplaces,
+      };
+
+      // Log the route data in JSON format
+      console.log(JSON.stringify(routeData, null, 2)); // Pretty-print JSON with 2 spaces
+    } else {
+      console.log("No pins available to save.");
+    }
+
+    handleDialogClose(); // Close the dialog after saving
+  };
+
   return (
     <div className="matalksContainer">
       <div className="sideBySide">
@@ -226,7 +267,11 @@ const MaptalksPin = () => {
                 </div>
               </div>
               <div className="buttontop">
-                <Button variant="contained" color="success">
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={handleSaveClick}
+                >
                   Save
                 </Button>
               </div>
@@ -237,6 +282,33 @@ const MaptalksPin = () => {
           <div ref={mapRef} style={{ width: "70vw", height: "80vh" }} />
         </div>
       </div>
+      {/* Dialog for entering route name */}
+      <Dialog open={dialogOpen} onClose={handleDialogClose}>
+        <DialogTitle>Save Route</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please enter a name for your route.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Pin Location Name"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={pinName}
+            onChange={handlePinNameChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleSave} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
