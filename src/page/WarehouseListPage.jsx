@@ -1,12 +1,11 @@
 import React from "react";
 
-import "../App.css";
 import Header from "../components/header/Header";
 import Sidebar from "../components/sidebar/Sidebar";
 import Footer from "../components/footer/Footer";
-import MaptalksMyLocation from "../components/maptalks/MaptalksMyLocation";
+import WarehouseList from "../components/operationLists/warehouse/WarehouseList";
 
-const MaptalksMyLocationPage = () => {
+const WarehouseListPage = () => {
   return (
     <div className="App">
       {/* header */}
@@ -23,7 +22,7 @@ const MaptalksMyLocationPage = () => {
 
         {/* All Contents */}
         <div className="contentsContainer">
-          <MaptalksMyLocation />
+          <WarehouseList />
         </div>
       </div>
 
@@ -34,5 +33,4 @@ const MaptalksMyLocationPage = () => {
     </div>
   );
 };
-
-export default MaptalksMyLocationPage;
+export default WarehouseListPage;

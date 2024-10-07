@@ -235,3 +235,42 @@
 .green {
   color: green;
 }
+.redColor {
+  color: red;
+}
+.warningColor {
+  color: rgb(255, 119, 0);
+}
+.problem-details-Container {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.problem-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.gridCenter {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-content: center;
+}
+.detailProblem-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-self: center;
+  margin: 3% 0;
+}
+.eSeal-details-data {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+.eSeal-problem-data {
+  display: grid;
+  gap: 10px;
+  border-left: 1px solid black;
+  padding-left: 15px;
+}

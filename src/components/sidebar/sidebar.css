@@ -1,7 +1,7 @@
 .sidebar {
   height: 100%;
   width: 80px; /* Collapsed width */
-  background-color: #282c34;
+  background-color: var(--main-header-background-color);
   z-index: 1000; /* Ensure it stays on top when expanded */
   transition: width 0.3s ease-in-out; /* Smooth transition */
   overflow: hidden;

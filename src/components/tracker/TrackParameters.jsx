@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
+
 import Paginator from "../paginator/Paginator";
 import ActiveVehicle from "../../data/ActiveVehicle";
-// import ActiveVehicleDetails from "./ActiveVehicleDetails";
 
 const TrackParameters = ({ onVehicleSelect }) => {
   const [vehicleData, setVehicleData] = useState([]); // State for the full data
@@ -66,7 +66,7 @@ const TrackParameters = ({ onVehicleSelect }) => {
 
   // existing handleViewClick function
   const handleViewClick = (vehicle) => {
-    onVehicleSelect(vehicle.id, vehicleData); // Ensure that vehicleData does not contain the entire vehicle object
+    onVehicleSelect(vehicle.id, vehicleData);
   };
 
   return (
@@ -102,7 +102,11 @@ const TrackParameters = ({ onVehicleSelect }) => {
             ? currentItems.map((vehicle) => (
                 <tr key={vehicle.id}>
                   <td>{vehicle.tripId}</td>
-                  <td>{vehicle.driverId}</td>
+                  <td>
+                    {vehicle.driver.map((driver, index) => (
+                      <p key={index}>{driver.driverId}</p>
+                    ))}
+                  </td>
                   <td>{vehicle.plateNumber}</td>
                   <td>{vehicle.brand}</td>
                   <td>{vehicle.model}</td>
@@ -116,7 +120,6 @@ const TrackParameters = ({ onVehicleSelect }) => {
                           gap: "5px",
                         }}
                       >
-                        {" "}
                         {/* Flex container */}
                         {vehicle.eSeal.map((eSealItem) => (
                           <button

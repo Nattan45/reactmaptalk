@@ -47,6 +47,7 @@ const AllAccounts = () => {
     <div>
       <h2 className="tableDataHeaderTitle">All Accounts</h2>
       <div className="filters">
+        Filter Accounts
         <input
           placeholder="Name, ID, phone, email ..."
           type="text"

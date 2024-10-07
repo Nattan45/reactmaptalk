@@ -69,13 +69,13 @@ tbody tr:hover {
 } */
 
 .activedevicesTable-header {
-  background-color: #2e5736;
+  background-color: var(--main-header-background-color);
 }
 
 /* for active devices */
 
 .inactivedevicesTable-header {
-  background-color: #572e33;
+  background-color: var(--main-header-background-color);
 }
 
 .rfidData {

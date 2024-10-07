@@ -116,7 +116,11 @@ const ActiveVehicle = [
     fromto: "Addis Ababa - Dire Dawa",
     Signal: "4/4",
     Warnings: "",
-    Problems: "",
+    Problems: [
+      {
+        id: 1,
+      },
+    ],
   },
   {
     id: 2,

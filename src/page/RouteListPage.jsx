@@ -1,12 +1,11 @@
 import React from "react";
 
-import "../App.css";
 import Header from "../components/header/Header";
 import Sidebar from "../components/sidebar/Sidebar";
 import Footer from "../components/footer/Footer";
-import MaptalksMyLocation from "../components/maptalks/MaptalksMyLocation";
+import RouteList from "../components/operationLists/route/RouteList";
 
-const MaptalksMyLocationPage = () => {
+const RouteListPage = () => {
   return (
     <div className="App">
       {/* header */}
@@ -23,7 +22,7 @@ const MaptalksMyLocationPage = () => {
 
         {/* All Contents */}
         <div className="contentsContainer">
-          <MaptalksMyLocation />
+          <RouteList />
         </div>
       </div>
 
@@ -35,4 +34,4 @@ const MaptalksMyLocationPage = () => {
   );
 };
 
-export default MaptalksMyLocationPage;
+export default RouteListPage;

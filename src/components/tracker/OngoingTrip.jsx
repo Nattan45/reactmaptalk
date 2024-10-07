@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+
+import { useNavigate } from "react-router-dom";
 import Paginator from "../paginator/Paginator";
 import Vehicles from "../../data/ActiveVehicle"; // Importing dummy data
 
@@ -7,6 +9,7 @@ const OngoingTrip = () => {
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
   const [showGpsList, setShowGpsList] = useState(false); // State for showing/hiding GPS list
+  const navigate = useNavigate(); // For redirecting
 
   // Simulating fetching data from a database (replace this with an actual API call)
   useEffect(() => {
@@ -32,6 +35,11 @@ const OngoingTrip = () => {
   // Function to toggle the GPS list visibility
   const toggleGpsList = () => {
     setShowGpsList((prevState) => !prevState);
+  };
+
+  // Handle Problem selection and redirect to the details page
+  const handleSelectProblem = (id) => {
+    navigate(`/problem/${id}`); // Redirect to ProblemDetails page
   };
 
   return (
@@ -147,7 +155,29 @@ const OngoingTrip = () => {
                 <td>{aVehicle.fromto}</td>
                 <td>{aVehicle.Signal}</td>
                 <td>{aVehicle.Warnings}</td>
-                <td>{aVehicle.Problems}</td>
+                <td>
+                  {Array.isArray(aVehicle.Problems) &&
+                    aVehicle.Problems.map((Problem, index) => (
+                      <svg
+                        key={index}
+                        onClick={() => handleSelectProblem(Problem.id)} // Correctly pass Problem.id
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#ff0000"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="lucide lucide-octagon-x"
+                      >
+                        <path d="m15 9-6 6" />
+                        <path d="M2.586 16.726A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2h6.624a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586z" />
+                        <path d="m9 9 6 6" />
+                      </svg>
+                    ))}
+                </td>
               </tr>
             ))
           ) : (

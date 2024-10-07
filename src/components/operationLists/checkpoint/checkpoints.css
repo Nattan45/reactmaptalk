@@ -1,0 +1,51 @@
+.gridCenter {
+  display: grid;
+  justify-items: center;
+}
+
+.fitContent {
+  width: fit-content;
+  margin-top: 5%;
+}
+
+.checkpointsCategoryList {
+  margin-top: 5%;
+}
+
+.categoryContainer {
+  display: grid;
+  justify-items: center;
+}
+.categoryHeader {
+  display: flex;
+  margin: 1% 0;
+}
+.categoryInfo {
+  display: flex;
+}
+
+.checkpointsList {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+.checkpointsRectangel {
+  display: grid;
+  justify-items: start;
+}
+
+.checkpointItem {
+  border-left: 1px solid black;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 5px;
+  justify-items: start;
+  padding-left: 15px;
+}
+
+.marginTB {
+  margin: 2%;
+}
+.marginBottom {
+  margin-bottom: 10%;
+}

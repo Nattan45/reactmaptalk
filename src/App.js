@@ -15,6 +15,10 @@ import TrackerPage from "./page/TrackerPage";
 import AccountPage from "./page/AccountPage";
 import NotFoundPage from "./page/NotFoundPage";
 import TripPage from "./page/TripPage";
+import ProblemDetails from "./page/ProblemDetails";
+import CheckpointsListPage from "./page/CheckpointsListPage";
+import WarehouseListPage from "./page/WarehouseListPage";
+import RouteListPage from "./page/RouteListPage";
 
 function App() {
   return (
@@ -59,8 +63,21 @@ function App() {
         <Route path="/TrackerPage" exact element={<TrackerPage />}></Route>
         <Route path="/AccountPage" exact element={<AccountPage />}></Route>
         <Route path="/TripPage" exact element={<TripPage />}></Route>
-
+        <Route
+          path="/CheckpointsListPage"
+          exact
+          element={<CheckpointsListPage />}
+        ></Route>
+        <Route
+          path="/WarehouseListPage"
+          exact
+          element={<WarehouseListPage />}
+        ></Route>
+        <Route path="/RouteListPage" exact element={<RouteListPage />}></Route>
+        {/* redirects */}
+        <Route path="/problem/:id" element={<ProblemDetails />} />
         {/* Catch-all route for 404 page */}
+        <Route path="/404" element={<NotFoundPage />} />{" "}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
