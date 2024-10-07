@@ -6,6 +6,7 @@
   --main-header-background-color: #282c34;
   --editable-header-color: #2e5736;
   --warning-header-color: #a92736;
+  --inactive-color: #d81818;
 }
 .borderBottom {
   border-bottom: 1px solid red;
@@ -16,7 +17,16 @@
   /* text-align: center; */
   background-color: #f2f4f3;
 }
-
+.activeColor {
+  background-color: var(--editable-header-color) !important;
+  color: white;
+  font-weight: 300;
+}
+.inactiveColor {
+  background-color: var(--inactive-color) !important;
+  color: white;
+  font-weight: 300;
+}
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

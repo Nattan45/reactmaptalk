@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import "./devices.css";
 import DeviceStastics from "./DeviceStastics";
 import RegisterGpsTrackerForm from "./RegisterGpsTrackerForm ";
-import GpsTrackerTable from "./GpsTrackerTable";
+import GpsTrackerTable from "../activeStatusList/gps/GpsTrackerTable";
 import RegisterFridForm from "./RegisterFridForm";
-import ActiveDevices from "./ActiveDevices";
-import InactiveDevices from "./InactiveDevices";
+import ActiveDevices from "../activeStatusList/gps/ActiveDevices";
+import InactiveDevices from "../activeStatusList/gps/InactiveDevices";
 
 const Devices = () => {
   // State to track which form is selected
