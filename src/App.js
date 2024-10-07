@@ -19,6 +19,7 @@ import ProblemDetails from "./page/ProblemDetails";
 import CheckpointsListPage from "./page/CheckpointsListPage";
 import WarehouseListPage from "./page/WarehouseListPage";
 import RouteListPage from "./page/RouteListPage";
+import PinListPage from "./page/PinListPage";
 
 function App() {
   return (
@@ -74,6 +75,7 @@ function App() {
           element={<WarehouseListPage />}
         ></Route>
         <Route path="/RouteListPage" exact element={<RouteListPage />}></Route>
+        <Route path="/PinListPage" exact element={<PinListPage />}></Route>
         {/* redirects */}
         <Route path="/problem/:id" element={<ProblemDetails />} />
         {/* Catch-all route for 404 page */}
