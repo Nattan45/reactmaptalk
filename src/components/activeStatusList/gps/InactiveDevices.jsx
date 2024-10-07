@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import "./tableStyle.css";
 
-import Paginator from "../paginator/Paginator";
-import Eseal from "../../data/Eseal";
+import Paginator from "../../paginator/Paginator";
+import Eseal from "../../../data/Eseal";
 import Button from "@mui/material/Button";
 
 const InactiveDevices = () => {
@@ -39,7 +38,7 @@ const InactiveDevices = () => {
 
   return (
     <div>
-      <h2 className="tableDataHeaderTitle">
+      <h2 className="tableDataHeaderTitle inactiveColor">
         <span>{inactiveDevices.length}</span> Inactive GPS Tracker Devices
       </h2>
       <table border="1" cellPadding="10" className="inactivedevicesTable">
@@ -61,7 +60,15 @@ const InactiveDevices = () => {
                 <td>{device.deviceName}</td>
                 <td>{device.brand}</td>
                 <td>{device.gpsId}</td>
-                <td>{device.rfidKeys.join(", ")}</td>
+                <td>
+                  <div className="flexList">
+                    {device.rfidKeys.map((rfid, idx) => (
+                      <button key={idx} className="itemCenter">
+                        {rfid.RfidKey}
+                      </button>
+                    ))}
+                  </div>
+                </td>
                 <td>
                   <Button
                     variant="contained"

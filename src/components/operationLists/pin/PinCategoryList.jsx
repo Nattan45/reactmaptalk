@@ -2,47 +2,16 @@ import React, { useEffect, useState } from "react";
 
 import Paginator from "../../paginator/Paginator";
 import PinsData from "../../../data/PinsData";
-import PinData from "../../../data/PinData";
-import PinCategoryList from "./PinCategoryList";
 
-const PinList = () => {
+const PinCategoryList = () => {
   const [deviceData, setDeviceData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
 
   const [visibleCategory, setVisibleCategory] = useState(null); // State to control the visibility of each category's checkpoints list
 
-  // useEffect(() => {
-  //   // Combine single warehouse data into the same structure as the multiple warehouse data
-  //   const combinedData = [
-  //     ...PinsData.map((pin) => ({
-  //       ...pin,
-  //       pinCoordinates: pin.pinCoordinates || [], // Ensure it exists
-  //     })),
-  //     {
-  //       pinName: "", // Add a category for single warehouse
-  //       pinCoordinates: PinData, // Use the single warehouse data
-  //     },
-  //   ];
-
-  //   setDeviceData(combinedData); // Load the combined data into state
-  // }, []);
   useEffect(() => {
-    // Correct the combinedData to ensure correct structure
-    const combinedData = [
-      ...PinsData.map((pin) => ({
-        ...pin,
-        pinCoordinates: pin.pinCoordinates || [], // Ensure it exists
-      })),
-      ...PinData.map((pin) => ({
-        // Convert PinData to match the same structure
-        id: pin.id,
-        pinName: pin.pinName,
-        pinCoordinates: pin.pinCoordinates || [],
-      })),
-    ];
-
-    setDeviceData(combinedData); // Load the combined data into state
+    setDeviceData(PinsData); // Load the dummy data into state
   }, []);
 
   // Calculate the current items to display on the current page
@@ -83,51 +52,39 @@ const PinList = () => {
                 <tr key={pin.id}>
                   <td>{pin.pinName}</td>
                   <td>
-                    {pin.pinCoordinates.length === 1 ? (
-                      // If there is only one coordinate, map and display it
-                      pin.pinCoordinates.map((coordinate, index) => (
-                        <p key={index}>
-                          [{coordinate[0].toFixed(5)},{coordinate[1].toFixed(5)}
-                          ]
-                        </p>
-                      ))
-                    ) : (
-                      <>
-                        <div className="categoryHeader">
-                          <div className="categoryInfo">
-                            <p>{pin.pinCoordinates.length} points</p>
-                          </div>
+                    <div className="categoryHeader">
+                      <div className="categoryInfo">
+                        <p>{pin.pinCoordinates.length} points</p>
+                      </div>
 
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="lucide lucide-chevron-down"
-                            onClick={() => toggleCategoryVisibility(idx)}
-                          >
-                            <path d="m6 9 6 6 6-6" />
-                          </svg>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="lucide lucide-chevron-down"
+                        onClick={() => toggleCategoryVisibility(idx)}
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </div>
+                    <div className="checkpointItem">
+                      {visibleCategory === idx && (
+                        <div className="checkpointsList ">
+                          {pin.pinCoordinates.map((coordinate, index) => (
+                            <p key={index}>
+                              [{coordinate[0].toFixed(5)},{" "}
+                              {coordinate[1].toFixed(5)}]
+                            </p>
+                          ))}
                         </div>
-                        <div className="checkpointItem">
-                          {visibleCategory === idx && (
-                            <div className="checkpointsList ">
-                              {pin.pinCoordinates.map((coordinate, index) => (
-                                <p key={index}>
-                                  [{coordinate[0].toFixed(5)},{" "}
-                                  {coordinate[1].toFixed(5)}]
-                                </p>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </>
-                    )}
+                      )}
+                    </div>
                   </td>
                   <td>
                     {/* View icon */}
@@ -201,9 +158,7 @@ const PinList = () => {
           onPageChange={handlePageChange}
         />
       </div>
-      <PinCategoryList />
     </div>
   );
 };
-
-export default PinList;
+export default PinCategoryList;

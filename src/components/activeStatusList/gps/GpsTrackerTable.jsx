@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import Paginator from "../paginator/Paginator";
-import Eseal from "../../data/Eseal"; // Importing dummy data
+import Paginator from "../../paginator/Paginator";
+import Eseal from "../../../data/Eseal"; // Importing dummy data
 // import Button from "@mui/material/Button";
 
 const GpsTrackerTable = () => {
@@ -58,7 +58,15 @@ const GpsTrackerTable = () => {
                 <td>{device.deviceName}</td>
                 <td>{device.brand}</td>
                 <td>{device.gpsId}</td>
-                <td className="">{device.rfidKeys.join(", ")}</td>
+                <td>
+                  <div className="flexList">
+                    {device.rfidKeys.map((rfid, idx) => (
+                      <button key={idx} className=" itemCenter">
+                        {rfid.RfidKey}
+                      </button>
+                    ))}
+                  </div>
+                </td>
                 <td>{device.status}</td>
                 <td>{device.status === "Active" ? device.vehicle : ""}</td>
                 <td>{device.speed}</td>

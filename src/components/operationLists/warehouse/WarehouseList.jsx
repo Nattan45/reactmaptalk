@@ -75,7 +75,7 @@ const WarehouseList = () => {
               <th>Category Name</th>
               <th>Coordinates</th>
               <th>Area</th>
-              <th>Edit</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -126,7 +126,24 @@ const WarehouseList = () => {
                         {warehouse.area} {warehouse.unit}
                       </td>
                       <td>
-                        {/* Edit and Delete icons */}
+                        {/* View icon */}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="lucide lucide-eye"
+                        >
+                          <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+                          <circle cx="12" cy="12" r="3" />
+                        </svg>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        {/* Edit icons */}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
@@ -144,6 +161,7 @@ const WarehouseList = () => {
                           <path d="M8 18h1" />
                         </svg>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        {/* Delete icons */}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"

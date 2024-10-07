@@ -2,17 +2,17 @@ const FreeRfids = [
   {
     id: 1,
     RfidKey: "12345",
-    status: "free",
+    status: "occupied",
   },
   {
     id: 2,
-    RfidKey: "56753",
+    RfidKey: "56751",
     status: "occupied",
   },
   {
     id: 3,
     RfidKey: "5443",
-    status: "free",
+    status: "occupied",
   },
   {
     id: 4,

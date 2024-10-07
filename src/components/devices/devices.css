@@ -201,3 +201,13 @@
 .heightfit {
   height: fit-content;
 }
+.flexList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap; /* Allow the items to wrap */
+  gap: 15px; /* Add spacing between items */
+  max-width: 250px;
+}
+.inactiveColor {
+  background-color: #ece800;
+}

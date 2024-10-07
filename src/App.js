@@ -19,6 +19,8 @@ import ProblemDetails from "./page/ProblemDetails";
 import CheckpointsListPage from "./page/CheckpointsListPage";
 import WarehouseListPage from "./page/WarehouseListPage";
 import RouteListPage from "./page/RouteListPage";
+import PinListPage from "./page/PinListPage";
+import DevicesStatusPage from "./page/DevicesStatusPage";
 
 function App() {
   return (
@@ -59,6 +61,11 @@ function App() {
           element={<SavedLocationsPage />}
         ></Route>
         <Route path="/DevicesPage" exact element={<DevicesPage />}></Route>
+        <Route
+          path="/DevicesStatusPage"
+          exact
+          element={<DevicesStatusPage />}
+        ></Route>
         <Route path="/VehiclesPage" exact element={<VehiclesPage />}></Route>
         <Route path="/TrackerPage" exact element={<TrackerPage />}></Route>
         <Route path="/AccountPage" exact element={<AccountPage />}></Route>
@@ -74,6 +81,7 @@ function App() {
           element={<WarehouseListPage />}
         ></Route>
         <Route path="/RouteListPage" exact element={<RouteListPage />}></Route>
+        <Route path="/PinListPage" exact element={<PinListPage />}></Route>
         {/* redirects */}
         <Route path="/problem/:id" element={<ProblemDetails />} />
         {/* Catch-all route for 404 page */}

@@ -32,7 +32,7 @@ const RouteListCard = () => {
             </svg>
           </p>
           <p className="Stastics-text-title textcenter">Saved Routes</p>
-          <p className="Stastics-text-body">
+          <p className="Stastics-text-body  textcenter">
             There are a total of <strong>{deviceData.length}</strong> &nbsp;
             Routes are found on the system
           </p>

@@ -1,4 +1,7 @@
 import React from "react";
+// import React, { useEffect, useState } from "react";
+
+import { NavLink } from "react-router-dom";
 
 const ActiveGpsTrackers = () => {
   return (
@@ -44,7 +47,9 @@ const ActiveGpsTrackers = () => {
 
             <p className="Stastics-text-body textcenter">49</p>
           </div>
-          <button className="Stastics-card-button">More info</button>
+          <NavLink exact="true" to="/DevicesStatusPage">
+            <button className="Stastics-card-button">More info</button>
+          </NavLink>
         </div>
       </div>
     </div>
