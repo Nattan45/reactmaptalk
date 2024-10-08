@@ -1,9 +1,18 @@
-import React from "react";
-// import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
+import Eseal from "../../data/Eseal";
 import { NavLink } from "react-router-dom";
 
 const ActiveGpsTrackers = () => {
+  const [activeDevices, setActiveDevices] = useState(0); // State for total checkpoints
+
+  useEffect(() => {
+    const activeEsealsCount = Eseal.filter(
+      (eseal) => eseal.status === "Active"
+    ).length;
+    setActiveDevices(activeEsealsCount);
+  }, []);
+
   return (
     <div className="">
       {/* actives E-seals / Gps */}
@@ -45,7 +54,7 @@ const ActiveGpsTrackers = () => {
             </p>
             <p className="Stastics-text-title textcenter">Active Gps</p>
 
-            <p className="Stastics-text-body textcenter">49</p>
+            <p className="Stastics-text-body textcenter">{activeDevices}</p>
           </div>
           <NavLink exact="true" to="/DevicesStatusPage">
             <button className="Stastics-card-button">More info</button>

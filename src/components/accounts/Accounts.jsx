@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import AccountStastics from "./AccountStastics";
 import RegisterUserForm from "./RegisterUserForm";
-import AllAccounts from "./AllAccounts";
+import AllAccounts from "../activeStatusList/account/AllAccounts";
 import RemoveAccount from "./RemoveAccount";
 import UpdateAccounts from "./UpdateAccounts";
 import AccountSetting from "./AccountSetting";

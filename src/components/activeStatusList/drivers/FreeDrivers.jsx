@@ -1,36 +1,36 @@
 import React, { useEffect, useState } from "react";
 
-import Paginator from "../paginator/Paginator";
-import Drivers from "../../data/Drivers";
+import Paginator from "../../paginator/Paginator";
+import Drivers from "../../../data/Drivers";
 
-const ActiveDrivers = () => {
-  const [ActiveDriversData, setActiveDriversData] = useState([]); // State for the full data
+const FreeDrivers = () => {
+  const [FreeDriversData, setFreeDriversData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
 
   // Simulating fetching data from a database (replace this with an actual API call)
   useEffect(() => {
     const fetchData = async () => {
-      setActiveDriversData(Drivers); // Load the dummy data into state
+      setFreeDriversData(Drivers); // Load the dummy data into state
     };
 
     fetchData(); // Call the fetch function
   }, []);
 
   // **Filter the driver to show only "Active" devices**
-  const inactiveActiveDrivers = ActiveDriversData.filter(
-    (item) => item.status === "Active"
+  const inactiveFreeDrivers = FreeDriversData.filter(
+    (item) => item.status === "Inactive"
   );
 
   // Calculate the current items to display on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = inactiveActiveDrivers.slice(
+  const currentItems = inactiveFreeDrivers.slice(
     indexOfFirstItem,
     indexOfLastItem
   ); // Slice the filtered data based on current page
 
-  const totalPages = Math.ceil(inactiveActiveDrivers.length / itemsPerPage);
+  const totalPages = Math.ceil(inactiveFreeDrivers.length / itemsPerPage);
 
   // Function to handle page change
   const handlePageChange = (pageNumber) => {
@@ -39,8 +39,8 @@ const ActiveDrivers = () => {
 
   return (
     <div>
-      <h2 className="tableDataHeaderTitle">
-        <span>{inactiveActiveDrivers.length}</span> Free Drivers
+      <h2 className="tableDataHeaderTitle inactiveColor">
+        <span>{inactiveFreeDrivers.length}</span> Inactive Drivers
       </h2>
       <table border="1" cellPadding="10" className="activedevicesTable">
         <thead className="activedevicesTable-header">
@@ -76,4 +76,4 @@ const ActiveDrivers = () => {
   );
 };
 
-export default ActiveDrivers;
+export default FreeDrivers;

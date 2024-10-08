@@ -1,24 +1,24 @@
 import React, { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom"; // Import this to access the location and its state
 
-import ActiveDevices from "./ActiveDevices";
-import InactiveDevices from "./InactiveDevices";
-import GpsTrackerTable from "./GpsTrackerTable";
+import ActiveVehicles from "./ActiveVehicles";
+import InActiveVehicles from "./InActiveVehicles";
+import AllVehiclesDataTable from "./AllVehiclesDataTable";
 
-const DevicesStatus = () => {
+const VehiclesStatus = () => {
   const location = useLocation(); // Hook to get the current location and its state
-  const inactiveDevicesRef = useRef(null); // Ref to track the InactiveDevices section
+  const inActiveVehiclesRef = useRef(null); // Ref to track the InactiveDevices section
 
   // Scroll to InactiveDevices when redirected with focusOnInactive state
   useEffect(() => {
     if (
       location.state &&
       location.state.focusOnInactive &&
-      inactiveDevicesRef.current
+      inActiveVehiclesRef.current
     ) {
       // Ensure that we scroll after the component renders
       setTimeout(() => {
-        inactiveDevicesRef.current.scrollIntoView({ behavior: "smooth" });
+        inActiveVehiclesRef.current.scrollIntoView({ behavior: "smooth" });
       }, 300); // Short delay to ensure the page is fully loaded
     }
   }, [location.state]);
@@ -26,19 +26,19 @@ const DevicesStatus = () => {
   return (
     <div className="gridCenter">
       <div className="marginTB">
-        <ActiveDevices />
+        <ActiveVehicles />
       </div>
 
-      {/* Add a ref to InactiveDevices */}
-      <div ref={inactiveDevicesRef}>
-        <InactiveDevices />
+      {/* Add a ref to InActiveVehicles */}
+      <div ref={inActiveVehiclesRef}>
+        <InActiveVehicles />
       </div>
 
       <div className="marginTB">
-        <GpsTrackerTable />
+        <AllVehiclesDataTable />
       </div>
     </div>
   );
 };
 
-export default DevicesStatus;
+export default VehiclesStatus;

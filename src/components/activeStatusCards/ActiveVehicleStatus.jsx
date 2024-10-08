@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import { NavLink } from "react-router-dom";
 import "./statusCard.css";
+import Vehicle from "../../data/ActiveVehicle";
 
 const ActiveVehicleStatus = () => {
+  const [activeVehicles, setActiveVehicles] = useState(0); // State for total checkpoints
+
+  useEffect(() => {
+    const activeVehiclesCount = Vehicle.length;
+    setActiveVehicles(activeVehiclesCount);
+  }, []);
   return (
     <div className="">
       {/* actives Vehicles */}
@@ -51,9 +60,11 @@ const ActiveVehicleStatus = () => {
             </p>
             <p className="Stastics-text-title textcenter">Active Vehicles</p>
 
-            <p className="Stastics-text-body textcenter">86</p>
+            <p className="Stastics-text-body textcenter">{activeVehicles}</p>
           </div>
-          <button className="Stastics-card-button">More info</button>
+          <NavLink exact="true" to="/VehiclesStatusPage">
+            <button className="Stastics-card-button">More info</button>
+          </NavLink>
         </div>
       </div>
     </div>

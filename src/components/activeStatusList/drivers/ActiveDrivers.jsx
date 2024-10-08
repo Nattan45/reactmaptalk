@@ -1,30 +1,36 @@
 import React, { useEffect, useState } from "react";
 
-import Paginator from "../paginator/Paginator";
-import Drivers from "../../data/Drivers";
+import Paginator from "../../paginator/Paginator";
+import Drivers from "../../../data/Drivers";
 
-const AllDriversList = () => {
-  const [driverData, setDriverData] = useState([]); // State for the full data
+const ActiveDrivers = () => {
+  const [ActiveDriversData, setActiveDriversData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
 
   // Simulating fetching data from a database (replace this with an actual API call)
   useEffect(() => {
     const fetchData = async () => {
-      setDriverData(Drivers); // Load the dummy data into state
+      setActiveDriversData(Drivers); // Load the dummy data into state
     };
 
     fetchData(); // Call the fetch function
   }, []);
 
-  const allDrivers = driverData;
+  // **Filter the driver to show only "Active" devices**
+  const inactiveActiveDrivers = ActiveDriversData.filter(
+    (item) => item.status === "Active"
+  );
 
   // Calculate the current items to display on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = allDrivers.slice(indexOfFirstItem, indexOfLastItem); // Slice the filtered data based on current page
+  const currentItems = inactiveActiveDrivers.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  ); // Slice the filtered data based on current page
 
-  const totalPages = Math.ceil(allDrivers.length / itemsPerPage);
+  const totalPages = Math.ceil(inactiveActiveDrivers.length / itemsPerPage);
 
   // Function to handle page change
   const handlePageChange = (pageNumber) => {
@@ -33,28 +39,27 @@ const AllDriversList = () => {
 
   return (
     <div>
-      <h2 className="tableDataHeaderTitle">
-        <span></span> All Drivers
+      <h2 className="tableDataHeaderTitle activeColor">
+        <span>{inactiveActiveDrivers.length}</span> Free Drivers
       </h2>
       <table border="1" cellPadding="10" className="activedevicesTable">
         <thead className="activedevicesTable-header">
           <tr>
             <th>Driver Name</th>
             <th>Driver ID</th>
-            <th>Phone Number</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody>
           {currentItems.length > 0
-            ? currentItems.map((driver) => (
-                <tr key={driver.id}>
+            ? currentItems.map((Driver) => (
+                <tr key={Driver.id}>
                   <td>
-                    {driver.firstName}&nbsp;{driver.lastName}
+                    {Driver.firstName}&nbsp;
+                    {Driver.lastName}
                   </td>
-                  <td>{driver.driverId}</td>
-                  <td>{driver.phoneNumber}</td>
-                  <td>{driver.status}</td>
+                  <td>{Driver.driverId}</td>
+                  <td>{Driver.status}</td>
                 </tr>
               ))
             : null}
@@ -70,4 +75,5 @@ const AllDriversList = () => {
     </div>
   );
 };
-export default AllDriversList;
+
+export default ActiveDrivers;

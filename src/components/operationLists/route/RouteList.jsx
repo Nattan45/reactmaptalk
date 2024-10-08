@@ -42,6 +42,7 @@ const RouteList = () => {
           <thead>
             <tr>
               <th>Route Name</th>
+              <th>Route Number</th>
               <th>Coordinates</th>
               <th>Total Distance</th>
               <th>Actions</th>
@@ -52,6 +53,7 @@ const RouteList = () => {
               currentItems.map((route, idx) => (
                 <tr key={route.id}>
                   <td>{route.routeName}</td>
+                  <td>{route.roadNumber}</td>
                   <td>
                     <div className="categoryHeader">
                       <div className="categoryInfo">

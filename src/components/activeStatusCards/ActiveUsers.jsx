@@ -1,5 +1,7 @@
 import React from "react";
 
+import { NavLink } from "react-router-dom";
+
 const ActiveUsers = () => {
   return (
     <div className="">
@@ -51,9 +53,12 @@ const ActiveUsers = () => {
             </p>
             <p className="Stastics-text-title textcenter">Active Users</p>
 
-            <p className="Stastics-text-body textcenter">64</p>
+            <p className="Stastics-text-body textcenter">1</p>
           </div>
-          <button className="Stastics-card-button">More info</button>
+
+          <NavLink exact="true" to="/AccountsStatusPage">
+            <button className="Stastics-card-button">More info</button>
+          </NavLink>
         </div>
       </div>
     </div>

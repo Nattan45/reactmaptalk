@@ -2,14 +2,14 @@ import React, { useState } from "react";
 
 import VehicleStastics from "./VehicleStastics";
 import VehicleRegistration from "./VehicleRegistration";
-import AllVehiclesDataTable from "./AllVehiclesDataTable";
+import AllVehiclesDataTable from "../activeStatusList/vehicles/AllVehiclesDataTable";
 import DriverRegistration from "../driver/DriverRegistration";
 import UpdateDriverDetails from "../driver/UpdateDriverDetails";
-import ActiveDrivers from "../driver/ActiveDrivers";
-import FreeDrivers from "../driver/FreeDrivers";
+import ActiveDrivers from "../activeStatusList/drivers/ActiveDrivers";
+import FreeDrivers from "../activeStatusList/drivers/FreeDrivers";
 import UpdateVehicleDetails from "./UpdateVehicleDetails";
-import ActiveVehicles from "./ActiveVehicles";
-import InActiveVehicles from "./InActiveVehicles";
+import ActiveVehicles from "../activeStatusList/vehicles/ActiveVehicles";
+import InActiveVehicles from "../activeStatusList/vehicles/InActiveVehicles";
 
 const Vehicles = () => {
   // State to track which form is selected
