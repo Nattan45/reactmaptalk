@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { NavLink } from "react-router-dom";
 import Driver from "../../data/Drivers";
 
 const InactiveDrivers = () => {
@@ -17,7 +18,6 @@ const InactiveDrivers = () => {
         <div className="Stastics-card-details">
           <p className="Stastics-text-title-icon">
             <svg
-              // fill="green"
               width="32"
               height="32"
               viewBox="0 0 48 48"
@@ -66,7 +66,12 @@ const InactiveDrivers = () => {
 
           <p className="Stastics-text-body textcenter">{inactiveDrivers}</p>
         </div>
-        <button className="Stastics-card-button">More info</button>
+        <NavLink
+          to="/DriversStatusPage"
+          state={{ focusOnInactive: true }} // Correct format to pass state
+        >
+          <button className="Stastics-card-button">More info</button>
+        </NavLink>
       </div>
     </div>
   );

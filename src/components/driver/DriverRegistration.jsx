@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import AllDriversList from "./AllDriversList";
+import AllDriversList from "../activeStatusList/drivers/AllDriversList";
 
 const DriverRegistration = () => {
   const [driverId, setDriverId] = useState("");

@@ -1,36 +1,30 @@
 import React, { useEffect, useState } from "react";
 
-import Paginator from "../paginator/Paginator";
-import Drivers from "../../data/Drivers";
+import Drivers from "../../../data/Drivers";
+import Paginator from "../../paginator/Paginator";
 
-const FreeDrivers = () => {
-  const [FreeDriversData, setFreeDriversData] = useState([]); // State for the full data
+const AllDriversList = () => {
+  const [driverData, setDriverData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
 
   // Simulating fetching data from a database (replace this with an actual API call)
   useEffect(() => {
     const fetchData = async () => {
-      setFreeDriversData(Drivers); // Load the dummy data into state
+      setDriverData(Drivers); // Load the dummy data into state
     };
 
     fetchData(); // Call the fetch function
   }, []);
 
-  // **Filter the driver to show only "Active" devices**
-  const inactiveFreeDrivers = FreeDriversData.filter(
-    (item) => item.status === "Inactive"
-  );
+  const allDrivers = driverData;
 
   // Calculate the current items to display on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = inactiveFreeDrivers.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  ); // Slice the filtered data based on current page
+  const currentItems = allDrivers.slice(indexOfFirstItem, indexOfLastItem); // Slice the filtered data based on current page
 
-  const totalPages = Math.ceil(inactiveFreeDrivers.length / itemsPerPage);
+  const totalPages = Math.ceil(allDrivers.length / itemsPerPage);
 
   // Function to handle page change
   const handlePageChange = (pageNumber) => {
@@ -40,26 +34,27 @@ const FreeDrivers = () => {
   return (
     <div>
       <h2 className="tableDataHeaderTitle">
-        <span>{inactiveFreeDrivers.length}</span> Inactive Drivers
+        <span></span> All Drivers
       </h2>
       <table border="1" cellPadding="10" className="activedevicesTable">
         <thead className="activedevicesTable-header">
           <tr>
             <th>Driver Name</th>
             <th>Driver ID</th>
+            <th>Phone Number</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody>
           {currentItems.length > 0
-            ? currentItems.map((Driver) => (
-                <tr key={Driver.id}>
+            ? currentItems.map((driver) => (
+                <tr key={driver.id}>
                   <td>
-                    {Driver.firstName}&nbsp;
-                    {Driver.lastName}
+                    {driver.firstName}&nbsp;{driver.lastName}
                   </td>
-                  <td>{Driver.driverId}</td>
-                  <td>{Driver.status}</td>
+                  <td>{driver.driverId}</td>
+                  <td>{driver.phoneNumber}</td>
+                  <td>{driver.status}</td>
                 </tr>
               ))
             : null}
@@ -75,5 +70,4 @@ const FreeDrivers = () => {
     </div>
   );
 };
-
-export default FreeDrivers;
+export default AllDriversList;

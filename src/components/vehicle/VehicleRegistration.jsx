@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import Drivers from "../../data/Drivers";
-import FreeDrivers from "../driver/FreeDrivers";
+import FreeDrivers from "../activeStatusList/drivers/FreeDrivers";
 
 const VehicleRegistration = () => {
   const [vehicleName, setVehicleName] = useState("");

@@ -1,6 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import Driver from "../../data/Drivers";
+import { NavLink } from "react-router-dom";
 
 export const ActiveDriverStatus = () => {
+  const [activeDriver, setActiveDriver] = useState(0); // State for total checkpoints
+
+  useEffect(() => {
+    const activeDriverCount = Driver.filter(
+      (driver) => driver.status === "Active"
+    ).length;
+    setActiveDriver(activeDriverCount);
+  }, []);
+
   return (
     <div className="">
       {/* actives Drivers */}
@@ -55,9 +67,11 @@ export const ActiveDriverStatus = () => {
             </p>
             <p className="Stastics-text-title textcenter">Active Drivers</p>
 
-            <p className="Stastics-text-body textcenter">6</p>
+            <p className="Stastics-text-body textcenter">{activeDriver}</p>
           </div>
-          <button className="Stastics-card-button">More info</button>
+          <NavLink exact="true" to="/DriversStatusPage">
+            <button className="Stastics-card-button">More info</button>
+          </NavLink>
         </div>
       </div>
     </div>
