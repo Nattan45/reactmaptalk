@@ -39,7 +39,7 @@ const DriverStatus = () => {
     //     <AllDriversList />
     //   </div>
     // </div>
-    <div className="grid">
+    <div className="gridJustifyCenter">
       <div className="flexRowCenter">
         <ActiveDrivers />
         <div className="marginLeft">

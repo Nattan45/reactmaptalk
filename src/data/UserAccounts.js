@@ -8,7 +8,7 @@ const UserAccounts = [
     email: "john.doe@example.com",
     department: "Engineering",
     userId: "JD123",
-    role: "admin",
+    role: "Admin",
   },
   {
     id: 2,
@@ -19,7 +19,7 @@ const UserAccounts = [
     email: "jane.smith@example.com",
     department: "HR",
     userId: "JS234",
-    role: "admin",
+    role: "Admin",
   },
   {
     id: 3,
@@ -30,7 +30,7 @@ const UserAccounts = [
     email: "mike.johnson@example.com",
     department: "Sales",
     userId: "MJ345",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 4,
@@ -41,7 +41,7 @@ const UserAccounts = [
     email: "emily.davis@example.com",
     department: "Marketing",
     userId: "ED456",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 5,
@@ -52,7 +52,7 @@ const UserAccounts = [
     email: "chris.brown@example.com",
     department: "IT",
     userId: "CB567",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 6,
@@ -63,7 +63,7 @@ const UserAccounts = [
     email: "amanda.clark@example.com",
     department: "Finance",
     userId: "AC678",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 7,
@@ -74,7 +74,7 @@ const UserAccounts = [
     email: "david.walker@example.com",
     department: "Operations",
     userId: "DW789",
-    role: "admin",
+    role: "Admin",
   },
   {
     id: 8,
@@ -85,7 +85,7 @@ const UserAccounts = [
     email: "susan.turner@example.com",
     department: "Support",
     userId: "ST890",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 9,
@@ -96,7 +96,7 @@ const UserAccounts = [
     email: "robert.hall@example.com",
     department: "Legal",
     userId: "RH901",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 10,
@@ -107,7 +107,7 @@ const UserAccounts = [
     email: "nancy.lopez@example.com",
     department: "Customer Service",
     userId: "NL101",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 11,
@@ -118,7 +118,7 @@ const UserAccounts = [
     email: "kevin.young@example.com",
     department: "Sales",
     userId: "KY102",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 12,
@@ -129,7 +129,7 @@ const UserAccounts = [
     email: "laura.king@example.com",
     department: "Engineering",
     userId: "LK103",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 13,
@@ -140,7 +140,7 @@ const UserAccounts = [
     email: "steve.martin@example.com",
     department: "HR",
     userId: "SM104",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 14,
@@ -151,7 +151,7 @@ const UserAccounts = [
     email: "kate.wilson@example.com",
     department: "Finance",
     userId: "KW105",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 15,
@@ -162,7 +162,7 @@ const UserAccounts = [
     email: "ryan.moore@example.com",
     department: "Marketing",
     userId: "RM106",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 16,
@@ -173,7 +173,7 @@ const UserAccounts = [
     email: "claire.taylor@example.com",
     department: "IT",
     userId: "CT107",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 17,
@@ -184,7 +184,7 @@ const UserAccounts = [
     email: "daniel.anderson@example.com",
     department: "Operations",
     userId: "DA108",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 18,
@@ -195,7 +195,7 @@ const UserAccounts = [
     email: "sarah.miller@example.com",
     department: "Support",
     userId: "SM109",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 19,
@@ -206,7 +206,7 @@ const UserAccounts = [
     email: "jason.garcia@example.com",
     department: "Legal",
     userId: "JG110",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 20,
@@ -217,7 +217,7 @@ const UserAccounts = [
     email: "olivia.martinez@example.com",
     department: "Customer Service",
     userId: "OM111",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 21,
@@ -228,7 +228,7 @@ const UserAccounts = [
     email: "brian.thomas@example.com",
     department: "Sales",
     userId: "BT112",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 22,
@@ -239,7 +239,7 @@ const UserAccounts = [
     email: "lisa.lee@example.com",
     department: "Engineering",
     userId: "LL113",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 23,
@@ -250,7 +250,7 @@ const UserAccounts = [
     email: "eric.perez@example.com",
     department: "HR",
     userId: "EP114",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 24,
@@ -261,7 +261,7 @@ const UserAccounts = [
     email: "mia.lopez@example.com",
     department: "Finance",
     userId: "ML115",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 25,
@@ -272,7 +272,7 @@ const UserAccounts = [
     email: "josh.harris@example.com",
     department: "Marketing",
     userId: "JH116",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 26,
@@ -283,7 +283,7 @@ const UserAccounts = [
     email: "ella.white@example.com",
     department: "IT",
     userId: "EW117",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 27,
@@ -294,7 +294,7 @@ const UserAccounts = [
     email: "tyler.martin@example.com",
     department: "Operations",
     userId: "TM118",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 28,
@@ -305,7 +305,7 @@ const UserAccounts = [
     email: "grace.clark@example.com",
     department: "Support",
     userId: "GC119",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 29,
@@ -316,7 +316,7 @@ const UserAccounts = [
     email: "ethan.scott@example.com",
     department: "Legal",
     userId: "ES120",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 30,
@@ -327,7 +327,7 @@ const UserAccounts = [
     email: "chloe.baker@example.com",
     department: "Customer Service",
     userId: "CB121",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 31,
@@ -338,7 +338,7 @@ const UserAccounts = [
     email: "mason.adams@example.com",
     department: "Sales",
     userId: "MA122",
-    role: "operator",
+    role: "Operator",
   },
   {
     id: 32,
@@ -349,7 +349,7 @@ const UserAccounts = [
     email: "zoe.nelson@example.com",
     department: "Engineering",
     userId: "ZN123",
-    role: "operator",
+    role: "Operator",
   },
 ];
 

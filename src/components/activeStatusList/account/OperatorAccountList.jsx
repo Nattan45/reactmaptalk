@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import UserAccounts from "../../data/UserAccounts"; // user data
-import { filterUsers } from "./filterUsers"; // filter function for user data
-import Paginator from "../paginator/Paginator";
-import UpdateAccountPopup from "./UpdateAccountsPopup"; // Import the update component
 
-const AllAccounts = () => {
+import UserAccounts from "../../../data/UserAccounts"; // user data
+import Paginator from "../../paginator/Paginator";
+import UpdateAccountPopup from "../../accounts/UpdateAccountsPopup"; // Import the update component
+
+const OperatorAccountList = () => {
   const [userData, setUserData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
-  const [filterText, setFilterText] = useState(""); // State for filtering
   const [user, setUser] = useState(null); // State for selected user
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // State to control the modal
 
@@ -20,7 +19,7 @@ const AllAccounts = () => {
     fetchData(); // Call the fetch function
   }, []);
 
-  const allUsers = filterUsers(userData, filterText); // Filtered users
+  const allUsers = userData.filter((user) => user.role === "Operator");
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = allUsers.slice(indexOfFirstItem, indexOfLastItem); // Slice the filtered data based on current page
@@ -45,18 +44,9 @@ const AllAccounts = () => {
 
   return (
     <div>
-      <h2 className="tableDataHeaderTitle">All Accounts</h2>
-      <div className="filters">
-        Filter Accounts
-        <input
-          placeholder="Name, ID, phone, email ..."
-          type="text"
-          name="text"
-          className="inputFilter"
-          value={filterText}
-          onChange={(e) => setFilterText(e.target.value)}
-        />
-      </div>
+      <h2 className="tableDataHeaderTitle activeColor">
+        Operator Accounts List
+      </h2>
       <br />
       <table border="1" cellPadding="10" className="activedevicesTable">
         <thead className="activedevicesTable-header">
@@ -68,7 +58,6 @@ const AllAccounts = () => {
             <th>Department</th>
             <th>Email</th>
             <th>Phone Number</th>
-            <th>Role</th>
             <th>Edit</th>
           </tr>
         </thead>
@@ -82,7 +71,6 @@ const AllAccounts = () => {
               <td>{user.department}</td>
               <td>{user.email}</td>
               <td>{user.phoneNumber}</td>
-              <td>{user.role}</td>
               <td>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -125,4 +113,4 @@ const AllAccounts = () => {
   );
 };
 
-export default AllAccounts;
+export default OperatorAccountList;
