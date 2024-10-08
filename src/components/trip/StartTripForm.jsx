@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import vehiclesData from "../../data/Vehicles"; // Adjust path if necessary
 import driversData from "../../data/Drivers"; // Adjust path if necessary
-import eSealData from "../../data/Eseal"; // Adjust path if necessary
+import eSealData from "../../data/Eseal";
+import Routes from "../../data/RouteData";
 
 const StartTripForm = () => {
   const [plateNumber, setPlateNumber] = useState("");
@@ -18,7 +19,8 @@ const StartTripForm = () => {
   const [eSealList, setESealList] = useState([]); // List of added eSeals
   const [gpsMountedDate, setGpsMountedDate] = useState("");
   const [tripStartingDate, setTripStartingDate] = useState("");
-  const [fromto, setFromTo] = useState("");
+  const [roadNumber, setRoadNumber] = useState(""); // Input for road number
+  const [roadName, setRoadName] = useState("");
   const [Checkpoints, setCheckpoints] = useState("");
 
   // Function to find vehicle by plate number if its status is not active
@@ -84,7 +86,7 @@ const StartTripForm = () => {
       gpsMountedDate,
       tripStartingDate,
       Checkpoints,
-      fromto,
+      roadNumber,
       Signal: "",
       Warnings: "",
       Problems: "",
@@ -103,6 +105,20 @@ const StartTripForm = () => {
       },
     },
   });
+
+  // Function to find route by roadNumber
+  const findRoadNameByNumber = (number) => {
+    const foundRoute = Routes.find((route) => route.roadNumber === number);
+    return foundRoute ? foundRoute.routeName : "Route not found";
+  };
+
+  // Fetch route name when roadNumber changes
+  useEffect(() => {
+    if (roadNumber) {
+      const routeName = findRoadNameByNumber(roadNumber);
+      setRoadName(routeName);
+    }
+  }, [roadNumber]);
 
   return (
     <form className="form wh-fit-content singleColumn" onSubmit={handleSubmit}>
@@ -296,15 +312,31 @@ const StartTripForm = () => {
           />
           <span>Checkpoints:</span>
         </label>
-        <label>
-          <input
-            className="input"
-            type="text"
-            value={fromto}
-            onChange={(e) => setFromTo(e.target.value)}
-          />
-          <span>From-To:</span>
-        </label>
+
+        <div className="driverForm">
+          <label className="driverLabel">
+            <div className="driverInputSection">
+              <input
+                type="text"
+                value={roadNumber}
+                onChange={(e) => setRoadNumber(e.target.value)} // Set roadNumber on change
+                required
+                className="driverInput"
+                placeholder="Road Number"
+              />
+              <span className="driverLabelText">Road Name</span>
+            </div>
+
+            {/* Display Route Name on the right side of the input */}
+            <div className="driverNameSection">
+              {roadName ? (
+                <span className="driverName">{roadName}</span>
+              ) : (
+                <span className="driverName">Waiting for ID...</span>
+              )}
+            </div>
+          </label>
+        </div>
 
         <button type="submit" className="submit placeEnd">
           Submit
