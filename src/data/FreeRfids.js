@@ -32,14 +32,14 @@ const FreeRfids = [
     RfidKey: "5688", // Auto Generated
     tagType: "Passive", // Active / Pas
     installationDate: "",
-    status: "free", // Free / Occupied
+    status: "Free", // Free / Occupied
   },
   {
     id: 6,
     RfidKey: "6262", // Auto Generated
     tagType: "Passive", // Active / Pas
     installationDate: "",
-    status: "free", // Free / Occupied
+    status: "Free", // Free / Occupied
   },
   {
     id: 7,
