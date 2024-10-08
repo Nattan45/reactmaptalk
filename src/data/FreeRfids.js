@@ -112,7 +112,7 @@ const FreeRfids = [
   {
     id: 23,
     RfidKey: "30303",
-    status: "free",
+    status: "occupied",
   },
   {
     id: 24,
@@ -132,12 +132,12 @@ const FreeRfids = [
   {
     id: 27,
     RfidKey: "70707",
-    status: "free",
+    status: "occupied",
   },
   {
     id: 28,
     RfidKey: "80808",
-    status: "free",
+    status: "occupied",
   },
   {
     id: 29,
@@ -148,6 +148,51 @@ const FreeRfids = [
     id: 30,
     RfidKey: "10111",
     status: "occupied",
+  },
+  {
+    id: 31,
+    RfidKey: "10911",
+    status: "occupied",
+  },
+  {
+    id: 32,
+    RfidKey: "10191",
+    status: "occupied",
+  },
+  {
+    id: 33,
+    RfidKey: "19111",
+    status: "occupied",
+  },
+  {
+    id: 34,
+    RfidKey: "90111",
+    status: "occupied",
+  },
+  {
+    id: 35,
+    RfidKey: "10181",
+    status: "occupied",
+  },
+  {
+    id: 36,
+    RfidKey: "18111",
+    status: "occupied",
+  },
+  {
+    id: 37,
+    RfidKey: "10811",
+    status: "occupied",
+  },
+  {
+    id: 38,
+    RfidKey: "10118",
+    status: "occupied",
+  },
+  {
+    id: 39,
+    RfidKey: "10199",
+    status: "free",
   },
 ];
 

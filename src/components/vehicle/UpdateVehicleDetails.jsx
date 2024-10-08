@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import Paginator from "../paginator/Paginator";
-import Vehicles from "../../data/Vehiclesxx";
+import Vehicles from "../../data/Vehicles";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";

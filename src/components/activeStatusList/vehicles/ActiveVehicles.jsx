@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import Paginator from "../paginator/Paginator";
-import Vehicles from "../../data/Vehiclesxx"; // Importing dummy data
+import Paginator from "../../paginator/Paginator";
+import Vehicles from "../../../data/Vehicles"; // Importing dummy data
 // import Button from "@mui/material/Button";
 
-const InActiveVehicles = () => {
+const ActiveVehicles = () => {
   const [vehicleData, setVehicleData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
@@ -18,20 +18,15 @@ const InActiveVehicles = () => {
     fetchData(); // Call the fetch function
   }, []);
 
-  const InactiveVehicles = vehicleData.filter(
-    (item) => item.status === "Inactive"
-  );
+  const activeVehicles = vehicleData.filter((item) => item.status === "Active");
 
   // Calculate the current items to display on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = InactiveVehicles.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  ); // Slice the data based on current page
+  const currentItems = activeVehicles.slice(indexOfFirstItem, indexOfLastItem); // Slice the data based on current page
 
   // Calculate the total number of pages
-  const totalPages = Math.ceil(InactiveVehicles.length / itemsPerPage);
+  const totalPages = Math.ceil(activeVehicles.length / itemsPerPage);
 
   // Function to handle page change
   const handlePageChange = (pageNumber) => {
@@ -40,17 +35,18 @@ const InActiveVehicles = () => {
 
   return (
     <div>
-      <h2 className="tableDataHeaderTitle">
-        {InactiveVehicles.length} Inactive Vehicles Status
+      <h2 className="tableDataHeaderTitle activeColor">
+        All {activeVehicles.length} Active Vehicles Status
       </h2>
-      <table border="1" cellPadding="10" className="inactivedevicesTable">
-        <thead className="inactivedevicesTable-header">
+      <table border="1" cellPadding="10" className="activedevicesTable">
+        <thead className="activedevicesTable-header">
           <tr>
             <th>Vehicle Name</th>
             <th>Brand</th>
             <th>Model</th>
             <th>Plate Number</th>
             <th>Status</th>
+            <th>Driver ID</th>
           </tr>
         </thead>
         <tbody>
@@ -62,6 +58,7 @@ const InActiveVehicles = () => {
                 <td>{device.model}</td>
                 <td>{device.plateNumber}</td>
                 <td>{device.status}</td>
+                <td>{device.status === "Active" ? device.driverId : ""}</td>
               </tr>
             ))
           ) : (
@@ -81,4 +78,4 @@ const InActiveVehicles = () => {
   );
 };
 
-export default InActiveVehicles;
+export default ActiveVehicles;

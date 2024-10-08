@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import Paginator from "../paginator/Paginator";
-import Vehicles from "../../data/Vehiclesxx"; // Importing dummy data
+import Vehicles from "../../../data/Vehicles"; // Importing dummy data
+import Paginator from "../../paginator/Paginator";
 // import Button from "@mui/material/Button";
 
 const AllVehiclesDataTable = () => {
