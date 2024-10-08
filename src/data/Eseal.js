@@ -131,7 +131,16 @@ const Eseal = [
     deviceName: "Tracker 7",
     brand: "Brand C",
     gpsId: "57575-Z",
-    rfidKeys: ["1124", "3345", "6677"],
+    rfidKeys: [
+      {
+        id: 39,
+        RfidKey: "10199",
+      },
+      {
+        id: 25,
+        RfidKey: "50505",
+      },
+    ],
     status: "Inactive",
   },
   {
@@ -175,7 +184,16 @@ const Eseal = [
     deviceName: "Tracker 10",
     brand: "Brand D",
     gpsId: "56455-W",
-    rfidKeys: ["9982", "2275", "6588"],
+    rfidKeys: [
+      {
+        id: 21,
+        RfidKey: "10101",
+      },
+      {
+        id: 19,
+        RfidKey: "88888",
+      },
+    ],
     status: "Inactive",
   },
   {
@@ -201,7 +219,16 @@ const Eseal = [
     deviceName: "Tracker 12",
     brand: "Brand A",
     gpsId: "54355-X",
-    rfidKeys: ["2654", "7645", "9875"],
+    rfidKeys: [
+      {
+        id: 18,
+        RfidKey: "77777",
+      },
+      {
+        id: 15,
+        RfidKey: "4444",
+      },
+    ],
     status: "Inactive",
   },
   {
@@ -227,7 +254,16 @@ const Eseal = [
     deviceName: "Tracker 14",
     brand: "Brand D",
     gpsId: "55355-W",
-    rfidKeys: ["8654", "4356"],
+    rfidKeys: [
+      {
+        id: 14,
+        RfidKey: "3333",
+      },
+      {
+        id: 8,
+        RfidKey: "8838",
+      },
+    ],
     status: "Inactive",
   },
   {

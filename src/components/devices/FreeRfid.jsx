@@ -21,7 +21,7 @@ const FreeRfid = () => {
 
   // **Filter the deviceData to show only "Active" devices**
   const inactiveFreeRfids = FreeRfidsData.filter(
-    (item) => item.status === "free"
+    (item) => item.status === "Free"
   );
 
   // Calculate the current items to display on the current page
@@ -49,6 +49,8 @@ const FreeRfid = () => {
         <thead className="activedevicesTable-header">
           <tr>
             <th>RFID Keys</th>
+            <th>Status</th>
+            <th>Tag Type</th>
             <th>Delete</th>
           </tr>
         </thead>
@@ -57,6 +59,8 @@ const FreeRfid = () => {
             ? currentItems.map((Rfids) => (
                 <tr key={Rfids.id}>
                   <td>{Rfids.RfidKey}</td>
+                  <td>{Rfids.status}</td>
+                  <td>{Rfids.tagType}</td>
                   <td>
                     <Button
                       variant="contained"

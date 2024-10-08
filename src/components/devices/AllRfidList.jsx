@@ -57,6 +57,8 @@ const AllRfidList = () => {
           <tr>
             <th>RFID Keys</th>
             <th>Status</th>
+            <th>Tag Type</th>
+            <th>Installation Date</th>
             <th>Delete</th>
           </tr>
         </thead>
@@ -66,12 +68,14 @@ const AllRfidList = () => {
                 <tr key={Rfids.id}>
                   <td>{Rfids.RfidKey}</td>
                   <td>{Rfids.status}</td>
+                  <td>{Rfids.tagType}</td>
+                  <td>{Rfids.installationDate}</td>
                   <td>
                     <ThemeProvider theme={theme}>
                       <Button
                         variant="contained"
                         color={
-                          Rfids.status === "occupied" ? "inactivebtn" : "error"
+                          Rfids.status === "Occupied" ? "inactivebtn" : "error"
                         } // Conditionally change button color
                         className="smallbutton"
                       >

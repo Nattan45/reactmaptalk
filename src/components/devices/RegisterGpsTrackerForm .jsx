@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 
 import FreeRfid from "./FreeRfid";
+import FreeRfids from "../../data/FreeRfids";
 
 const RegisterGpsTrackerForm = () => {
   const [deviceName, setDeviceName] = useState("");
   const [brand, setBrand] = useState("");
-  const [gpsId, setGpsId] = useState("");
   const [rfidKeys, setRfidKeys] = useState([""]); // Initialize with an empty field for RFID key
+  const [rfidStatuses, setRfidStatuses] = useState([]); // Track RFID key statuses (found or not)
 
   // Function to handle adding a new RFID key input field
   const handleAddRfidKey = () => {
@@ -24,19 +25,34 @@ const RegisterGpsTrackerForm = () => {
     const updatedKeys = [...rfidKeys];
     updatedKeys[index] = value; // Update the RFID key value at the specific index
     setRfidKeys(updatedKeys);
+
+    // Check if the entered RFID key is found in the records
+    checkRfidKeyStatus(value, index);
   };
 
   // Function to handle form submission
   const handleSubmit = (e) => {
+    // Filter out RFID keys that are not "Free"
+    const validRfidKeys = rfidKeys.filter(
+      (rfidKey, index) => rfidStatuses[index] === "found"
+    );
     e.preventDefault();
     const formData = {
       deviceName,
       brand,
-      gpsId,
-      rfidKeys, // This will contain all RFID keys entered by the user
+      rfidKeys: validRfidKeys, // Only save the valid RFID keys
     };
-    console.log("Form Data:", formData);
-    // Here you can send the formData to your API or backend
+    console.log(JSON.stringify(formData, null, 2));
+  };
+
+  // Check if the RFID key exists in the 'Free' records
+  const checkRfidKeyStatus = (rfidKey, index) => {
+    const freeRecords = FreeRfids.filter((record) => record.status === "Free");
+    const isFound = freeRecords.some((record) => record.RfidKey === rfidKey);
+
+    const updatedStatuses = [...rfidStatuses];
+    updatedStatuses[index] = isFound ? "found" : "not-found";
+    setRfidStatuses(updatedStatuses);
   };
 
   return (
@@ -82,7 +98,7 @@ const RegisterGpsTrackerForm = () => {
           <p className="title textcenter">Tracker Registration Form</p>
         </div>
         <br />
-        <label className="textcenter">GPS form</label>
+        <label className="textcenter">E-Seal Form</label>
 
         {/* Device Name */}
         <label>
@@ -93,7 +109,7 @@ const RegisterGpsTrackerForm = () => {
             required
             className="input"
           />
-          <span>Device Name:</span>
+          <span>Brand Name</span>
         </label>
 
         <div className="form-flex">
@@ -106,19 +122,7 @@ const RegisterGpsTrackerForm = () => {
               required
               className="input"
             />
-            <span>Brand</span>
-          </label>
-
-          {/* gpsId */}
-          <label className="smallinputs">
-            <input
-              type="text"
-              value={gpsId}
-              onChange={(e) => setGpsId(e.target.value)}
-              required
-              className="input"
-            />
-            <span>gpsId</span>
+            <span>Model</span>
           </label>
         </div>
 
@@ -132,8 +136,10 @@ const RegisterGpsTrackerForm = () => {
                 value={rfidKey}
                 onChange={(e) => handleRfidKeyChange(index, e.target.value)}
                 required
-                className="input"
+                className={`input ${rfidStatuses[index]}`} // Apply class based on status
+                placeholder="RFID Key"
               />
+
               <button
                 type="button"
                 onClick={() => handleRemoveRfidKey(index)}
@@ -142,6 +148,24 @@ const RegisterGpsTrackerForm = () => {
               >
                 Remove
               </button>
+              {/* Display SVG if the RFID key is found */}
+              {rfidStatuses[index] === "found" && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#00ff6e"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-circle-check-big"
+                >
+                  <path d="M21.801 10A10 10 0 1 1 17 3.335" />
+                  <path d="m9 11 3 3L22 4" />
+                </svg>
+              )}
             </div>
           ))}
           <button
@@ -149,13 +173,13 @@ const RegisterGpsTrackerForm = () => {
             onClick={handleAddRfidKey}
             className="submit-rfid"
           >
-            Add RFID Key
+            Add More
           </button>
         </div>
 
         {/* Submit Button */}
         <button type="submit" className="submit">
-          Register Device
+          Register
         </button>
       </form>
       <FreeRfid />

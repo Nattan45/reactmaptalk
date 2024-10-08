@@ -1,20 +1,20 @@
 import React, { useState } from "react";
+
 import AllRfidList from "./AllRfidList";
+import { Select, MenuItem, Box } from "@mui/material";
 
 const RegisterFridForm = () => {
-  const [deviceName, setDeviceName] = useState("");
-  const [brand, setBrand] = useState("");
-  const [gpsId, setGpsId] = useState("");
+  const [tagType, setTagType] = useState("");
+  const [rFIDKey, setRFIDKey] = useState("");
 
   // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = {
-      deviceName,
-      brand,
-      gpsId,
+      tagType,
+      rFIDKey,
     };
-    console.log("Form Data:", formData);
+    console.log(JSON.stringify(formData, null, 2));
     // Here you can send the formData to your API or backend
   };
 
@@ -45,46 +45,45 @@ const RegisterFridForm = () => {
         <br />
 
         <div className="form-flex">
-          {/* Brand */}
-          <label>
-            <input
-              type="text"
-              value={brand}
-              onChange={(e) => setBrand(e.target.value)}
-              required
+          {/* Tag Type */}
+          <Box
+            display="flex"
+            alignItems="center"
+            gap={2}
+            sx={{ width: "100%", maxWidth: "150px" }} // Set maxWidth for better control
+          >
+            <Select
+              value={tagType}
+              onChange={(e) => setTagType(e.target.value)}
+              displayEmpty
+              inputProps={{ "aria-label": "Without label" }}
               className="input"
-            />
-            <span>Tag Name</span>
-          </label>
+              fullWidth
+            >
+              <MenuItem value="" disabled>
+                Tag Type
+              </MenuItem>
+              <MenuItem value="Passive RFID">Passive RFID</MenuItem>
+              <MenuItem value="Active RFID">Active RFID</MenuItem>
+            </Select>
+          </Box>
 
-          {/* gpsId */}
+          {/* RFID Key */}
           <label className="smallinputs">
             <input
               type="text"
-              value={gpsId}
-              onChange={(e) => setGpsId(e.target.value)}
+              value={rFIDKey}
+              onChange={(e) => setRFIDKey(e.target.value)}
               required
               className="input"
             />
-            <span>gpsId</span>
+            <span>RFID Key</span>
           </label>
         </div>
 
-        {/* Device Name */}
-        <label>
-          <input
-            type="text"
-            value={deviceName}
-            onChange={(e) => setDeviceName(e.target.value)}
-            required
-            className="input"
-          />
-          <span>Key Number</span>
-        </label>
-
         {/* Submit Button */}
         <button type="submit" className="submit wh-fit-content placeEnd">
-          Register Device
+          Create RFID
         </button>
       </form>
       <AllRfidList />

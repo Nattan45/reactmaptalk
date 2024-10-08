@@ -117,7 +117,7 @@
 }
 .pendingRfidLists {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 0.3fr 0.4fr;
   gap: 20px;
   justify-content: center;
 }
@@ -210,4 +210,14 @@
 }
 .inactiveColor {
   background-color: #ece800;
+}
+/* Green border if RFID key is found */
+.input.found {
+  border-color: rgb(0, 255, 0);
+  /* background-color: #5d8565; */
+}
+
+/* Red border if RFID key is not found */
+.input.not-found {
+  border-color: red;
 }
