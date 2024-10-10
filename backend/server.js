@@ -1,27 +1,27 @@
-require("dotenv").config(); // Load environment variables from .env
-const express = require("express");
-const cors = require("cors");
-const axios = require("axios");
+require("dotenv").config();
+const express = require("express"); // npm i express
+const cors = require("cors"); // npm i cors
+const axios = require("axios"); // npm i axios
 const bodyParser = require("body-parser");
 
 const routes = require("./routes"); // Import routes
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 // Enable CORS to allow requests from the React frontend
 app.use(cors());
-
+// For parsing JSON bodies
+app.use(bodyParser.json());
+// Custom port from env file
+const PORT = process.env.Node_PORT;
 // Get Spring Boot endpoint from the .env file
 const SPRING_ENDPOINT = process.env.SPRING_ENDPOINT;
-
-app.use(bodyParser.json()); // This line is crucial for parsing JSON bodies
 
 // User Account Related Endpoints
 // get all users list
 app.get("/api/users", async (req, res) => {
   try {
     // Make a request to your Spring Boot user endpoint
-    const response = await axios.get(`${SPRING_ENDPOINT}${routes.USERSList}`);
+    const response = await axios.get(`${SPRING_ENDPOINT}${routes.USERSLIST}`);
 
     // console.log(response.data);
     // Send back the user data to the frontend
@@ -39,7 +39,7 @@ app.post("/api/create/user", async (req, res) => {
   try {
     // Send the data to the Spring endpoint
     const response = await axios.post(
-      `${SPRING_ENDPOINT}${routes.USERSList}`,
+      `${SPRING_ENDPOINT}${routes.USERSLIST}`,
       userData
     );
 

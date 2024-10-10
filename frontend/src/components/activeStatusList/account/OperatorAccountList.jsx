@@ -11,17 +11,10 @@ const OperatorAccountList = () => {
   const [user, setUser] = useState(null); // State for selected user
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // State to control the modal
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     setUserData(UserAccounts); // Load the dummy data into state
-  //   };
-
-  //   fetchData(); // Call the fetch function
-  // }, []);
   useEffect(() => {
     const fetchData = async () => {
       axios
-        .get("http://localhost:5000/api/users") // the frontend backend(node js)
+        .get(`${process.env.REACT_APP_API_URL}/api/users`) // the frontend backend(node js)
         .then((response) => {
           const data = response.data;
 

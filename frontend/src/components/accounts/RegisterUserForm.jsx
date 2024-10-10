@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 
-import "./accounts.css";
-import { Select, MenuItem, Box } from "@mui/material";
-
 import axios from "axios";
+import { Select, MenuItem, Box } from "@mui/material";
+import "./accounts.css";
 
 const RegisterUserForm = () => {
   const [firstName, setFirstName] = useState("");
@@ -36,7 +35,7 @@ const RegisterUserForm = () => {
 
     // Post the formData to your API
     axios
-      .post("http://localhost:5000/api/create/user", formData)
+      .post(`${process.env.REACT_APP_API_URL}/api/create/user`, formData)
       .then((response) => {
         console.log("User created successfully:", response.data);
         // You can also handle success (e.g., clear the form, show a message)
