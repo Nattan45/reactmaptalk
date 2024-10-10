@@ -8,7 +8,7 @@ const TotalAccountsStatus = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/users") // the frontend backend(node js)
+      .get(`${process.env.REACT_APP_API_URL}/api/users`) // the frontend backend(node js)
       .then((response) => {
         const data = response.data;
 
