@@ -3,21 +3,23 @@ import React, { useState } from "react";
 import "./accounts.css";
 import { Select, MenuItem, Box } from "@mui/material";
 
+import axios from "axios";
+
 const RegisterUserForm = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
-  const [department, setDepartment] = useState("");
-  const [userId, setUserId] = useState("");
   const [gender, setGender] = useState("");
-  const [accountLocation, setAccountLocation] = useState("");
   const [profilepicture, setProfilePicture] = useState("");
+  const [department, setDepartment] = useState("");
   const [role, setRole] = useState("operator"); // New state for role
 
   // Function to handle form submission
   const handleSubmit = (e) => {
+    // Convert role to uppercase
+    const uppercasedRole = role.toUpperCase(); // Use toUpperCase() method
     e.preventDefault();
     const formData = {
       firstName,
@@ -26,14 +28,23 @@ const RegisterUserForm = () => {
       phoneNumber,
       email,
       department,
-      userId,
-      role,
+      role: uppercasedRole,
       gender,
-      accountLocation,
       profilepicture,
     };
-    console.log("Form Data:", formData);
-    // Here you can send the formData to your API or backend
+    console.log(JSON.stringify(formData, null, 2));
+
+    // Post the formData to your API
+    axios
+      .post("http://localhost:5000/api/create/user", formData)
+      .then((response) => {
+        console.log("User created successfully:", response.data);
+        // You can also handle success (e.g., clear the form, show a message)
+      })
+      .catch((error) => {
+        console.error("There was an error creating the user:", error);
+        // Handle error (e.g., show an error message)
+      });
   };
 
   return (
@@ -128,18 +139,17 @@ const RegisterUserForm = () => {
           </label>
         </div>
 
-        {/* userId and Profile */}
+        {/* Department and Profile */}
         <div className="form-flex">
-          {/* User Id */}
           <label>
             <input
               type="text"
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
+              value={department}
+              onChange={(e) => setDepartment(e.target.value)}
               required
               className="input"
             />
-            <span>User Id</span>
+            <span>Department</span>
           </label>
 
           {/* profile_picture */}
@@ -153,89 +163,28 @@ const RegisterUserForm = () => {
             />
           </label>
         </div>
-
-        {/* gender, account and department */}
-        <div
-          className="form-flex threeGrid"
-          style={{
-            display: "flex",
-            gap: "16px",
-            justifyContent: "space-between",
-            width: "50%",
-          }}
+        {/* Gender */}
+        <Box
+          display="flex"
+          alignItems="center"
+          gap={2}
+          sx={{ width: "100%", maxWidth: "150px" }} // Set maxWidth for better control
         >
-          {/* Gender */}
-          <Box
-            display="flex"
-            alignItems="center"
-            gap={2}
-            sx={{ width: "100%", maxWidth: "150px" }} // Set maxWidth for better control
+          <Select
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            displayEmpty
+            inputProps={{ "aria-label": "Without label" }}
+            className="input"
+            fullWidth
           >
-            <Select
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-              displayEmpty
-              inputProps={{ "aria-label": "Without label" }}
-              className="input"
-              fullWidth
-            >
-              <MenuItem value="" disabled>
-                Gender
-              </MenuItem>
-              <MenuItem value="male">Male</MenuItem>
-              <MenuItem value="female">Female</MenuItem>
-            </Select>
-          </Box>
-
-          {/* Account Location */}
-          <Box
-            display="flex"
-            alignItems="center"
-            gap={2}
-            sx={{ width: "100%", maxWidth: "190px" }} // Set maxWidth for better control
-          >
-            <Select
-              value={accountLocation}
-              onChange={(e) => setAccountLocation(e.target.value)}
-              displayEmpty
-              inputProps={{ "aria-label": "Without label" }}
-              className="input"
-              fullWidth // Ensures the dropdown fills the space within the box
-            >
-              <MenuItem value="" disabled>
-                Account Location
-              </MenuItem>
-              <MenuItem value="AddisAbaba">Addis Ababa</MenuItem>
-              <MenuItem value="Adama">Adama</MenuItem>
-              <MenuItem value="Gigiga">Gigiga</MenuItem>
-            </Select>
-          </Box>
-
-          {/* Department */}
-          <Box
-            display="flex"
-            alignItems="center"
-            gap={2}
-            sx={{ width: "100%", maxWidth: "150px" }} // Set maxWidth for better control
-          >
-            <Select
-              value={department}
-              onChange={(e) => setDepartment(e.target.value)}
-              displayEmpty
-              inputProps={{ "aria-label": "Without label" }}
-              className="input"
-              fullWidth // Ensures the dropdown fills the space within the box
-            >
-              <MenuItem value="" disabled>
-                Department
-              </MenuItem>
-              <MenuItem value="hr">Hr</MenuItem>
-              <MenuItem value="it">It</MenuItem>
-              <MenuItem value="sales">Sales</MenuItem>
-            </Select>
-          </Box>
-        </div>
-
+            <MenuItem value="" disabled>
+              Gender
+            </MenuItem>
+            <MenuItem value="male">Male</MenuItem>
+            <MenuItem value="female">Female</MenuItem>
+          </Select>
+        </Box>
         {/* Role */}
         <div className="roleContainer">
           <label className="formSectionTitles marginTop">Roles</label>

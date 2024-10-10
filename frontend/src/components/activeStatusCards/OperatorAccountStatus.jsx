@@ -1,16 +1,26 @@
 import React, { useEffect, useState } from "react";
 
-import Accounts from "../../data/UserAccounts";
+import axios from "axios";
 import { NavLink } from "react-router-dom";
 
 const OperatorAccountStatus = () => {
-  const [operatorAccounts, setOperatorAccounts] = useState(0); // State for total checkpoints
+  const [operatorAccounts, setOperatorAccounts] = useState(0);
 
   useEffect(() => {
-    const operatorAccountsCount = Accounts.filter(
-      (accounts) => accounts.role === "Operator"
-    ).length;
-    setOperatorAccounts(operatorAccountsCount);
+    axios
+      .get("http://localhost:5000/api/users") // the frontend backend(node js)
+      .then((response) => {
+        const data = response.data;
+
+        // Count the number of OPERATORS account
+        const operatorAccountsCount = data.filter(
+          (account) => account.role === "OPERATOR"
+        ).length;
+        setOperatorAccounts(operatorAccountsCount);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
   }, []);
 
   return (

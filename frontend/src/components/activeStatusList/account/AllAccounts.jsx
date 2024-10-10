@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import UserAccounts from "../../../data/UserAccounts"; // user data
+import axios from "axios"; // Import Axios
 import { filterUsers } from "../../accounts/filterUsers"; // filter function for user data
 import Paginator from "../../paginator/Paginator";
 import UpdateAccountPopup from "../../accounts/UpdateAccountsPopup"; // Import the update component
@@ -15,7 +15,17 @@ const AllAccounts = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setUserData(UserAccounts); // Load the dummy data into state
+      axios
+        .get("http://localhost:5000/api/users") // the frontend backend(node js)
+        .then((response) => {
+          const data = response.data;
+
+          // pass the data
+          setUserData(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching users:", error);
+        });
     };
 
     fetchData(); // Call the fetch function
@@ -62,7 +72,7 @@ const AllAccounts = () => {
       <table border="1" cellPadding="10" className="activedevicesTable">
         <thead className="activedevicesTable-header">
           <tr>
-            <th>User Name</th>
+            {/* <th>User Name</th> */}
             <th>First name</th>
             <th>Last name</th>
             <th>User ID</th>
@@ -76,7 +86,7 @@ const AllAccounts = () => {
         <tbody>
           {currentItems.map((user) => (
             <tr key={user.id}>
-              <td>{user.username}</td>
+              {/* <td>{user.username}</td> */}
               <td>{user.firstName}</td>
               <td>{user.lastName}</td>
               <td>{user.userId}</td>
