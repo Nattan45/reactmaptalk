@@ -1,16 +1,30 @@
 import React, { useEffect, useState } from "react";
 
-import Accounts from "../../data/UserAccounts";
+// import Accounts from "../../data/UserAccounts";
+import axios from "axios"; // Import Axios
 import { NavLink } from "react-router-dom";
 
 const AdminAccountStatus = () => {
-  const [adminAccounts, setAdminAccounts] = useState(0); // State for total checkpoints
+  //  const [users, setUsers] = useState([]);
+  const [adminAccounts, setAdminAccounts] = useState(0);
 
   useEffect(() => {
-    const adminAccountsCount = Accounts.filter(
-      (accounts) => accounts.role === "Admin"
-    ).length;
-    setAdminAccounts(adminAccountsCount);
+    // Fetch users using Axios
+    axios
+      .get("http://localhost:5000/api/users") // the frontend backend(node js)
+      .then((response) => {
+        const data = response.data;
+        //  setUsers(data); // Set the fetched users
+
+        // Count the number of admin accounts
+        const adminAccountsCount = data.filter(
+          (account) => account.role === "ADMIN"
+        ).length;
+        setAdminAccounts(adminAccountsCount); // Update the adminAccounts state
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
   }, []);
 
   return (

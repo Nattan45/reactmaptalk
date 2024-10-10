@@ -53,7 +53,7 @@ const ActiveUsers = () => {
             </p>
             <p className="Stastics-text-title textcenter">Active Users</p>
 
-            <p className="Stastics-text-body textcenter">1</p>
+            <p className="Stastics-text-body textcenter">xxxxxxx</p>
           </div>
 
           <NavLink exact="true" to="/AccountsStatusPage">

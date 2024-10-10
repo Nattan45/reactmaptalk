@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from "react";
 
-import Accounts from "../../data/UserAccounts";
+import axios from "axios"; // Import Axios
 import { NavLink } from "react-router-dom";
 
 const TotalAccountsStatus = () => {
   const [allAccounts, setAllAccounts] = useState(0); // State for total checkpoints
 
   useEffect(() => {
-    const allAccountsCount = Accounts.length;
-    setAllAccounts(allAccountsCount);
+    axios
+      .get("http://localhost:5000/api/users") // the frontend backend(node js)
+      .then((response) => {
+        const data = response.data;
+
+        // Count the number of OPERATORS account
+        const AccountsCount = data.length;
+        setAllAccounts(AccountsCount);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
   }, []);
 
   return (

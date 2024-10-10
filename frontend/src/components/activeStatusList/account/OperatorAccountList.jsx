@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import UserAccounts from "../../../data/UserAccounts"; // user data
+import axios from "axios";
 import Paginator from "../../paginator/Paginator";
 import UpdateAccountPopup from "../../accounts/UpdateAccountsPopup"; // Import the update component
 
@@ -11,15 +11,32 @@ const OperatorAccountList = () => {
   const [user, setUser] = useState(null); // State for selected user
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // State to control the modal
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setUserData(UserAccounts); // Load the dummy data into state
+  //   };
+
+  //   fetchData(); // Call the fetch function
+  // }, []);
   useEffect(() => {
     const fetchData = async () => {
-      setUserData(UserAccounts); // Load the dummy data into state
+      axios
+        .get("http://localhost:5000/api/users") // the frontend backend(node js)
+        .then((response) => {
+          const data = response.data;
+
+          // pass the data
+          setUserData(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching users:", error);
+        });
     };
 
     fetchData(); // Call the fetch function
   }, []);
 
-  const allUsers = userData.filter((user) => user.role === "Operator");
+  const allUsers = userData.filter((user) => user.role === "OPERATOR");
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = allUsers.slice(indexOfFirstItem, indexOfLastItem); // Slice the filtered data based on current page
@@ -51,7 +68,7 @@ const OperatorAccountList = () => {
       <table border="1" cellPadding="10" className="activedevicesTable">
         <thead className="activedevicesTable-header">
           <tr>
-            <th>User Name</th>
+            {/* <th>User Name</th> */}
             <th>First name</th>
             <th>Last name</th>
             <th>User ID</th>
@@ -64,7 +81,7 @@ const OperatorAccountList = () => {
         <tbody>
           {currentItems.map((user) => (
             <tr key={user.id}>
-              <td>{user.username}</td>
+              {/* <td>{user.username}</td> */}
               <td>{user.firstName}</td>
               <td>{user.lastName}</td>
               <td>{user.userId}</td>
