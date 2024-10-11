@@ -60,7 +60,6 @@ const RemoveAccount = () => {
   // Function to handle user removal
   const handleRemoveUser = async (id) => {
     try {
-      console.log(id, "++++++++++");
       // Send a DELETE request to the backend to remove the user by ID
       await axios.delete(
         `${process.env.REACT_APP_API_URL}/api/user/remove/${id}`

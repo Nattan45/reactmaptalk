@@ -9,7 +9,7 @@ const OperatorAccountList = () => {
   const [userData, setUserData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
-  const [user, setUser] = useState(null); // State for selected user
+  // const [user, setUser] = useState(null); // State for selected user
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // State to control the modal
 
   // Message Toast
@@ -60,10 +60,10 @@ const OperatorAccountList = () => {
     setCurrentPage(pageNumber); // Set the new page number
   };
 
-  const handleEditClick = (user) => {
-    setUser(user); // Set the selected user
-    setIsEditModalOpen(true); // Open the modal
-  };
+  // const handleEditClick = (user) => {
+  //   setUser(user); // Set the selected user
+  //   setIsEditModalOpen(true); // Open the modal
+  // };
 
   const handleSave = (updatedUser) => {
     // Find index of the user in the userData array
@@ -89,7 +89,7 @@ const OperatorAccountList = () => {
             <th>Department</th>
             <th>Email</th>
             <th>Phone Number</th>
-            <th>Edit</th>
+            {/* <th>View</th> */}
           </tr>
         </thead>
         <tbody>
@@ -102,7 +102,7 @@ const OperatorAccountList = () => {
               <td>{user.department}</td>
               <td>{user.email}</td>
               <td>{user.phoneNumber}</td>
-              <td>
+              {/* <td>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -120,7 +120,7 @@ const OperatorAccountList = () => {
                   <path d="M14 2v4a2 2 0 0 0 2 2h4" />
                   <path d="M13.378 15.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
                 </svg>
-              </td>
+              </td> */}
             </tr>
           ))}
         </tbody>
@@ -137,7 +137,7 @@ const OperatorAccountList = () => {
       <UpdateAccountPopup
         open={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        user={user}
+        // user={user}
         onSave={handleSave}
       />
 

@@ -36,10 +36,24 @@ app.get("/api/users", async (req, res) => {
   }
 });
 
-// get all users list
+// get all users list - with id
 app.get("/api/users-id", async (req, res) => {
   try {
     const response = await axios.get(`${SPRING_ENDPOINT}${routes.USERLISTID}`);
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error fetching users:", error.message);
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+});
+
+// get all users list - For update
+app.get("/api/users-id-list", async (req, res) => {
+  try {
+    const response = await axios.get(
+      `${SPRING_ENDPOINT}${routes.USERUPDATELIST}`
+    );
 
     res.json(response.data);
   } catch (error) {
@@ -79,6 +93,37 @@ app.post("/api/create/user", async (req, res) => {
       // Handle any other server errors
       console.log("Error:", error.message); // Log the error message
       res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
+// update user details
+app.put("/api/users-update/:id", async (req, res) => {
+  const userId = req.params.id;
+
+  const userData = req.body;
+  if (!userId) {
+    return res.status(400).json({ error: "User ID is required" });
+  }
+
+  try {
+    const response = await axios.put(
+      `${SPRING_ENDPOINT}${routes.USERSLIST}/${userId}`,
+      userData // sending the updated user data
+    );
+
+    // Send success response back to the client
+    res.status(response.status).json({ message: "User updated successfully" });
+  } catch (error) {
+    // Handle errors from the Spring service
+    if (error.response) {
+      console.error("Error from Spring service:", error.response.data);
+      res.status(error.response.status).json({
+        error: error.response.data.message || "Failed to Update user",
+      });
+    } else {
+      console.error("Server error:", error.message);
+      res.status(500).json({ error: "Internal Server Error" });
     }
   }
 });
