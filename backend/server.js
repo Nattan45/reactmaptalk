@@ -36,6 +36,18 @@ app.get("/api/users", async (req, res) => {
   }
 });
 
+// get all users list
+app.get("/api/users-id", async (req, res) => {
+  try {
+    const response = await axios.get(`${SPRING_ENDPOINT}${routes.USERLISTID}`);
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error fetching users:", error.message);
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+});
+
 // create new user
 app.post("/api/create/user", async (req, res) => {
   const userData = req.body;
@@ -72,9 +84,7 @@ app.post("/api/create/user", async (req, res) => {
 });
 
 app.delete("/api/user/remove/:id", async (req, res) => {
-  const userId = req.params.id; // Get the user ID from the request params
-
-  console.log(userId);
+  const userId = req.params.id;
 
   if (!userId) {
     return res.status(400).json({ error: "User ID is required" });

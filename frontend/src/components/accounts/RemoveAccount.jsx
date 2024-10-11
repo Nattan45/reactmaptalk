@@ -30,14 +30,11 @@ const RemoveAccount = () => {
       try {
         // Make the GET request using Axios
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/users`
+          `${process.env.REACT_APP_API_URL}/api/users-id`
         );
 
-        // Get the data from the response
-        const data = response.data;
-
         // Pass the data to state
-        setUserList(data);
+        setUserList(response.data);
       } catch (err) {
         // Check if the error response exists and handle accordingly
         if (err.response) {
