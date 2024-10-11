@@ -2,7 +2,7 @@
 export const filterUsers = (users, filterText) => {
   return users.filter((user) => {
     // const username = user.username.toLowerCase();
-    const fullName = `${user.firstName} ${user.lastName}`;
+    const firstName = user.firstName;
     const userId = user.userId;
     const department = user.department;
     const phone = user.phoneNumber;
@@ -11,7 +11,7 @@ export const filterUsers = (users, filterText) => {
 
     return (
       // username.includes(filterText) ||
-      fullName.includes(filterText) ||
+      firstName.includes(filterText) ||
       userId.includes(filterText) ||
       department.includes(filterText) ||
       phone.includes(filterText) ||

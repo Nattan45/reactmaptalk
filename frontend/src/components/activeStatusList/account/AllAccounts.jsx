@@ -4,6 +4,7 @@ import axios from "axios"; // Import Axios
 import { filterUsers } from "../../accounts/filterUsers"; // filter function for user data
 import Paginator from "../../paginator/Paginator";
 import UpdateAccountPopup from "../../accounts/UpdateAccountsPopup"; // Import the update component
+import MessagePopup from "../../messageComponent/MessagePopup";
 
 const AllAccounts = () => {
   const [userData, setUserData] = useState([]); // State for the full data
@@ -13,19 +14,45 @@ const AllAccounts = () => {
   const [user, setUser] = useState(null); // State for selected user
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // State to control the modal
 
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/api/users`) // the frontend backend(node js)
-        .then((response) => {
-          const data = response.data;
+      try {
+        // Make the GET request using Axios
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/users`
+        );
 
-          // pass the data
-          setUserData(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching users:", error);
-        });
+        // Get the data from the response
+        const data = response.data;
+
+        // Pass the data to state
+        setUserData(data);
+      } catch (err) {
+        // Check if the error response exists and handle accordingly
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error"); // Show error message using your popup
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
     };
 
     fetchData(); // Call the fetch function
@@ -84,8 +111,8 @@ const AllAccounts = () => {
           </tr>
         </thead>
         <tbody>
-          {currentItems.map((user) => (
-            <tr key={user.id}>
+          {currentItems.map((user, key) => (
+            <tr key={key}>
               {/* <td>{user.username}</td> */}
               <td>{user.firstName}</td>
               <td>{user.lastName}</td>
@@ -132,6 +159,8 @@ const AllAccounts = () => {
         user={user}
         onSave={handleSave}
       />
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

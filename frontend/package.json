@@ -1,5 +1,6 @@
 {
   "name": "reactmaptalk",
+  "proxy": "http://192.168.200.182:48624",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

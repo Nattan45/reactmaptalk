@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Select, MenuItem, Box } from "@mui/material";
 import "./accounts.css";
+import { validateFormData } from "./validation";
+import MessagePopup from "../messageComponent/MessagePopup";
 
 const RegisterUserForm = () => {
   const [firstName, setFirstName] = useState("");
@@ -15,10 +17,24 @@ const RegisterUserForm = () => {
   const [department, setDepartment] = useState("");
   const [role, setRole] = useState("operator"); // New state for role
 
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
   // Function to handle form submission
-  const handleSubmit = (e) => {
-    // Convert role to uppercase
+  const handleSubmit = async (e) => {
     const uppercasedRole = role.toUpperCase(); // Use toUpperCase() method
+    const uppercasedGender = gender.toUpperCase(); // Use toUpperCase() method
     e.preventDefault();
     const formData = {
       firstName,
@@ -28,22 +44,40 @@ const RegisterUserForm = () => {
       email,
       department,
       role: uppercasedRole,
-      gender,
+      gender: uppercasedGender,
       profilepicture,
     };
+
+    // Validate form data
+    const validationErrors = validateFormData(formData);
+    // If there are validation errors, display them and stop submission
+    if (validationErrors.length > 0) {
+      addMessage(validationErrors.join(" "), "error"); // Show all errors as a single message
+      return; // Stop further execution
+    }
+
     console.log(JSON.stringify(formData, null, 2));
 
-    // Post the formData to your API
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/api/create/user`, formData)
-      .then((response) => {
-        console.log("User created successfully:", response.data);
-        // You can also handle success (e.g., clear the form, show a message)
-      })
-      .catch((error) => {
-        console.error("There was an error creating the user:", error);
-        // Handle error (e.g., show an error message)
-      });
+    try {
+      // Make the POST request to the API using Axios
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/create/user`,
+        formData
+      );
+
+      addMessage("User created successfully!", "success");
+    } catch (err) {
+      // Check if the error response exists and handle accordingly
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage ||
+          err.response.data.message ||
+          "An error occurred: 500";
+        addMessage(errorMessage, "error"); // Show error message using your popup
+      } else {
+        addMessage("Network error: Unable to reach the server.", "error");
+      }
+    }
   };
 
   return (
@@ -126,15 +160,15 @@ const RegisterUserForm = () => {
           </label>
 
           {/* Email */}
-          <label className="smallinputs">
+          <label className="smallinputs text">
             <input
-              type="text"
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="input"
+              className={`input ${email ? "has-value" : ""}`}
             />
-            <span>Email</span>
+            <span className="email">Email</span>
           </label>
         </div>
 
@@ -162,6 +196,7 @@ const RegisterUserForm = () => {
             />
           </label>
         </div>
+
         {/* Gender */}
         <Box
           display="flex"
@@ -184,6 +219,7 @@ const RegisterUserForm = () => {
             <MenuItem value="female">Female</MenuItem>
           </Select>
         </Box>
+
         {/* Role */}
         <div className="roleContainer">
           <label className="formSectionTitles marginTop">Roles</label>
@@ -216,6 +252,7 @@ const RegisterUserForm = () => {
           Register
         </button>
       </form>
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };
