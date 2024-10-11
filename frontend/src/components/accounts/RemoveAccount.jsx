@@ -1,22 +1,90 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
+import axios from "axios";
 import Button from "@mui/material/Button";
-import UserAccounts from "../../data/UserAccounts"; // user data
 import { filterUsers } from "./filterUsers"; // filter function for user data
+import MessagePopup from "../messageComponent/MessagePopup";
 
 const RemoveAccount = () => {
   const [filterText, setFilterText] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
-  const [userList, setUserList] = useState(UserAccounts);
+  const [userList, setUserList] = useState([]);
+
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
+  // Fetch user data from the backend when the component mounts
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Make the GET request using Axios
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/users`
+        );
+
+        // Get the data from the response
+        const data = response.data;
+
+        // Pass the data to state
+        setUserList(data);
+      } catch (err) {
+        // Check if the error response exists and handle accordingly
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error"); // Show error message using your popup
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleSelectUser = (user) => {
     setSelectedUser(user); // Set the selected user when chosen
     setFilterText(""); // Reset the filter text
   };
 
-  const handleRemoveUser = (id) => {
-    setUserList(userList.filter((user) => user.id !== id)); // Remove the selected user
-    setSelectedUser(null); // Clear selection after removal
+  // Function to handle user removal
+  const handleRemoveUser = async (id) => {
+    try {
+      console.log(id, "++++++++++");
+      // Send a DELETE request to the backend to remove the user by ID
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/user/remove/${id}`
+      );
+
+      addMessage("User Deleted successfully!", "success");
+      // Update the user list after removal
+      setUserList(userList.filter((user) => user.id !== id));
+      setSelectedUser(null); // Clear selection after removal
+    } catch (err) {
+      // Check if the error response exists and handle accordingly
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage ||
+          err.response.data.message ||
+          "An error occurred: 500";
+        addMessage(errorMessage, "error"); // Show error message using your popup
+      } else {
+        addMessage("Network error: Unable to reach the server.", "error");
+      }
+    }
   };
 
   const filteredUsers = filterUsers(userList, filterText);
@@ -45,7 +113,7 @@ const RemoveAccount = () => {
           {filteredUsers.map((user) => (
             <li key={user.id} onClick={() => handleSelectUser(user)}>
               <Button variant="text" color="primary">
-                {`${user.firstName} ${user.lastName} (${user.username})`}
+                {`${user.firstName} ${user.lastName} (${user.userId})`}
               </Button>
             </li>
           ))}
@@ -88,6 +156,8 @@ const RemoveAccount = () => {
           </Button>
         </div>
       )}
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

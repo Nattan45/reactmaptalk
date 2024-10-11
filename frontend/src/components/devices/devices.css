@@ -70,6 +70,13 @@
   font-size: 0.9em;
 }
 
+/* Hide the span when there's a value */
+.form label .input.has-value + span {
+  top: 30px;
+  font-size: 10px;
+  color: green;
+}
+
 .form label .input:focus + span,
 .form label .input:valid + span {
   top: 30px;

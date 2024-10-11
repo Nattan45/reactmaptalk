@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios"; // Import Axios
 import Paginator from "../../paginator/Paginator";
 import UpdateAccountPopup from "../../accounts/UpdateAccountsPopup"; // Import the update component
+import MessagePopup from "../../messageComponent/MessagePopup";
 
 const AdminAccountList = () => {
   const [userData, setUserData] = useState([]); // State for the full data
@@ -11,8 +12,39 @@ const AdminAccountList = () => {
   const [user, setUser] = useState(null); // State for selected user
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // State to control the modal
 
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/users`
+        );
+        setUserData(response.data);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
+
       axios
         .get(`${process.env.REACT_APP_API_URL}/api/users`) // the frontend backend(node js)
         .then((response) => {
@@ -117,6 +149,8 @@ const AdminAccountList = () => {
         user={user}
         onSave={handleSave}
       />
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

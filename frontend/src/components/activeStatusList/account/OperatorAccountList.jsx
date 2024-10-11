@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Paginator from "../../paginator/Paginator";
 import UpdateAccountPopup from "../../accounts/UpdateAccountsPopup"; // Import the update component
+import MessagePopup from "../../messageComponent/MessagePopup";
 
 const OperatorAccountList = () => {
   const [userData, setUserData] = useState([]); // State for the full data
@@ -11,22 +12,42 @@ const OperatorAccountList = () => {
   const [user, setUser] = useState(null); // State for selected user
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // State to control the modal
 
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/api/users`) // the frontend backend(node js)
-        .then((response) => {
-          const data = response.data;
-
-          // pass the data
-          setUserData(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching users:", error);
-        });
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/users`
+        );
+        const data = response.data;
+        setUserData(data);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
     };
 
-    fetchData(); // Call the fetch function
+    fetchData();
   }, []);
 
   const allUsers = userData.filter((user) => user.role === "OPERATOR");
@@ -72,8 +93,8 @@ const OperatorAccountList = () => {
           </tr>
         </thead>
         <tbody>
-          {currentItems.map((user) => (
-            <tr key={user.id}>
+          {currentItems.map((user, key) => (
+            <tr key={key}>
               {/* <td>{user.username}</td> */}
               <td>{user.firstName}</td>
               <td>{user.lastName}</td>
@@ -119,6 +140,8 @@ const OperatorAccountList = () => {
         user={user}
         onSave={handleSave}
       />
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

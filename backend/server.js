@@ -6,9 +6,13 @@ const bodyParser = require("body-parser");
 
 const routes = require("./routes"); // Import routes
 
+// validators
+const validateUserData = require("./validators/userAccounts/accountValidator");
+
 const app = express();
 // Enable CORS to allow requests from the React frontend
 app.use(cors());
+// app.use(cors({ origin: "http://192.168.200.182:48624" }));
 // For parsing JSON bodies
 app.use(bodyParser.json());
 // Custom port from env file
@@ -34,26 +38,67 @@ app.get("/api/users", async (req, res) => {
 
 // create new user
 app.post("/api/create/user", async (req, res) => {
-  const userData = req.body; // Get the incoming data from the request
+  const userData = req.body;
+
+  // Validate the data coming from the frontend
+  const validationErrors = validateUserData(userData);
+  if (validationErrors) {
+    return res.status(400).json({
+      errorMessage: validationErrors.join(", "), // Return all validation errors as a single string
+    });
+  }
 
   try {
-    // Send the data to the Spring endpoint
     const response = await axios.post(
       `${SPRING_ENDPOINT}${routes.USERSLIST}`,
       userData
     );
-
-    // Log the response from the Spring service
-    // like this
-    console.log("Response from Spring service:", response.data);
-
     // Send the response back to the client
     res.status(response.status).json(response.data);
   } catch (error) {
-    console.error("Error sending data to Spring service:", error.message);
+    if (error.response) {
+      // If the error comes from Spring Boot, forward the error message to React
+      console.log("Response from Spring service:", error.response.data);
 
-    // Send an error response back to the client
-    res.status(500).json({ error: "Failed to create user in Spring service" });
+      // Format the error response to match the desired structure
+      const errorMessage = error.response.data.errorMessage || "Unknown error"; // Fallback in case the key doesn't exist
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      // Handle any other server errors
+      console.log("Error:", error.message); // Log the error message
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
+app.delete("/api/user/remove/:id", async (req, res) => {
+  const userId = req.params.id; // Get the user ID from the request params
+
+  console.log(userId);
+
+  if (!userId) {
+    return res.status(400).json({ error: "User ID is required" });
+  }
+
+  try {
+    // Send DELETE request to Spring Boot service to delete the user
+    const response = await axios.delete(
+      `${SPRING_ENDPOINT}${routes.DELETEUSERS}/${userId}`
+    );
+
+    // Send success response back to the client
+    res.status(response.status).json({ message: "User deleted successfully" });
+  } catch (error) {
+    // Handle errors from the Spring service
+    if (error.response) {
+      console.error("Error from Spring service:", error.response.data);
+      res.status(error.response.status).json({
+        error: error.response.data.message || "Failed to delete user",
+      });
+    } else {
+      console.error("Server error:", error.message);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
   }
 });
 
