@@ -1,25 +1,76 @@
 import React, { useState } from "react";
+
+import axios from "axios";
+import { Select, MenuItem, Box } from "@mui/material";
+import { validateFormData } from "./driverValidation";
 import AllDriversList from "../activeStatusList/drivers/AllDriversList";
+import MessagePopup from "../messageComponent/MessagePopup";
 
 const DriverRegistration = () => {
   const [driverId, setDriverId] = useState("");
-  const [firstname, setFirstName] = useState("");
-  const [lastname, setLastname] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [emergencyContact, setEmergencyContact] = useState("");
+  const [gender, setGender] = useState("");
+
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
 
   // Function to handle form submission
-  const handleSubmit = (e) => {
-    const driverName = firstname;
+  const handleSubmit = async (e) => {
+    const uppercasedGender = gender.toUpperCase();
+
     e.preventDefault();
     const formData = {
+      firstName,
+      lastName,
       driverId,
-      driverName,
-      firstname,
-      lastname,
       phoneNumber,
+      email,
+      gender: uppercasedGender,
+      emergencyContact,
     };
-    console.log("Form Data:", formData);
-    // Here you can send the formData to your API or backend
+
+    // Validate form data
+    const validationErrors = validateFormData(formData);
+    // If there are validation errors, display them and stop submission
+    if (validationErrors.length > 0) {
+      addMessage(validationErrors.join(" "), "error"); // Show all errors as a single message
+      return; // Stop further execution
+    }
+
+    // sending the formData to node js backend
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/create/driver`,
+        formData
+      );
+
+      addMessage("Drier created successfully!", "success");
+    } catch (err) {
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage ||
+          err.response.data.message ||
+          "An error occurred: 500";
+        addMessage(errorMessage, "error");
+      } else {
+        addMessage("Network error: Unable to reach the server.", "error");
+      }
+    }
   };
 
   return (
@@ -74,33 +125,33 @@ const DriverRegistration = () => {
         </div>
         <br />
         <br />
-
         <div className="form-flex">
-          {/* Brand */}
+          {/* First Name */}
           <label>
             <input
               type="text"
-              value={firstname}
+              value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               requiblack="true"
               className="input"
+              required
             />
             <span>First Name</span>
           </label>
 
-          {/* Model */}
+          {/* Last Name */}
           <label className="smallinputs">
             <input
               type="text"
-              value={lastname}
-              onChange={(e) => setLastname(e.target.value)}
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
               requiblack="true"
               className="input"
+              required
             />
             <span>Last Name</span>
           </label>
         </div>
-
         {/* Device ID */}
         <label>
           <input
@@ -109,9 +160,11 @@ const DriverRegistration = () => {
             onChange={(e) => setDriverId(e.target.value)}
             requiblack="true"
             className="input"
+            required
           />
           <span>Driver Id</span>
         </label>
+        {/* phone Number */}
         <label>
           <input
             type="text"
@@ -119,16 +172,68 @@ const DriverRegistration = () => {
             onChange={(e) => setPhoneNumber(e.target.value)}
             requiblack="true"
             className="input"
+            required
           />
           <span>Phone Number</span>
         </label>
+        {/* Email*/}
+        <label className="smallinputs text">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className={`input ${email ? "has-value" : ""}`}
+          />
+          <span className="email">Email</span>
+        </label>
+        <div className="form-flex">
+          {/* Gender */}
+          <Box
+            display="flex"
+            alignItems="center"
+            gap={2}
+            sx={{ width: "100%", maxWidth: "150px" }} // Set maxWidth for better control
+          >
+            <Select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              displayEmpty
+              inputProps={{ "aria-label": "Without label" }}
+              className="input"
+              required
+              fullWidth
+            >
+              <MenuItem value="" disabled>
+                Gender
+              </MenuItem>
+              <MenuItem value="male">Male</MenuItem>
+              <MenuItem value="female">Female</MenuItem>
+            </Select>
+          </Box>
+          {/* Last Name */}
+          <label className="smallinputs">
+            <input
+              type="text"
+              value={emergencyContact}
+              onChange={(e) => setEmergencyContact(e.target.value)}
+              requiblack="true"
+              className="input"
+              required
+            />
+            <span>Emergency Contact</span>
+          </label>
+        </div>
 
         {/* Submit Button */}
         <button type="submit" className="submit wh-fit-content placeEnd">
-          Register Driver
+          Register
         </button>
       </form>
+
       <AllDriversList />
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

@@ -208,6 +208,9 @@
 .heightfit {
   height: fit-content;
 }
+.widthfit {
+  width: fit-content;
+}
 .flexList {
   display: flex;
   flex-direction: row;

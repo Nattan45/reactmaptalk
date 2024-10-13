@@ -2,8 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom"; // Import this to access the location and its state
 
 import ActiveDrivers from "./ActiveDrivers";
-import FreeDrivers from "./FreeDrivers";
-// import AllDriversList from "./AllDriversList";
+import InactiveDrivers from "./InactiveDrivers";
 import UpdateDriverDetails from "../../driver/UpdateDriverDetails";
 
 const DriverStatus = () => {
@@ -25,25 +24,11 @@ const DriverStatus = () => {
   }, [location.state]);
 
   return (
-    // <div className="gridCenter">
-    //   <div className="marginTB">
-    //     <ActiveDrivers />
-    //   </div>
-
-    //   {/* Add a ref to FreeDrivers */}
-    //   <div ref={freeDriversRef}>
-    //     <FreeDrivers />
-    //   </div>
-
-    //   <div className="marginTB">
-    //     <AllDriversList />
-    //   </div>
-    // </div>
     <div className="gridJustifyCenter">
       <div className="flexRowCenter">
         <ActiveDrivers />
         <div className="marginLeft">
-          <FreeDrivers />
+          <InactiveDrivers />
         </div>
       </div>
       <div className="fitWidth">

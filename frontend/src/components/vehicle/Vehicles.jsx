@@ -6,7 +6,7 @@ import AllVehiclesDataTable from "../activeStatusList/vehicles/AllVehiclesDataTa
 import DriverRegistration from "../driver/DriverRegistration";
 import UpdateDriverDetails from "../driver/UpdateDriverDetails";
 import ActiveDrivers from "../activeStatusList/drivers/ActiveDrivers";
-import FreeDrivers from "../activeStatusList/drivers/FreeDrivers";
+import InactiveDrivers from "../activeStatusList/drivers/InactiveDrivers";
 import UpdateVehicleDetails from "./UpdateVehicleDetails";
 import ActiveVehicles from "../activeStatusList/vehicles/ActiveVehicles";
 import InActiveVehicles from "../activeStatusList/vehicles/InActiveVehicles";
@@ -29,7 +29,7 @@ const Vehicles = () => {
       {/* Navigation section */}
       <div className="deviceChoice">
         <nav className="formNav">
-          {/* Buttons for selecting the form */}
+          {/* left side Buttons */}
           <div className="leftSide">
             <button
               className={selectedForm === "vehicleRegistration" ? "active" : ""}
@@ -59,8 +59,10 @@ const Vehicles = () => {
             </button>
           </div>
 
+          {/* breaker line */}
           <hr />
 
+          {/* right side Buttons */}
           <div className="rightSide">
             <button
               className={selectedForm === "ActiveVehicles" ? "active" : ""}
@@ -81,8 +83,8 @@ const Vehicles = () => {
               Active Drivers
             </button>
             <button
-              className={selectedForm === "FreeDrivers" ? "active" : ""}
-              onClick={() => handleFormChange("FreeDrivers")}
+              className={selectedForm === "InactiveDrivers" ? "active" : ""}
+              onClick={() => handleFormChange("InactiveDrivers")}
             >
               Inactive Drivers
             </button>
@@ -98,7 +100,7 @@ const Vehicles = () => {
           {selectedForm === "ActiveVehicles" && <ActiveVehicles />}
           {selectedForm === "InActiveVehicles" && <InActiveVehicles />}
           {selectedForm === "ActiveDrivers" && <ActiveDrivers />}
-          {selectedForm === "FreeDrivers" && <FreeDrivers />}
+          {selectedForm === "InactiveDrivers" && <InactiveDrivers />}
         </div>
       </div>
 

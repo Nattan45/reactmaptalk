@@ -51,9 +51,7 @@ app.get("/api/users-id", async (req, res) => {
 // get all users list - For update
 app.get("/api/users-id-list", async (req, res) => {
   try {
-    const response = await axios.get(
-      `${SPRING_ENDPOINT}${routes.USERUPDATELIST}`
-    );
+    const response = await axios.get(`${SPRING_ENDPOINT}${routes.USERSIDLIST}`);
 
     res.json(response.data);
   } catch (error) {
@@ -106,8 +104,6 @@ app.put("/api/users-update/:id", async (req, res) => {
     return res.status(400).json({ error: "User ID is required" });
   }
 
-  // console.log(userData);
-
   try {
     const response = await axios.put(
       `${SPRING_ENDPOINT}${routes.USERSLIST}/${userId}`,
@@ -135,6 +131,7 @@ app.put("/api/users-update/:id", async (req, res) => {
   }
 });
 
+// delete User Account
 app.delete("/api/user/remove/:id", async (req, res) => {
   const userId = req.params.id;
 
@@ -160,6 +157,119 @@ app.delete("/api/user/remove/:id", async (req, res) => {
     } else {
       console.error("Server error:", error.message);
       res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+});
+
+//get all drivers with ID
+app.get("/api/drivers-id-list", async (req, res) => {
+  try {
+    const response = await axios.get(
+      `${SPRING_ENDPOINT}${routes.DRIVERSIDLIST}`
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error fetching drivers:", error.message);
+    res.status(500).json({ error: "Failed to fetch drivers" });
+  }
+});
+
+//get all drivers
+app.get("/api/drivers", async (req, res) => {
+  try {
+    const response = await axios.get(`${SPRING_ENDPOINT}${routes.DRIVERSLIST}`);
+
+    res.json(response.data);
+    // console.log(response.data);
+  } catch (error) {
+    console.error("Error fetching drivers:", error.message);
+    res.status(500).json({ error: "Failed to fetch drivers" });
+  }
+});
+
+// update Driver
+app.put("/api/update/driver/:id", async (req, res) => {
+  const driverId = req.params.id;
+  const driverData = req.body;
+
+  if (!driverId) {
+    return res.status(400).json({ error: "User ID is required" });
+  }
+
+  try {
+    const response = await axios.put(
+      `${SPRING_ENDPOINT}${routes.DRIVERSLIST}/${driverId}`,
+      driverData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // Send success response back to the client
+    res.status(response.status).json({ message: "User updated successfully" });
+  } catch (error) {
+    // Handle errors from the Spring service
+    if (error.response) {
+      console.error("Error from Spring service:", error.response.data);
+      res.status(error.response.status).json({
+        error: error.response.data.message || "Failed to Update user",
+      });
+    } else {
+      console.error("Server error:", error.message);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+});
+
+// Create Driver
+app.post("/api/create/driver", async (req, res) => {
+  const userData = req.body;
+  // console.log(userData, "driver data");
+
+  try {
+    const response = await axios.post(
+      `${SPRING_ENDPOINT}${routes.DRIVERSLIST}`,
+      userData
+    );
+    // Send the response back to the client
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      console.log("Response from Spring service:", error.response.data);
+
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
+// delete Driver
+app.delete("/api/delete/driver/:id", async (req, res) => {
+  const driverId = req.params.id;
+
+  try {
+    const response = await axios.delete(
+      `${SPRING_ENDPOINT}${routes.DRIVERSLIST}/${driverId}`
+    );
+
+    res
+      .status(response.status)
+      .json({ message: "Driver deleted successfully" });
+  } catch (error) {
+    if (error.response) {
+      console.log("Response from Spring service:", error.response.data);
+
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
     }
   }
 });
