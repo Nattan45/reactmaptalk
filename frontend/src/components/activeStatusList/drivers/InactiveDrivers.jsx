@@ -77,7 +77,6 @@ const InactiveDrivers = () => {
           <tr>
             <th>Driver Name</th>
             <th>Driver ID</th>
-            <th>Email</th>
             <th>Phone Number</th>
             <th>Emergency Contact</th>
           </tr>
@@ -91,7 +90,6 @@ const InactiveDrivers = () => {
                     {Driver.lastName}
                   </td>
                   <td>{Driver.driverId}</td>
-                  <td>{Driver.email}</td>
                   <td>{Driver.phoneNumber}</td>
                   <td>{Driver.emergencyContact}</td>
                 </tr>

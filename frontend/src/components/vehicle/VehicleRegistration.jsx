@@ -38,7 +38,7 @@ const VehicleRegistration = () => {
   }, [driverId]);
 
   return (
-    <div className="registrationFormWithTable half-and-full-grid">
+    <div className="registrationFormWithTable">
       <form className="form heightfit" onSubmit={handleSubmit}>
         <div className="formTitle">
           <svg
