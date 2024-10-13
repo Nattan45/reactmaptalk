@@ -33,7 +33,7 @@ const AllAccounts = () => {
       try {
         // Make the GET request using Axios
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/users`
+          `${process.env.REACT_APP_API_URL}/api/users-id-list`
         );
 
         // Get the data from the response

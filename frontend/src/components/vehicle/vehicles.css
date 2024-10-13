@@ -87,3 +87,8 @@
 .inputFilter:focus {
   border: 2px solid grey;
 }
+
+.half-and-full-grid {
+  display: grid;
+  grid-template-columns: 0.6fr 1fr;
+}

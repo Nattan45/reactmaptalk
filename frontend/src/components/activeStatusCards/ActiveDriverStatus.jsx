@@ -1,16 +1,51 @@
 import React, { useEffect, useState } from "react";
 
-import Driver from "../../data/Drivers";
 import { NavLink } from "react-router-dom";
+import axios from "axios";
+import MessagePopup from "../messageComponent/MessagePopup";
 
 export const ActiveDriverStatus = () => {
   const [activeDriver, setActiveDriver] = useState(0); // State for total checkpoints
 
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
   useEffect(() => {
-    const activeDriverCount = Driver.filter(
-      (driver) => driver.status === "Active"
-    ).length;
-    setActiveDriver(activeDriverCount);
+    const fetchData = async () => {
+      try {
+        const Driver = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/drivers`
+        );
+
+        const activeDriverCount = Driver.data.filter(
+          (driver) => driver.driverStatus === "ACTIVE"
+        ).length;
+
+        setActiveDriver(activeDriverCount);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
+    };
+    fetchData();
   }, []);
 
   return (
@@ -74,6 +109,7 @@ export const ActiveDriverStatus = () => {
           </NavLink>
         </div>
       </div>
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

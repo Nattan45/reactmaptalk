@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import Drivers from "../../data/Drivers";
-import FreeDrivers from "../activeStatusList/drivers/FreeDrivers";
+import InactiveDrivers from "../activeStatusList/drivers/InactiveDrivers";
 
 const VehicleRegistration = () => {
   const [vehicleName, setVehicleName] = useState("");
@@ -156,7 +156,7 @@ const VehicleRegistration = () => {
           Register
         </button>
       </form>
-      <FreeDrivers />
+      <InactiveDrivers />
     </div>
   );
 };

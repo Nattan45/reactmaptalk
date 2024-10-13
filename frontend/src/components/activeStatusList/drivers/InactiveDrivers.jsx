@@ -1,25 +1,55 @@
 import React, { useEffect, useState } from "react";
 
 import Paginator from "../../paginator/Paginator";
-import Drivers from "../../../data/Drivers";
+import axios from "axios";
+import MessagePopup from "../../messageComponent/MessagePopup";
 
-const FreeDrivers = () => {
+const InactiveDrivers = () => {
   const [FreeDriversData, setFreeDriversData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
 
-  // Simulating fetching data from a database (replace this with an actual API call)
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      setFreeDriversData(Drivers); // Load the dummy data into state
+      try {
+        const Drivers = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/drivers`
+        );
+        setFreeDriversData(Drivers.data);
+        console.log(Drivers.data);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
     };
 
-    fetchData(); // Call the fetch function
+    fetchData();
   }, []);
 
   // **Filter the driver to show only "Active" devices**
   const inactiveFreeDrivers = FreeDriversData.filter(
-    (item) => item.status === "Inactive"
+    (driver) => driver.driverStatus === "INACTIVE"
   );
 
   // Calculate the current items to display on the current page
@@ -47,19 +77,21 @@ const FreeDrivers = () => {
           <tr>
             <th>Driver Name</th>
             <th>Driver ID</th>
-            <th>Status</th>
+            <th>Phone Number</th>
+            <th>Emergency Contact</th>
           </tr>
         </thead>
         <tbody>
           {currentItems.length > 0
-            ? currentItems.map((Driver) => (
-                <tr key={Driver.id}>
+            ? currentItems.map((Driver, index) => (
+                <tr key={index}>
                   <td>
                     {Driver.firstName}&nbsp;
                     {Driver.lastName}
                   </td>
                   <td>{Driver.driverId}</td>
-                  <td>{Driver.status}</td>
+                  <td>{Driver.phoneNumber}</td>
+                  <td>{Driver.emergencyContact}</td>
                 </tr>
               ))
             : null}
@@ -72,8 +104,10 @@ const FreeDrivers = () => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };
 
-export default FreeDrivers;
+export default InactiveDrivers;

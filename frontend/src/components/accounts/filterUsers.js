@@ -2,12 +2,12 @@
 export const filterUsers = (users, filterText) => {
   return users.filter((user) => {
     // const username = user.username.toLowerCase();
-    const firstName = user.firstName;
-    const userId = user.userId;
-    const department = user.department;
-    const phone = user.phoneNumber;
-    const email = user.email;
-    const role = user.role;
+    const firstName = user.firstName || "";
+    const userId = user.userId || "";
+    const department = user.department || "";
+    const phone = user.phoneNumber || "";
+    const email = user.email || "";
+    const role = user.role || "";
 
     return (
       // username.includes(filterText) ||
