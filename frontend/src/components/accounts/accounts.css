@@ -106,3 +106,11 @@
 .zindex {
   z-index: 9;
 }
+
+.marginT {
+  margin-top: 2%;
+}
+.popupSaveCenter {
+  display: flex;
+  justify-content: center;
+}

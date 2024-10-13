@@ -106,10 +106,17 @@ app.put("/api/users-update/:id", async (req, res) => {
     return res.status(400).json({ error: "User ID is required" });
   }
 
+  // console.log(userData);
+
   try {
     const response = await axios.put(
       `${SPRING_ENDPOINT}${routes.USERSLIST}/${userId}`,
-      userData // sending the updated user data
+      userData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
 
     // Send success response back to the client
@@ -117,7 +124,7 @@ app.put("/api/users-update/:id", async (req, res) => {
   } catch (error) {
     // Handle errors from the Spring service
     if (error.response) {
-      console.error("Error from Spring service:", error.response.data);
+      console.error("Error from Spring service:--", error.response.data);
       res.status(error.response.status).json({
         error: error.response.data.message || "Failed to Update user",
       });

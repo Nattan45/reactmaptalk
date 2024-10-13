@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import axios from "axios";
+import "./accounts.css";
 import { validateFormData } from "./validation";
 import { Modal, Box, TextField, Button } from "@mui/material";
 import MessagePopup from "../messageComponent/MessagePopup";
@@ -111,6 +112,11 @@ const UpdateAccountsPopup = ({ open, onClose, user, onSave }) => {
             onChange={handleChange}
             fullWidth
             margin="normal"
+            slotProps={{
+              input: {
+                readOnly: true,
+              },
+            }}
           />
           <TextField
             label="Last Name"
@@ -119,30 +125,11 @@ const UpdateAccountsPopup = ({ open, onClose, user, onSave }) => {
             onChange={handleChange}
             fullWidth
             margin="normal"
-          />
-          <TextField
-            label="Email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Phone Number"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Department"
-            name="department"
-            value={formData.department}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
+            slotProps={{
+              input: {
+                readOnly: true,
+              },
+            }}
           />
           <TextField
             label="Gender"
@@ -151,6 +138,41 @@ const UpdateAccountsPopup = ({ open, onClose, user, onSave }) => {
             onChange={handleChange}
             fullWidth
             margin="normal"
+            slotProps={{
+              input: {
+                readOnly: true,
+              },
+            }}
+          />
+          <TextField
+            label="Email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            id="standard-basic"
+            variant="standard"
+          />
+          <TextField
+            label="Phone Number"
+            name="phoneNumber"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            id="standard-basic"
+            variant="standard"
+          />
+          <TextField
+            label="Department"
+            name="department"
+            value={formData.department}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            id="standard-basic"
+            variant="standard"
           />
           <TextField
             label="Role"
@@ -159,10 +181,19 @@ const UpdateAccountsPopup = ({ open, onClose, user, onSave }) => {
             onChange={handleChange}
             fullWidth
             margin="normal"
+            id="standard-basic"
+            variant="standard"
           />
-          <Button variant="contained" color="primary" onClick={handleSave}>
-            Save
-          </Button>
+          <div className="popupSaveCenter marginT">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSave}
+              className=""
+            >
+              Save
+            </Button>
+          </div>
         </Box>
       </Modal>
       <MessagePopup messages={messages} removeMessage={removeMessage} />
