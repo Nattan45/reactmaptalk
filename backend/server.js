@@ -74,7 +74,7 @@ app.post("/api/create/user", async (req, res) => {
 
   try {
     const response = await axios.post(
-      `${SPRING_ENDPOINT}${routes.USERSLIST}`,
+      `${SPRING_ENDPOINT}${routes.USERSIGNUP}`,
       userData
     );
     // Send the response back to the client

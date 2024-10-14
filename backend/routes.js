@@ -1,5 +1,8 @@
 module.exports = {
   // Users Endpoints _________________________
+  // Users Registration / Signup
+  USERSIGNUP: "/auth/signup", // get list, post
+
   // Users home route
   USERSLIST: "/users", // get list, post
 
