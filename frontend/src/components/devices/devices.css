@@ -21,11 +21,19 @@
 .form {
   display: grid;
   justify-content: center;
-
   gap: 10px;
   width: fit-content;
   background-color: #fff;
   padding: 50px;
+  border-radius: 20px;
+}
+
+.formHeight {
+  display: grid;
+  justify-content: center;
+  gap: 10px;
+  background-color: #fff;
+  padding: 25px;
   border-radius: 20px;
 }
 

@@ -29,5 +29,7 @@ module.exports = {
   VEHICLESLIST: "/vehicles", // get list, post
 
   // get all VehicleS list - Contains ID
-  VEHICLESIDLIST: "/vehicles/driverIdList",
+  VEHICLESIDLIST: "/vehicles/vehicleIdList",
+
+  VEHICLEUPDATE: "/vehicles/:id/update",
 };

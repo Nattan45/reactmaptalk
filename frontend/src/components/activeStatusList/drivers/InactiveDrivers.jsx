@@ -30,7 +30,7 @@ const InactiveDrivers = () => {
           `${process.env.REACT_APP_API_URL}/api/drivers`
         );
         setFreeDriversData(Drivers.data);
-        console.log(Drivers.data);
+        // console.log(Drivers.data);
       } catch (err) {
         if (err.response) {
           const errorMessage =

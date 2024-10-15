@@ -197,7 +197,7 @@ app.put("/api/update/driver/:id", async (req, res) => {
   const driverData = req.body;
 
   if (!driverId) {
-    return res.status(400).json({ error: "User ID is required" });
+    return res.status(400).json({ error: "Driver ID is required" });
   }
 
   try {
@@ -212,7 +212,9 @@ app.put("/api/update/driver/:id", async (req, res) => {
     );
 
     // Send success response back to the client
-    res.status(response.status).json({ message: "User updated successfully" });
+    res
+      .status(response.status)
+      .json({ message: "Driver updated successfully" });
   } catch (error) {
     // Handle errors from the Spring service
     if (error.response) {
@@ -288,7 +290,16 @@ app.delete("/api/delete/driver/:id", async (req, res) => {
 // Vehicle Related Endpoints ________________________________________________
 //get all vehicles with ID
 app.get("/api/vehicles-id-list", async (req, res) => {
-  console.log("vehicle request with their id");
+  try {
+    const response = await axios.get(
+      `${SPRING_ENDPOINT}${routes.VEHICLESIDLIST}`
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error fetching vehicles:xxxxxx", error.message);
+    res.status(500).json({ error: "Failed to fetch vehicles" });
+  }
 });
 
 //get all vehicles
@@ -305,6 +316,7 @@ app.get("/api/vehicles", async (req, res) => {
   }
 });
 
+// create vehicles
 app.post("/api/create/vehicle", async (req, res) => {
   const vehicleData = req.body;
 
@@ -323,6 +335,70 @@ app.post("/api/create/vehicle", async (req, res) => {
     );
     // Send the response back to the client
     res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      console.log("Response from Spring service:", error.response.data);
+
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
+// update vehicles
+app.put("/api/update/vehicle/:id", async (req, res) => {
+  const vehicleId = req.params.id;
+
+  const vehicleDetail = req.body;
+
+  if (!vehicleId) {
+    return res.status(400).json({ error: "Vehicle ID is required" });
+  }
+
+  try {
+    const response = await axios.put(
+      `${SPRING_ENDPOINT}${routes.VEHICLEUPDATE.replace(":id", vehicleId)}`, // Inject the vehicleId into the URL
+      vehicleDetail,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // Send success response back to the client
+    res
+      .status(response.status)
+      .json({ message: "Vehicle updated successfully" });
+  } catch (error) {
+    // Handle errors from the Spring service
+    if (error.response) {
+      console.error("Error from Spring service:", error.response.data);
+      res.status(error.response.status).json({
+        error: error.response.data.message || "Failed to Update user",
+      });
+    } else {
+      console.error("Server error:", error.message);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+});
+
+// delete vehicles
+app.delete("/api/delete/vehicles/:id", async (req, res) => {
+  const vehicleId = req.params.id;
+
+  try {
+    const response = await axios.delete(
+      `${SPRING_ENDPOINT}${routes.VEHICLESLIST}/${vehicleId}`
+    );
+
+    res
+      .status(response.status)
+      .json({ message: "Vehicle deleted successfully" });
   } catch (error) {
     if (error.response) {
       console.log("Response from Spring service:", error.response.data);
