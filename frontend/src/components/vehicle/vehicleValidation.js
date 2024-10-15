@@ -25,7 +25,8 @@ export const validatePlateNumber = (plateNumber) => {
 // Function to validate vehicle name, brand, and model
 export const validateTextFields = (value) => {
   // Disallow special characters like #@%
-  const pattern = /^[a-zA-Z0-9 ]+$/;
+  const pattern = /^[a-zA-Z0-9 -]+$/;
+
   if (!pattern.test(value)) {
     return "Field should not contain special characters like #, @, %, etc.";
   }

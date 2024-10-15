@@ -31,6 +31,8 @@ const VehicleRegistration = () => {
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
+    e.preventDefault();
+
     // Validate the plate number
     const plateError = validatePlateNumber(plateNumber);
     if (plateError) {
@@ -57,14 +59,13 @@ const VehicleRegistration = () => {
     }
     const formattedPlateNumber = `${plateNumber.state}-${plateNumber.identifier}-${plateNumber.code}`;
 
-    e.preventDefault();
     const formData = {
       vehicleName,
       brand,
       model,
       plateNumber: formattedPlateNumber,
     };
-    console.log("Form Data:", formData);
+    // console.log("Form Data:", formData);
 
     try {
       await axios.post(

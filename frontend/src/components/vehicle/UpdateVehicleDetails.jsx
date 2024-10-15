@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 
 import Paginator from "../paginator/Paginator";
-import Vehicles from "../../data/Vehicles";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
+import {
+  Stack,
+  Modal,
+  TextField,
+  Button,
+  Box,
+  createTheme,
+  ThemeProvider,
+} from "@mui/material";
+import axios from "axios";
+import MessagePopup from "../messageComponent/MessagePopup";
 
 const UpdateVehicleDetails = () => {
   const [vehicleData, setVehicleData] = useState([]); // State for the full data
@@ -16,10 +21,40 @@ const UpdateVehicleDetails = () => {
   const [open, setOpen] = useState(false); // Modal open state
   const [filterText, setFilterText] = useState(""); // State for filtering plate numbers
 
-  // Simulating fetching data from a database (replace this with an actual API call)
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      setVehicleData(Vehicles); // Load the dummy data into state
+      try {
+        const Vehicles = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/vehicles-id-list`
+        );
+
+        setVehicleData(Vehicles.data);
+        // console.log(Vehicles.data);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
     };
 
     fetchData(); // Call the fetch function
@@ -27,7 +62,7 @@ const UpdateVehicleDetails = () => {
 
   // filter
   const inactiveVehicles = vehicleData
-    .filter((item) => item.status === "Inactive")
+    .filter((item) => item.vehicleStatus === "WAITING")
     .filter((item) =>
       item.plateNumber.toLowerCase().includes(filterText.toLowerCase())
     );
@@ -61,21 +96,6 @@ const UpdateVehicleDetails = () => {
     setEditVehicle(null);
   };
 
-  const handleUpdate = (event) => {
-    event.preventDefault(); // Prevent the form from submitting and refreshing the page
-
-    // Log the updated driver details using the name attributes
-    const updatedVehicle = {
-      vehicleName: event.target.elements.vehicleName.value,
-      brand: event.target.elements.brand.value,
-      model: event.target.elements.model.value,
-      plateNumber: event.target.elements.plateNumber.value,
-    };
-
-    console.log("Updated Vehicle Details:", updatedVehicle);
-    handleClose(); // Close the modal after saving or updating
-  };
-
   const { palette } = createTheme();
   const { augmentColor } = palette;
   const createColor = (mainColor) =>
@@ -87,9 +107,79 @@ const UpdateVehicleDetails = () => {
     },
   });
 
+  useEffect(() => {
+    // Assuming editVehicle is the vehicle data coming from the endpoint
+    if (editVehicle && editVehicle.plateNumber) {
+      const [state, identifier, code] = editVehicle.plateNumber.split("-");
+      setPlateNumber({ state, identifier, code });
+    }
+  }, [editVehicle]);
+
+  // Additional state to hold plate number components
+  const [plateNumber, setPlateNumber] = useState({
+    state: "",
+    identifier: "",
+    code: "",
+  });
+
+  const handleUpdate = async (event) => {
+    event.preventDefault();
+
+    // Combine the plate number components into the formatted string
+    const formattedPlateNumber = `${plateNumber.state}-${plateNumber.identifier}-${plateNumber.code}`;
+
+    // Prepare the updated vehicle object
+    const updatedVehicle = {
+      plateNumber: formattedPlateNumber,
+      // Add any other vehicle details here that need to be updated
+    };
+
+    try {
+      await axios.put(
+        `${process.env.REACT_APP_API_URL}/api/update/vehicle/${editVehicle.id}`,
+        updatedVehicle
+      );
+
+      addMessage("Vehicle updated successfully!", "success");
+
+      // Close modal and reset edited vehicle
+      handleClose();
+    } catch (err) {
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage ||
+          err.response.data.message ||
+          "An error occurred: 500";
+        addMessage(errorMessage, "error");
+      } else {
+        addMessage("Network error: Unable to reach the server.", "error");
+      }
+    }
+  };
+
+  const handelDeleteVehicle = async (id) => {
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/delete/vehicles/${id}`
+      );
+
+      addMessage("Vehicle deleted successfully!", "success");
+    } catch (err) {
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage ||
+          err.response.data.message ||
+          "An error occurred: 500";
+        addMessage(errorMessage, "error");
+      } else {
+        addMessage("Network error: Unable to reach the server.", "error");
+      }
+    }
+  };
+
   return (
     <div className={open ? "blur-background" : ""}>
-      <h2 className="tableDataHeaderTitle">Inactive Vehicles Update Form</h2>
+      <h2 className="tableDataHeaderTitle">Waiting Vehicles Update Form</h2>
       <div className="filters">
         <input
           placeholder="Plate Number..."
@@ -119,7 +209,7 @@ const UpdateVehicleDetails = () => {
                   <td>{vehicle.brand}</td>
                   <td>{vehicle.model}</td>
                   <td>{vehicle.plateNumber}</td>
-                  <td>{vehicle.status}</td>
+                  <td>{vehicle.vehicleStatus}</td>
                   <td>
                     <Stack direction="row" spacing={2}>
                       <ThemeProvider theme={theme}>
@@ -131,6 +221,7 @@ const UpdateVehicleDetails = () => {
                               : "error"
                           }
                           className="smallbutton"
+                          onClick={() => handelDeleteVehicle(vehicle.id)}
                         >
                           <span className="sentencebutton">Delete</span>
                         </Button>
@@ -170,49 +261,117 @@ const UpdateVehicleDetails = () => {
       />
 
       <Modal open={open} onClose={handleClose}>
-        <Box className="modalBox">
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
           {editVehicle && (
             <div>
-              <h3>
-                Edit Vehicle: {editVehicle.vehicleName} {editVehicle.model}
+              <h3 className="textcenter">
+                Vehicle: &nbsp; {editVehicle.vehicleName} &nbsp; - &nbsp;
+                {editVehicle.model}
               </h3>
               <form className="form heightfit" onSubmit={handleUpdate}>
-                <label>
-                  Vehicle Name:
-                  <input
-                    type="text"
-                    defaultValue={editVehicle.vehicleName}
-                    name="vehicleName"
-                    className="input"
-                  />
-                </label>
-                <label>
-                  Brand
-                  <input
-                    type="text"
-                    defaultValue={editVehicle.brand}
-                    name="brand"
-                    className="input"
-                  />
-                </label>
-                <label>
-                  Model
-                  <input
-                    type="text"
-                    defaultValue={editVehicle.model}
-                    name="model"
-                    className="input"
-                  />
-                </label>
-                <label>
-                  Plate Number
-                  <input
-                    type="text"
-                    defaultValue={editVehicle.plateNumber}
-                    name="plateNumber"
-                    className="input"
-                  />
-                </label>
+                <TextField
+                  label="Vehicle Name"
+                  name="vehicleName"
+                  value={editVehicle.vehicleName}
+                  fullWidth
+                  margin="normal"
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
+                  }}
+                />
+                <TextField
+                  label="Brand"
+                  name="brand"
+                  value={editVehicle.brand}
+                  fullWidth
+                  margin="normal"
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
+                  }}
+                />
+                <TextField
+                  label="Model"
+                  name="model"
+                  value={editVehicle.model}
+                  fullWidth
+                  margin="normal"
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
+                  }}
+                />
+
+                <div className="form-flex vehicleform-flex">
+                  <label>
+                    <div className="vehicleplate-number-title">
+                      Plate Number
+                    </div>
+                    <div className="vehicleinput-group">
+                      <input
+                        type="text"
+                        placeholder="State"
+                        value={plateNumber.state}
+                        onChange={(e) =>
+                          setPlateNumber({
+                            ...plateNumber,
+                            state: e.target.value,
+                          })
+                        }
+                        required
+                        maxLength="2"
+                        className="vehicleinput vehicleinput-small"
+                      />
+                      <span className="vehicledash">-</span>
+                      <input
+                        type="text"
+                        placeholder="Identifier"
+                        value={plateNumber.identifier}
+                        onChange={(e) =>
+                          setPlateNumber({
+                            ...plateNumber,
+                            identifier: e.target.value,
+                          })
+                        }
+                        required
+                        maxLength="6"
+                        className="vehicleinput vehicleinput-medium"
+                      />
+                      <span className="vehicledash">-</span>
+                      <input
+                        type="text"
+                        placeholder="Code"
+                        value={plateNumber.code}
+                        onChange={(e) =>
+                          setPlateNumber({
+                            ...plateNumber,
+                            code: e.target.value,
+                          })
+                        }
+                        required
+                        maxLength="1"
+                        className="vehicleinput vehicleinput-small"
+                      />
+                    </div>
+                  </label>
+                </div>
+
+                <br />
                 <button type="submit" className="submit">
                   Save
                 </button>
@@ -221,6 +380,8 @@ const UpdateVehicleDetails = () => {
           )}
         </Box>
       </Modal>
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

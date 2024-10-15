@@ -6,7 +6,7 @@ function vehicleRegistration(vehicleData) {
   // Check if vehicleName is present and does not contain invalid characters
   if (!vehicleData.vehicleName) {
     errors.push("Vehicle name is required");
-  } else if (/[^a-zA-Z0-9\s]/.test(vehicleData.vehicleName)) {
+  } else if (/[^a-zA-Z0-9\s-]/.test(vehicleData.vehicleName)) {
     errors.push("Vehicle name contains invalid characters");
   }
 
@@ -28,7 +28,8 @@ function vehicleRegistration(vehicleData) {
   if (!vehicleData.plateNumber) {
     errors.push("Plate number is required");
   } else {
-    const plateNumberPattern = /^([a-zA-Z]{2})-([0-9]{1,6})-([a-zA-Z0-9]{1})$/;
+    const plateNumberPattern =
+      /^([a-zA-Z]{2})-([a-zA-Z-0-9]{1,6})-([a-zA-Z0-9]{1})$/;
     if (!plateNumberPattern.test(vehicleData.plateNumber)) {
       errors.push(
         "Plate number must follow the format: state-identifier-code (e.g., AB-123456-C)"
