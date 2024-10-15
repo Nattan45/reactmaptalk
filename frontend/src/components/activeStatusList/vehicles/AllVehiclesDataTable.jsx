@@ -1,18 +1,63 @@
 import React, { useEffect, useState } from "react";
 
-import Vehicles from "../../../data/Vehicles"; // Importing dummy data
 import Paginator from "../../paginator/Paginator";
-// import Button from "@mui/material/Button";
+import axios from "axios";
+import MessagePopup from "../../messageComponent/MessagePopup";
+import { Button, createTheme, ThemeProvider } from "@mui/material";
 
 const AllVehiclesDataTable = () => {
   const [vehicleData, setVehicleData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
 
-  // Simulating fetching data from a database (replace this with an actual API call)
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      setVehicleData(Vehicles); // Load the dummy data into state
+      try {
+        const Vehicles = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/vehicles`
+        );
+
+        // sort the vehicles in ASSIGNED > PENDING > WAITING order
+        const sortVehicleData = (vehicles) => {
+          const order = {
+            ASSIGNED: 1,
+            PENDING: 2,
+            WAITING: 3,
+          };
+
+          return vehicles.sort((a, b) => {
+            return order[a.vehicleStatus] - order[b.vehicleStatus];
+          });
+        };
+
+        // When setting the vehicle data after fetching
+        setVehicleData(sortVehicleData(Vehicles.data));
+        // setVehicleData(Vehicles.data);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
     };
 
     fetchData(); // Call the fetch function
@@ -31,6 +76,18 @@ const AllVehiclesDataTable = () => {
     setCurrentPage(pageNumber); // Set the new page number
   };
 
+  const { palette } = createTheme();
+  const { augmentColor } = palette;
+  const createColor = (mainColor) =>
+    augmentColor({ color: { main: mainColor } });
+  const theme = createTheme({
+    palette: {
+      ASSIGNED: createColor("#2e5736"),
+      WAITING: createColor("#D20103"),
+      PENDING: createColor("#FFA500"),
+    },
+  });
+
   return (
     <div>
       <h2 className="tableDataHeaderTitle">
@@ -44,19 +101,45 @@ const AllVehiclesDataTable = () => {
             <th>Model</th>
             <th>Plate Number</th>
             <th>Status</th>
-            <th>Driver ID</th>
           </tr>
         </thead>
         <tbody>
           {currentItems.length > 0 ? (
-            currentItems.map((device) => (
-              <tr key={device.id}>
-                <td>{device.vehicleName}</td>
-                <td>{device.brand}</td>
-                <td>{device.model}</td>
-                <td>{device.plateNumber}</td>
-                <td>{device.status}</td>
-                <td>{device.status === "Active" ? device.driverId : ""}</td>
+            currentItems.map((vehicle, key) => (
+              <tr key={key}>
+                <td>{vehicle.vehicleName}</td>
+                <td>{vehicle.brand}</td>
+                <td>{vehicle.model}</td>
+                <td>{vehicle.plateNumber}</td>
+                <td>
+                  <ThemeProvider theme={theme}>
+                    {vehicle.vehicleStatus === "ASSIGNED" ? (
+                      <Button
+                        variant="contained"
+                        color={"ASSIGNED"}
+                        className="smallbutton"
+                      >
+                        Assigned
+                      </Button>
+                    ) : vehicle.vehicleStatus === "PENDING" ? (
+                      <Button
+                        variant="contained"
+                        color={"PENDING"}
+                        className="smallbutton"
+                      >
+                        Pending
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        color={"WAITING"}
+                        className="smallbutton"
+                      >
+                        Waiting
+                      </Button>
+                    )}
+                  </ThemeProvider>
+                </td>
               </tr>
             ))
           ) : (
@@ -72,6 +155,8 @@ const AllVehiclesDataTable = () => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

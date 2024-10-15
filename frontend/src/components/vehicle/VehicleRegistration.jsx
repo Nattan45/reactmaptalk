@@ -1,48 +1,96 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-import Drivers from "../../data/Drivers";
 import InactiveDrivers from "../activeStatusList/drivers/InactiveDrivers";
+import axios from "axios";
+import MessagePopup from "../messageComponent/MessagePopup";
+import { validatePlateNumber, validateTextFields } from "./vehicleValidation";
 
 const VehicleRegistration = () => {
   const [vehicleName, setVehicleName] = useState("");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
-  const [driverId, setDriverId] = useState(""); // Updated to string
-  const [driverName, setDriverName] = useState("");
+  const [plateNumber, setPlateNumber] = useState({
+    state: "",
+    identifier: "",
+    code: "",
+  });
+
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
 
   // Function to handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    // Validate the plate number
+    const plateError = validatePlateNumber(plateNumber);
+    if (plateError) {
+      addMessage(plateError, "error");
+      return;
+    }
+
+    // Validate the text fields
+    const vehicleNameError = validateTextFields(vehicleName);
+    const brandError = validateTextFields(brand);
+    const modelError = validateTextFields(model);
+
+    if (vehicleNameError) {
+      addMessage(vehicleNameError, "error");
+      return;
+    }
+    if (brandError) {
+      addMessage(brandError, "error");
+      return;
+    }
+    if (modelError) {
+      addMessage(modelError, "error");
+      return;
+    }
+    const formattedPlateNumber = `${plateNumber.state}-${plateNumber.identifier}-${plateNumber.code}`;
+
     e.preventDefault();
     const formData = {
       vehicleName,
       brand,
       model,
-      driverId,
+      plateNumber: formattedPlateNumber,
     };
     console.log("Form Data:", formData);
-    // Here you can send the formData to your API or backend
-  };
 
-  // Function to find driver by driverId from dummy data
-  const findDriverName = (id) => {
-    const foundDriver = Drivers.find((driver) => driver.driverId === id);
-    return foundDriver ? foundDriver.driverName : "Driver not found";
-  };
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/create/vehicle`,
+        formData
+      );
 
-  // Fetch driver name when driverId changes
-  useEffect(() => {
-    if (driverId) {
-      const name = findDriverName(driverId);
-      setDriverName(name);
+      addMessage("Vehicle created successfully!", "success");
+    } catch (err) {
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage ||
+          err.response.data.message ||
+          "An error occurred: 500";
+        addMessage(errorMessage, "error");
+      } else {
+        addMessage("Network error: Unable to reach the server.", "error");
+      }
     }
-  }, [driverId]);
+  };
 
   return (
     <div className="registrationFormWithTable">
       <form className="form heightfit" onSubmit={handleSubmit}>
         <div className="formTitle">
           <svg
-            // fill="#d0ae06"
             fill="black"
             height="32"
             width="32"
@@ -83,8 +131,10 @@ const VehicleRegistration = () => {
           </svg>
           <p className="title textcenter">Vehicle Registration Form</p>
         </div>
+
         <br />
         <label className="textcenter">Vehicle</label>
+
         {/* Vehicle Name */}
         <label>
           <input
@@ -96,6 +146,7 @@ const VehicleRegistration = () => {
           />
           <span>Vehicle Name:</span>
         </label>
+
         <div className="form-flex">
           {/* Brand */}
           <label>
@@ -121,35 +172,51 @@ const VehicleRegistration = () => {
             <span>Model</span>
           </label>
         </div>
-        <br />
 
-        <label className="textcenter">Driver</label>
-        {/* Driver Name */}
-        <div className="driverForm">
-          <label className="driverLabel">
-            <div className="driverInputSection">
-              {/* Input for Driver ID */}
+        {/* Plate Number */}
+        <div className="form-flex vehicleform-flex">
+          <label>
+            <div className="vehicleplate-number-title">Plate Number</div>
+            <div className="vehicleinput-group">
               <input
                 type="text"
-                value={driverId}
-                onChange={(e) => setDriverId(e.target.value)}
+                placeholder="State"
+                value={plateNumber.state}
+                onChange={(e) =>
+                  setPlateNumber({ ...plateNumber, state: e.target.value })
+                }
                 required
-                className="driverInput"
-                placeholder="Driver ID"
+                maxLength="2"
+                className="vehicleinput vehicleinput-small"
               />
-              <span className="driverLabelText">Driver Name</span>
-            </div>
-
-            {/* Display Driver Name on the right side of the input */}
-            <div className="driverNameSection">
-              {driverName ? (
-                <span className="driverName">{driverName}</span>
-              ) : (
-                <span className="driverName">Waiting for ID...</span>
-              )}
+              <span className="vehicledash">-</span>
+              <input
+                type="text"
+                placeholder="Identifier"
+                value={plateNumber.identifier}
+                onChange={(e) =>
+                  setPlateNumber({ ...plateNumber, identifier: e.target.value })
+                }
+                required
+                maxLength="6"
+                className="vehicleinput vehicleinput-medium"
+              />
+              <span className="vehicledash">-</span>
+              <input
+                type="text"
+                placeholder="Code"
+                value={plateNumber.code}
+                onChange={(e) =>
+                  setPlateNumber({ ...plateNumber, code: e.target.value })
+                }
+                required
+                maxLength="1"
+                className="vehicleinput vehicleinput-small"
+              />
             </div>
           </label>
         </div>
+
         <br />
         {/* Submit Button */}
         <button type="submit" className="submit">
@@ -157,6 +224,8 @@ const VehicleRegistration = () => {
         </button>
       </form>
       <InactiveDrivers />
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

@@ -1,10 +1,10 @@
-.vehicleDriverConatiner {
+/* .vehicleDriverConatiner {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   justify-self: center;
   gap: 40px;
   color: #369414;
-}
+} */
 .thirdSection {
   margin-top: 3%;
 }
@@ -91,4 +91,55 @@
 .half-and-full-grid {
   display: grid;
   grid-template-columns: 0.6fr 1fr;
+}
+
+.vehicleform-flex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.vehicleplate-number-title {
+  font-size: 16px;
+  /* font-weight: bold; */
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.vehicleinput-group {
+  display: flex;
+  align-items: center;
+}
+
+.vehicleinput {
+  padding: 10px;
+  font-size: 16px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 0 5px;
+}
+
+.vehicleinput-small {
+  width: 60px;
+}
+.vehicleinput-small::placeholder {
+  font-size: 12px;
+}
+
+.vehicleinput-medium {
+  width: 140px;
+}
+
+.vehicleinput-medium::placeholder {
+  font-size: 14px;
+}
+
+.vehicledash {
+  font-size: 24px;
+  padding: 0 5px;
+}
+
+input::placeholder {
+  color: #999;
 }

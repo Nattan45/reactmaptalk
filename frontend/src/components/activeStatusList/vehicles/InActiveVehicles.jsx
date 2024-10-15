@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 import Paginator from "../../paginator/Paginator";
-import Vehicles from "../../../data/Vehicles"; // Importing dummy data
+import axios from "axios";
+import MessagePopup from "../../messageComponent/MessagePopup";
 // import Button from "@mui/material/Button";
 
 const InActiveVehicles = () => {
@@ -9,17 +10,46 @@ const InActiveVehicles = () => {
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
 
-  // Simulating fetching data from a database (replace this with an actual API call)
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      setVehicleData(Vehicles); // Load the dummy data into state
+      try {
+        const Vehicles = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/vehicles`
+        );
+
+        setVehicleData(Vehicles.data); // Load the dummy data into state
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
     };
 
     fetchData(); // Call the fetch function
   }, []);
 
   const InactiveVehicles = vehicleData.filter(
-    (item) => item.status === "Inactive"
+    (vehicle) => vehicle.vehicleStatus === "WAITING"
   );
 
   // Calculate the current items to display on the current page
@@ -41,7 +71,7 @@ const InActiveVehicles = () => {
   return (
     <div>
       <h2 className="tableDataHeaderTitle inactiveColor">
-        {InactiveVehicles.length} Inactive Vehicles Status
+        {InactiveVehicles.length} Waiting Vehicles Status
       </h2>
       <table border="1" cellPadding="10" className="inactivedevicesTable">
         <thead className="inactivedevicesTable-header">
@@ -50,18 +80,16 @@ const InActiveVehicles = () => {
             <th>Brand</th>
             <th>Model</th>
             <th>Plate Number</th>
-            <th>Status</th>
           </tr>
         </thead>
         <tbody>
           {currentItems.length > 0 ? (
-            currentItems.map((device) => (
-              <tr key={device.id}>
-                <td>{device.vehicleName}</td>
-                <td>{device.brand}</td>
-                <td>{device.model}</td>
-                <td>{device.plateNumber}</td>
-                <td>{device.status}</td>
+            currentItems.map((vehicle, key) => (
+              <tr key={key}>
+                <td>{vehicle.vehicleName}</td>
+                <td>{vehicle.brand}</td>
+                <td>{vehicle.model}</td>
+                <td>{vehicle.plateNumber}</td>
               </tr>
             ))
           ) : (
@@ -77,6 +105,8 @@ const InActiveVehicles = () => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };
