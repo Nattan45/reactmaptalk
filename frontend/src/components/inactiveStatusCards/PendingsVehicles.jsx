@@ -4,7 +4,7 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import MessagePopup from "../messageComponent/MessagePopup";
 
-const InactivesVehicles = () => {
+const PendingsVehicles = () => {
   const [activeVehicles, setActiveVehicles] = useState(0);
 
   // Message Toast
@@ -29,7 +29,7 @@ const InactivesVehicles = () => {
         );
 
         const InactiveVehicles = activeVehiclesCount.data.filter(
-          (vehicle) => vehicle.vehicleStatus === "WAITING"
+          (vehicle) => vehicle.vehicleStatus === "PENDING"
         );
 
         setActiveVehicles(InactiveVehicles.length);
@@ -51,11 +51,11 @@ const InactivesVehicles = () => {
 
   return (
     <div className="allStastics">
-      <div className="Stastics-card red-card-outline">
+      <div className="Stastics-card yellow-card-outline">
         <div className="Stastics-card-details">
           <p className="Stastics-text-title-icon">
             <svg
-              fill="red"
+              fill="#cccc1e"
               height="32"
               width="32"
               version="1.1"
@@ -94,13 +94,13 @@ const InactivesVehicles = () => {
               </g>
             </svg>
           </p>
-          <p className="Stastics-text-title textcenter">Waiting Vehicles</p>
+          <p className="Stastics-text-title textcenter">Pending Vehicles</p>
 
           <p className="Stastics-text-body textcenter">{activeVehicles}</p>
         </div>
         <NavLink
           to="/VehiclesStatusPage"
-          // state={{ focusOnInactive: true }} // Correct format to pass state
+          state={{ focusOnInactive: true }} // Correct format to pass state
         >
           <button className="Stastics-card-button">More info</button>
         </NavLink>
@@ -111,4 +111,4 @@ const InactivesVehicles = () => {
   );
 };
 
-export default InactivesVehicles;
+export default PendingsVehicles;

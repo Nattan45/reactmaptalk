@@ -8,6 +8,7 @@
   --editable-header-color: #2e5736;
   --warning-header-color: #a92736;
   --inactive-color: #d81818;
+  --Pending-color: #d8bb18;
 }
 
 .borderBottom {
@@ -31,6 +32,12 @@
 /* this style can identify Inactive/ live devices, drivers, vehicles or rfids */
 .inactiveColor {
   background-color: var(--inactive-color) !important;
+  color: white;
+  font-weight: 300;
+}
+
+.PendingColor {
+  background-color: var(--Pending-color) !important;
   color: white;
   font-weight: 300;
 }

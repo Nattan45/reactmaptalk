@@ -8,6 +8,8 @@ const routes = require("./routes"); // Import routes
 
 // validators
 const validateUserData = require("./validators/userAccounts/accountValidator");
+const validateDriverProfile = require("./validators/driverProfiles/driverProfile");
+const validateVehicleRegistration = require("./validators/vehicleProfile/vehicleRegistration");
 
 const app = express();
 // Enable CORS to allow requests from the React frontend
@@ -20,7 +22,7 @@ const PORT = process.env.Node_PORT;
 // Get Spring Boot endpoint from the .env file
 const SPRING_ENDPOINT = process.env.SPRING_ENDPOINT;
 
-// User Account Related Endpoints
+// User Account Related Endpoints ________________________________________________
 // get all users list
 app.get("/api/users", async (req, res) => {
   try {
@@ -74,7 +76,7 @@ app.post("/api/create/user", async (req, res) => {
 
   try {
     const response = await axios.post(
-      `${SPRING_ENDPOINT}${routes.USERSLIST}`,
+      `${SPRING_ENDPOINT}${routes.USERSIGNUP}`,
       userData
     );
     // Send the response back to the client
@@ -161,6 +163,7 @@ app.delete("/api/user/remove/:id", async (req, res) => {
   }
 });
 
+// Driver Related Endpoints ________________________________________________
 //get all drivers with ID
 app.get("/api/drivers-id-list", async (req, res) => {
   try {
@@ -229,6 +232,14 @@ app.post("/api/create/driver", async (req, res) => {
   const userData = req.body;
   // console.log(userData, "driver data");
 
+  // Validate the data coming from the frontend
+  const validationErrors = validateDriverProfile(userData);
+  if (validationErrors) {
+    return res.status(400).json({
+      errorMessage: validationErrors.join(", "),
+    });
+  }
+
   try {
     const response = await axios.post(
       `${SPRING_ENDPOINT}${routes.DRIVERSLIST}`,
@@ -261,6 +272,57 @@ app.delete("/api/delete/driver/:id", async (req, res) => {
     res
       .status(response.status)
       .json({ message: "Driver deleted successfully" });
+  } catch (error) {
+    if (error.response) {
+      console.log("Response from Spring service:", error.response.data);
+
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
+// Vehicle Related Endpoints ________________________________________________
+//get all vehicles with ID
+app.get("/api/vehicles-id-list", async (req, res) => {
+  console.log("vehicle request with their id");
+});
+
+//get all vehicles
+app.get("/api/vehicles", async (req, res) => {
+  try {
+    const response = await axios.get(
+      `${SPRING_ENDPOINT}${routes.VEHICLESLIST}`
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error fetching vehicles:", error.message);
+    res.status(500).json({ error: "Failed to fetch vehicles" });
+  }
+});
+
+app.post("/api/create/vehicle", async (req, res) => {
+  const vehicleData = req.body;
+
+  // Validate the data coming from the frontend
+  const validationErrors = validateVehicleRegistration(vehicleData);
+  if (validationErrors) {
+    return res.status(400).json({
+      errorMessage: validationErrors.join(", "),
+    });
+  }
+
+  try {
+    const response = await axios.post(
+      `${SPRING_ENDPOINT}${routes.VEHICLESLIST}`,
+      vehicleData
+    );
+    // Send the response back to the client
+    res.status(response.status).json(response.data);
   } catch (error) {
     if (error.response) {
       console.log("Response from Spring service:", error.response.data);

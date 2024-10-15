@@ -10,6 +10,7 @@ import InactiveDrivers from "../activeStatusList/drivers/InactiveDrivers";
 import UpdateVehicleDetails from "./UpdateVehicleDetails";
 import ActiveVehicles from "../activeStatusList/vehicles/ActiveVehicles";
 import InActiveVehicles from "../activeStatusList/vehicles/InActiveVehicles";
+import PendingVehicles from "../activeStatusList/vehicles/PendingVehicles";
 
 const Vehicles = () => {
   // State to track which form is selected
@@ -71,10 +72,16 @@ const Vehicles = () => {
               Active Vehicles
             </button>
             <button
-              className={selectedForm === "InActiveVehicles" ? "active" : ""}
-              onClick={() => handleFormChange("InActiveVehicles")}
+              className={selectedForm === "PendingVehicles" ? "active" : ""}
+              onClick={() => handleFormChange("PendingVehicles")}
             >
-              Inactive Vehicles
+              Pending Vehicles
+            </button>
+            <button
+              className={selectedForm === "WaitingVehicles" ? "active" : ""}
+              onClick={() => handleFormChange("WaitingVehicles")}
+            >
+              Waiting Vehicles
             </button>
             <button
               className={selectedForm === "ActiveDrivers" ? "active" : ""}
@@ -98,7 +105,8 @@ const Vehicles = () => {
           {selectedForm === "DriverRegistration" && <DriverRegistration />}
           {selectedForm === "UpdateDriverDetails" && <UpdateDriverDetails />}
           {selectedForm === "ActiveVehicles" && <ActiveVehicles />}
-          {selectedForm === "InActiveVehicles" && <InActiveVehicles />}
+          {selectedForm === "PendingVehicles" && <PendingVehicles />}
+          {selectedForm === "WaitingVehicles" && <InActiveVehicles />}
           {selectedForm === "ActiveDrivers" && <ActiveDrivers />}
           {selectedForm === "InactiveDrivers" && <InactiveDrivers />}
         </div>

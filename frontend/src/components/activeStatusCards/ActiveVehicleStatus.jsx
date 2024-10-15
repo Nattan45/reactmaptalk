@@ -2,15 +2,54 @@ import React, { useEffect, useState } from "react";
 
 import { NavLink } from "react-router-dom";
 import "./statusCard.css";
-import Vehicle from "../../data/ActiveVehicle";
+import axios from "axios";
+import MessagePopup from "../messageComponent/MessagePopup";
 
 const ActiveVehicleStatus = () => {
-  const [activeVehicles, setActiveVehicles] = useState(0); // State for total checkpoints
+  const [activeVehicles, setActiveVehicles] = useState(0);
+
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
 
   useEffect(() => {
-    const activeVehiclesCount = Vehicle.length;
-    setActiveVehicles(activeVehiclesCount);
+    const fetchData = async () => {
+      try {
+        const activeVehiclesCount = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/vehicles`
+        );
+
+        const InactiveVehicles = activeVehiclesCount.data.filter(
+          (vehicle) => vehicle.vehicleStatus === "ASSIGNED"
+        );
+
+        setActiveVehicles(InactiveVehicles.length);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
+    };
+
+    fetchData();
   }, []);
+
   return (
     <div className="">
       {/* actives Vehicles */}
@@ -67,6 +106,8 @@ const ActiveVehicleStatus = () => {
           </NavLink>
         </div>
       </div>
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom"; // Import this to access the loc
 import ActiveVehicles from "./ActiveVehicles";
 import InActiveVehicles from "./InActiveVehicles";
 import AllVehiclesDataTable from "./AllVehiclesDataTable";
+import PendingVehicles from "./PendingVehicles";
 
 const VehiclesStatus = () => {
   const location = useLocation(); // Hook to get the current location and its state
@@ -25,13 +26,18 @@ const VehiclesStatus = () => {
 
   return (
     <div className="gridCenter">
-      <div className="marginTB">
+      <div className="flexRowCenter">
         <ActiveVehicles />
+        <div className="marginLeft">
+          <InActiveVehicles />
+        </div>
       </div>
+
+      {/* <div className="marginTB"></div> */}
 
       {/* Add a ref to InActiveVehicles */}
       <div ref={inActiveVehiclesRef}>
-        <InActiveVehicles />
+        <PendingVehicles />
       </div>
 
       <div className="marginTB">

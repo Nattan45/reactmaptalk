@@ -59,7 +59,7 @@ const DriverRegistration = () => {
         formData
       );
 
-      addMessage("Drier created successfully!", "success");
+      addMessage("Driver created successfully!", "success");
     } catch (err) {
       if (err.response) {
         const errorMessage =
