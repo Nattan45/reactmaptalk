@@ -6,14 +6,21 @@ const bodyParser = require("body-parser");
 
 const routes = require("./routes"); // Import routes
 
-// validators
+// Frontend validators
 const validateUserData = require("./validators/userAccounts/accountValidator");
 const validateDriverProfile = require("./validators/driverProfiles/driverProfile");
 const validateVehicleRegistration = require("./validators/vehicleProfile/vehicleRegistration");
 
+const validateRfidRegistration = require("./validators/rfidKeyProfile/rfidRegistration");
+
+// backend validators
+// const { healthCheckMiddleware, checkBackendHealth, startPeriodicHealthCheck } = require("./validators/endpintHealth/healthCheckMiddleware");
+
 const app = express();
 // Enable CORS to allow requests from the React frontend
 app.use(cors());
+// Apply health check middleware globally
+
 // app.use(cors({ origin: "http://192.168.200.182:48624" }));
 // For parsing JSON bodies
 app.use(bodyParser.json());
@@ -297,7 +304,7 @@ app.get("/api/vehicles-id-list", async (req, res) => {
 
     res.json(response.data);
   } catch (error) {
-    console.error("Error fetching vehicles:xxxxxx", error.message);
+    console.error("Error fetching vehicles:", error.message);
     res.status(500).json({ error: "Failed to fetch vehicles" });
   }
 });
@@ -399,6 +406,91 @@ app.delete("/api/delete/vehicles/:id", async (req, res) => {
     res
       .status(response.status)
       .json({ message: "Vehicle deleted successfully" });
+  } catch (error) {
+    if (error.response) {
+      console.log("Response from Spring service:", error.response.data);
+
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
+// rfid Related Endpoints ________________________________________________
+// get all rfid with ID
+app.get("/api/rfidkey-id-list", async (req, res) => {
+  try {
+    const response = await axios.get(
+      `${SPRING_ENDPOINT}${routes.RFIDKEYSIDLIST}`
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error fetching Rfid-Keys:xxx", error.message);
+    res.status(500).json({ error: "Failed to fetch Rfid-Keys" });
+  }
+});
+
+// get all rfidkeys
+app.get("/api/rfidkey", async (req, res) => {
+  try {
+    const response = await axios.get(
+      `${SPRING_ENDPOINT}${routes.RFIDKEYSLIST}`
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error fetching Rfid-Keys:", error.message);
+    res.status(500).json({ error: "Failed to fetch Rfid-Keys" });
+  }
+});
+
+// Create all rfidkeys
+app.post("/api/create/rfid", async (req, res) => {
+  const rfidData = req.body;
+
+  // Validate the data coming from the frontend
+  const validationResults = validateRfidRegistration(rfidData);
+
+  if (!validationResults.valid) {
+    return res.status(400).json({
+      errorMessage: validationResults.errors.join(", "), // Join multiple errors with a comma
+    });
+  }
+
+  try {
+    const response = await axios.post(
+      `${SPRING_ENDPOINT}${routes.RFIDKEYSLIST}`,
+      rfidData
+    );
+
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
+// Delete all rfidkeys
+app.delete("/api/delete/rfidkey/:id", async (req, res) => {
+  const rfidkey = req.params.id;
+
+  try {
+    const response = await axios.delete(
+      `${SPRING_ENDPOINT}${routes.RFIDKEYSLIST}/${rfidkey}`
+    );
+
+    res
+      .status(response.status)
+      .json({ message: "Rfid Key deleted successfully" });
   } catch (error) {
     if (error.response) {
       console.log("Response from Spring service:", error.response.data);

@@ -1,13 +1,28 @@
 import React, { useState } from "react";
 
 import FreeRfid from "./FreeRfid";
-import FreeRfids from "../../data/FreeRfids";
+import axios from "axios";
+import MessagePopup from "../messageComponent/MessagePopup";
 
 const RegisterGpsTrackerForm = () => {
   const [deviceName, setDeviceName] = useState("");
   const [brand, setBrand] = useState("");
   const [rfidKeys, setRfidKeys] = useState([""]); // Initialize with an empty field for RFID key
   const [rfidStatuses, setRfidStatuses] = useState([]); // Track RFID key statuses (found or not)
+
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
 
   // Function to handle adding a new RFID key input field
   const handleAddRfidKey = () => {
@@ -32,11 +47,13 @@ const RegisterGpsTrackerForm = () => {
 
   // Function to handle form submission
   const handleSubmit = (e) => {
-    // Filter out RFID keys that are not "Free"
-    const validRfidKeys = rfidKeys.filter(
-      (rfidKey, index) => rfidStatuses[index] === "found"
-    );
     e.preventDefault();
+
+    // Filter out RFID keys that have been found (valid keys)
+    const validRfidKeys = rfidKeys.filter(
+      (_, index) => rfidStatuses[index] === "found"
+    );
+
     const formData = {
       deviceName,
       brand,
@@ -46,13 +63,39 @@ const RegisterGpsTrackerForm = () => {
   };
 
   // Check if the RFID key exists in the 'Free' records
-  const checkRfidKeyStatus = (rfidKey, index) => {
-    const freeRecords = FreeRfids.filter((record) => record.status === "Free");
-    const isFound = freeRecords.some((record) => record.RfidKey === rfidKey);
+  const checkRfidKeyStatus = async (keyCode, index) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/rfidkey-id-list`
+      );
 
-    const updatedStatuses = [...rfidStatuses];
-    updatedStatuses[index] = isFound ? "found" : "not-found";
-    setRfidStatuses(updatedStatuses);
+      const freeRfids = response.data;
+      // Filter to find only unassigned RFID keys
+      const freeRecords = freeRfids.filter(
+        (rfid) => rfid.rfidStatus === "UNASSIGNED"
+      );
+
+      // Check if the entered keyCode is found among free records
+      const isFound = freeRecords.some((record) => record.keyCode === keyCode);
+
+      // Log if the RFID key is found or not
+      console.log(`RFID Key ${keyCode} found: ${isFound}`);
+
+      // Update the status based on the result
+      const updatedStatuses = [...rfidStatuses];
+      updatedStatuses[index] = isFound ? "found" : "not-found";
+      setRfidStatuses(updatedStatuses);
+    } catch (err) {
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage ||
+          err.response.data.message ||
+          "An error occurred: 500";
+        addMessage(errorMessage, "error");
+      } else {
+        addMessage("Network error: Unable to reach the server.", "error");
+      }
+    }
   };
 
   return (
@@ -183,6 +226,8 @@ const RegisterGpsTrackerForm = () => {
         </button>
       </form>
       <FreeRfid />
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

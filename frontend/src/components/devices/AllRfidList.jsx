@@ -3,21 +3,52 @@ import "./tableStyle.css";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Paginator from "../paginator/Paginator";
-import FreeRfids from "../../data/FreeRfids";
 import Button from "@mui/material/Button";
+import axios from "axios";
+import MessagePopup from "../messageComponent/MessagePopup";
+import { formatRfidStatus } from "./formatRfidStatus";
 
 const AllRfidList = () => {
   const [FreeRfidsData, setFreeRfidsData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
 
-  // Simulating fetching data from a database (replace this with an actual API call)
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      setFreeRfidsData(FreeRfids); // Load the dummy data into state
+      try {
+        const FreeRfids = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/rfidkey-id-list`
+        );
+
+        setFreeRfidsData(FreeRfids.data);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
     };
 
-    fetchData(); // Call the fetch function
+    fetchData();
   }, []);
 
   // **Filter the deviceData to show only "Active" devices**
@@ -47,6 +78,28 @@ const AllRfidList = () => {
     },
   });
 
+  const handelRfidDelete = async (id) => {
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/delete/rfidkey/${id}`
+      );
+
+      addMessage("Rfid Deleted Successfully!", "success");
+      // Remove the deleted RFID from the local state
+      setFreeRfidsData((prevData) => prevData.filter((rfid) => rfid.id !== id));
+    } catch (err) {
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage ||
+          err.response.data.message ||
+          "An error occurred: 500";
+        addMessage(errorMessage, "error");
+      } else {
+        addMessage("Network error: Unable to reach the server.", "error");
+      }
+    }
+  };
+
   return (
     <div>
       <h2 className="tableDataHeaderTitle">
@@ -66,18 +119,27 @@ const AllRfidList = () => {
           {currentItems.length > 0
             ? currentItems.map((Rfids) => (
                 <tr key={Rfids.id}>
-                  <td>{Rfids.RfidKey}</td>
-                  <td>{Rfids.status}</td>
-                  <td>{Rfids.tagType}</td>
+                  <td>{Rfids.keyCode}</td>
+                  <td>{formatRfidStatus(Rfids.rfidStatus)}</td>
+                  <td>{formatRfidStatus(Rfids.rfidType)}</td>
                   <td>{Rfids.installationDate}</td>
                   <td>
                     <ThemeProvider theme={theme}>
                       <Button
                         variant="contained"
                         color={
-                          Rfids.status === "Occupied" ? "inactivebtn" : "error"
-                        } // Conditionally change button color
+                          Rfids.rfidStatus === "ASSIGNED"
+                            ? "inactivebtn"
+                            : "error"
+                        }
                         className="smallbutton"
+                        onClick={() => {
+                          if (Rfids.rfidStatus === "ASSIGNED") {
+                            addMessage("The Rfid Is Assigned", "warning");
+                          } else {
+                            handelRfidDelete(Rfids.id);
+                          }
+                        }}
                       >
                         <span className="sentencebutton">Delete</span>
                       </Button>
@@ -95,6 +157,8 @@ const AllRfidList = () => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };
