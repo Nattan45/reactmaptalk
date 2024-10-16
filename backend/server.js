@@ -504,6 +504,17 @@ app.delete("/api/delete/rfidkey/:id", async (req, res) => {
   }
 });
 
+// E-seal Related Endpoints ________________________________________________
+// get all E-seal with ID
+
+// get all E-seal
+
+// create E-seal
+app.post("/api/create/E-Seal", async (req, res) => {
+  const eSealData = req.body;
+
+  console.log(eSealData);
+});
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

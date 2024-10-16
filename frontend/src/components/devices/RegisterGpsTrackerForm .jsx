@@ -3,12 +3,14 @@ import React, { useState } from "react";
 import FreeRfid from "./FreeRfid";
 import axios from "axios";
 import MessagePopup from "../messageComponent/MessagePopup";
+import { validateFormData } from "./validateEseal";
 
 const RegisterGpsTrackerForm = () => {
-  const [deviceName, setDeviceName] = useState("");
+  const [tagName, setTagName] = useState("");
   const [brand, setBrand] = useState("");
   const [rfidKeys, setRfidKeys] = useState([""]); // Initialize with an empty field for RFID key
   const [rfidStatuses, setRfidStatuses] = useState([]); // Track RFID key statuses (found or not)
+  const [rfidIds, setRfidIds] = useState([]); // Store RFID key ids
 
   // Message Toast
   const [messages, setMessages] = useState([]);
@@ -31,8 +33,13 @@ const RegisterGpsTrackerForm = () => {
 
   // Function to handle removing an RFID key input field
   const handleRemoveRfidKey = (index) => {
-    const updatedKeys = rfidKeys.filter((_, i) => i !== index); // Remove the specific RFID key
+    const updatedKeys = rfidKeys.filter((_, i) => i !== index);
+    const updatedIds = rfidIds.filter((_, i) => i !== index);
+    const updatedStatuses = rfidStatuses.filter((_, i) => i !== index);
+
     setRfidKeys(updatedKeys);
+    setRfidIds(updatedIds);
+    setRfidStatuses(updatedStatuses);
   };
 
   // Function to handle changes in RFID key input fields
@@ -46,20 +53,45 @@ const RegisterGpsTrackerForm = () => {
   };
 
   // Function to handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Filter out RFID keys that have been found (valid keys)
-    const validRfidKeys = rfidKeys.filter(
+    // Filter out valid RFID key ids
+    const validRfidIds = rfidIds.filter(
       (_, index) => rfidStatuses[index] === "found"
     );
 
     const formData = {
-      deviceName,
+      tagName,
       brand,
-      rfidKeys: validRfidKeys, // Only save the valid RFID keys
+      rfidKeys: validRfidIds, // Only save the valid RFID key ids
     };
-    console.log(JSON.stringify(formData, null, 2));
+
+    // Validate form data
+    const validationResult = validateFormData(formData);
+
+    console.log(validationResult, "validationResult");
+    console.log(formData, "formDataformDataformData");
+    if (validationResult.valid) {
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/create/E-Seal`,
+          formData
+        );
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
+    } else {
+      addMessage(validationResult.errorMessage, "error");
+    }
   };
 
   // Check if the RFID key exists in the 'Free' records
@@ -76,15 +108,29 @@ const RegisterGpsTrackerForm = () => {
       );
 
       // Check if the entered keyCode is found among free records
-      const isFound = freeRecords.some((record) => record.keyCode === keyCode);
+      const foundRecord = freeRecords.find(
+        (record) => record.keyCode === keyCode
+      );
+
+      // Check if the entered keyCode is found among free records
+      // const isFound = freeRecords.some((record) => record.keyCode === keyCode);
 
       // Log if the RFID key is found or not
-      console.log(`RFID Key ${keyCode} found: ${isFound}`);
-
-      // Update the status based on the result
+      // console.log(`RFID Key ${keyCode} found: ${isFound}`);
+      // Update the status and RFID ID if found
       const updatedStatuses = [...rfidStatuses];
-      updatedStatuses[index] = isFound ? "found" : "not-found";
+      const updatedIds = [...rfidIds];
+
+      if (foundRecord) {
+        updatedStatuses[index] = "found";
+        updatedIds[index] = foundRecord.id; // Store the RFID id
+      } else {
+        updatedStatuses[index] = "not-found";
+        updatedIds[index] = ""; // Clear the RFID id if not found
+      }
+
       setRfidStatuses(updatedStatuses);
+      setRfidIds(updatedIds);
     } catch (err) {
       if (err.response) {
         const errorMessage =
@@ -147,12 +193,12 @@ const RegisterGpsTrackerForm = () => {
         <label>
           <input
             type="text"
-            value={deviceName}
-            onChange={(e) => setDeviceName(e.target.value)}
+            value={tagName}
+            onChange={(e) => setTagName(e.target.value)}
             required
             className="input"
           />
-          <span>Brand Name</span>
+          <span>Tag Name</span>
         </label>
 
         <div className="form-flex">
@@ -200,10 +246,10 @@ const RegisterGpsTrackerForm = () => {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="#00ff6e"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="lucide lucide-circle-check-big"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-circle-check-big"
                 >
                   <path d="M21.801 10A10 10 0 1 1 17 3.335" />
                   <path d="m9 11 3 3L22 4" />
