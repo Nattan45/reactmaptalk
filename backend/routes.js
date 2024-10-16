@@ -26,10 +26,17 @@ module.exports = {
 
   // Vehicle Endpoints __________________________________________
   // VehicleS home route
-  VEHICLESLIST: "/vehicles", // get list, post
+  VEHICLESLIST: "/vehicles", // get list, post, delete
 
   // get all VehicleS list - Contains ID
   VEHICLESIDLIST: "/vehicles/vehicleIdList",
 
   VEHICLEUPDATE: "/vehicles/:id/update",
+
+  // Rfid Endpoints __________________________________________
+  // Rfids home route
+  RFIDKEYSLIST: "/rfidkey", // get list, post, delete
+
+  // get all Rfids list - Contains ID
+  RFIDKEYSIDLIST: "/rfidkey/rfidkeyIdList",
 };

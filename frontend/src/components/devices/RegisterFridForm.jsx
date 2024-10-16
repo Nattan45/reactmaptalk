@@ -2,20 +2,65 @@ import React, { useState } from "react";
 
 import AllRfidList from "./AllRfidList";
 import { Select, MenuItem, Box } from "@mui/material";
+import axios from "axios";
+import MessagePopup from "../messageComponent/MessagePopup";
+const validateRfid = require("./validateRfid"); // Import the validation function
 
 const RegisterFridForm = () => {
-  const [tagType, setTagType] = useState("");
-  const [rFIDKey, setRFIDKey] = useState("");
+  const [rfidType, setRfidType] = useState("");
+  const [keyCode, setkeyCode] = useState("");
 
-  // Function to handle form submission
-  const handleSubmit = (e) => {
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = {
-      tagType,
-      rFIDKey,
+
+    // Function to standardize rfidType
+    const standardizeRfidType = (rfidType) => {
+      return rfidType.toUpperCase().replace(" ", "_"); // Convert to uppercase and replace spaces with underscores
     };
+
+    // Assuming `rfidType` is coming from a state or form input
+    const rfidTypeInput = rfidType; // You need to pass the actual rfidType value from your form state
+
+    const formData = {
+      rfidType: standardizeRfidType(rfidTypeInput),
+      keyCode,
+    };
+
+    const validationResult = validateRfid(formData);
+
     console.log(JSON.stringify(formData, null, 2));
-    // Here you can send the formData to your API or backend
+
+    if (validationResult.valid) {
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/create/rfid`,
+          formData
+        );
+        addMessage("Rfid Key Registered Successfully!", "success");
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage || "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
+    }
   };
 
   return (
@@ -53,12 +98,13 @@ const RegisterFridForm = () => {
             sx={{ width: "100%", maxWidth: "150px" }} // Set maxWidth for better control
           >
             <Select
-              value={tagType}
-              onChange={(e) => setTagType(e.target.value)}
+              value={rfidType}
+              onChange={(e) => setRfidType(e.target.value)}
               displayEmpty
               inputProps={{ "aria-label": "Without label" }}
               className="input"
               fullWidth
+              required
             >
               <MenuItem value="" disabled>
                 Tag Type
@@ -72,8 +118,8 @@ const RegisterFridForm = () => {
           <label className="smallinputs">
             <input
               type="text"
-              value={rFIDKey}
-              onChange={(e) => setRFIDKey(e.target.value)}
+              value={keyCode}
+              onChange={(e) => setkeyCode(e.target.value)}
               required
               className="input"
             />
@@ -87,6 +133,8 @@ const RegisterFridForm = () => {
         </button>
       </form>
       <AllRfidList />
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };
