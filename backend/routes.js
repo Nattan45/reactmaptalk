@@ -39,4 +39,14 @@ module.exports = {
 
   // get all Rfids list - Contains ID
   RFIDKEYSIDLIST: "/rfidkey/rfidkeyIdList",
+
+  // E-Seal Endpoints __________________________________________
+  // E-Seal home route
+  ESEALSLIST: "/eseal", // get list, delete
+
+  // get all E-Seal list - Contains ID
+  ESEALSIDLIST: "/eseal/electronicSealIdList",
+
+  // create/ get eseal with rfid and vehicle forenkey
+  CREATEESEAL: "/esealinfo",
 };

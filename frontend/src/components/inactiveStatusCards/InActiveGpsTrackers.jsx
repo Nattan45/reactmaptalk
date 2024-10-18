@@ -1,16 +1,51 @@
 import React, { useEffect, useState } from "react";
 
 import { NavLink } from "react-router-dom";
-import Eseal from "../../data/Eseal";
+import MessagePopup from "../messageComponent/MessagePopup";
+import axios from "axios";
 
 const InActiveGpsTrackers = () => {
   const [inactiveDevices, setInactiveDevices] = useState(0); // State for total checkpoints
 
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
   useEffect(() => {
-    const activeEsealsCount = Eseal.filter(
-      (eseal) => eseal.status === "Inactive"
-    ).length;
-    setInactiveDevices(activeEsealsCount);
+    const fetchData = async () => {
+      try {
+        const Eseal = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/E-seal`
+        );
+
+        const activeEsealsCount = Eseal.data.filter(
+          (eseal) => eseal.electronicSealStatus === "UNLOCKED"
+        ).length;
+
+        setInactiveDevices(activeEsealsCount);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
+    };
+    fetchData();
   }, []);
 
   return (
@@ -61,6 +96,8 @@ const InActiveGpsTrackers = () => {
           <button className="Stastics-card-button">More info</button>
         </NavLink>
       </div>
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

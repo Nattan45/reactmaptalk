@@ -8,7 +8,7 @@ import { validateFormData } from "./validateEseal";
 const RegisterGpsTrackerForm = () => {
   const [tagName, setTagName] = useState("");
   const [brand, setBrand] = useState("");
-  const [rfidKeys, setRfidKeys] = useState([""]); // Initialize with an empty field for RFID key
+  const [rfidKeyId, setrfidKeyId] = useState([""]); // Initialize with an empty field for RFID key
   const [rfidStatuses, setRfidStatuses] = useState([]); // Track RFID key statuses (found or not)
   const [rfidIds, setRfidIds] = useState([]); // Store RFID key ids
 
@@ -28,28 +28,28 @@ const RegisterGpsTrackerForm = () => {
 
   // Function to handle adding a new RFID key input field
   const handleAddRfidKey = () => {
-    setRfidKeys([...rfidKeys, ""]); // Add a new empty RFID key field
+    setrfidKeyId([...rfidKeyId, ""]); // Add a new empty RFID key field
   };
 
   // Function to handle removing an RFID key input field
   const handleRemoveRfidKey = (index) => {
-    const updatedKeys = rfidKeys.filter((_, i) => i !== index);
+    const updatedKeys = rfidKeyId.filter((_, i) => i !== index);
     const updatedIds = rfidIds.filter((_, i) => i !== index);
     const updatedStatuses = rfidStatuses.filter((_, i) => i !== index);
 
-    setRfidKeys(updatedKeys);
+    setrfidKeyId(updatedKeys);
     setRfidIds(updatedIds);
     setRfidStatuses(updatedStatuses);
   };
 
   // Function to handle changes in RFID key input fields
   const handleRfidKeyChange = (index, value) => {
-    const updatedKeys = [...rfidKeys];
+    const updatedKeys = [...rfidKeyId];
     updatedKeys[index] = value; // Update the RFID key value at the specific index
-    setRfidKeys(updatedKeys);
+    setrfidKeyId(updatedKeys);
 
     // Check if the entered RFID key is found in the records
-    checkRfidKeyStatus(value, index);
+    checkrfidKeyIdtatus(value, index);
   };
 
   // Function to handle form submission
@@ -64,7 +64,7 @@ const RegisterGpsTrackerForm = () => {
     const formData = {
       tagName,
       brand,
-      rfidKeys: validRfidIds, // Only save the valid RFID key ids
+      rfidKeyId: validRfidIds, // Only save the valid RFID key ids
     };
 
     // Validate form data
@@ -78,6 +78,7 @@ const RegisterGpsTrackerForm = () => {
           `${process.env.REACT_APP_API_URL}/api/create/E-Seal`,
           formData
         );
+        addMessage("E-Seal Registered Successfully!", "success");
       } catch (err) {
         if (err.response) {
           const errorMessage =
@@ -95,7 +96,7 @@ const RegisterGpsTrackerForm = () => {
   };
 
   // Check if the RFID key exists in the 'Free' records
-  const checkRfidKeyStatus = async (keyCode, index) => {
+  const checkrfidKeyIdtatus = async (keyCode, index) => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/api/rfidkey-id-list`
@@ -218,7 +219,7 @@ const RegisterGpsTrackerForm = () => {
         {/* RFID Key Numbers */}
         <div className="newrfids">
           <label>RFID Keys</label>
-          {rfidKeys.map((rfidKey, index) => (
+          {rfidKeyId.map((rfidKey, index) => (
             <div key={index} className="pendingRfidLists">
               <input
                 type="text"
@@ -232,7 +233,7 @@ const RegisterGpsTrackerForm = () => {
               <button
                 type="button"
                 onClick={() => handleRemoveRfidKey(index)}
-                disabled={rfidKeys.length === 1} // Disable removal if it's the only input
+                disabled={rfidKeyId.length === 1} // Disable removal if it's the only input
                 className="remove-rfid"
               >
                 Remove

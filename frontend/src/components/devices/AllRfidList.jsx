@@ -74,7 +74,8 @@ const AllRfidList = () => {
   const theme = createTheme({
     palette: {
       inactivebtn: createColor("#ccc"),
-      apple: createColor("#5DBA40"),
+      assignedColor: createColor("#95EF71"),
+      unAssignedColor: createColor("#F6B85A"),
     },
   });
 
@@ -120,9 +121,32 @@ const AllRfidList = () => {
             ? currentItems.map((Rfids) => (
                 <tr key={Rfids.id}>
                   <td>{Rfids.keyCode}</td>
-                  <td>{formatRfidStatus(Rfids.rfidStatus)}</td>
+                  <td>
+                    <ThemeProvider theme={theme}>
+                      <Button
+                        variant="contained"
+                        color={
+                          Rfids.rfidStatus === "ASSIGNED"
+                            ? "assignedColor"
+                            : "unAssignedColor"
+                        }
+                        className="smallbutton"
+                      >
+                        <span className="sentencebutton">
+                          {formatRfidStatus(Rfids.rfidStatus)}
+                        </span>
+                      </Button>
+                    </ThemeProvider>
+                  </td>
                   <td>{formatRfidStatus(Rfids.rfidType)}</td>
-                  <td>{Rfids.installationDate}</td>
+                  <td>
+                    {Rfids.installationDate
+                      ? new Date(Rfids.installationDate)
+                          .toISOString()
+                          .split("T")[0]
+                      : "Not installed"}
+                  </td>
+
                   <td>
                     <ThemeProvider theme={theme}>
                       <Button

@@ -13,10 +13,10 @@ const nameBrandRegex = /^[a-zA-Z0-9- ]+$/;
  * @param {Object} formData - The form data to validate.
  * @param {string} formData.deviceName - The name of the device.
  * @param {string} formData.brand - The brand of the device.
- * @param {Array<string>} formData.rfidKeys - The array of valid RFID keys.
+ * @param {Array<string>} formData.rfidKeyId - The array of valid RFID keys.
  * @returns {Object} An object containing valid status and error message (if any).
  */
-export function validateFormData({ deviceName, brand, rfidKeys }) {
+export function validateFormData({ deviceName, brand, rfidKeyId }) {
   // Validate device name
   if (!nameBrandRegex.test(deviceName)) {
     return {
@@ -37,8 +37,8 @@ export function validateFormData({ deviceName, brand, rfidKeys }) {
 
   // Validate RFID keys (check if empty or invalid format)
   if (
-    rfidKeys.length === 0 ||
-    !rfidKeys.every((key) => uuidOrNumberRegex.test(key))
+    rfidKeyId.length === 0 ||
+    !rfidKeyId.every((key) => uuidOrNumberRegex.test(key))
   ) {
     return {
       valid: false,

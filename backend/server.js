@@ -505,16 +505,81 @@ app.delete("/api/delete/rfidkey/:id", async (req, res) => {
 });
 
 // E-seal Related Endpoints ________________________________________________
-// get all E-seal with ID
-
 // get all E-seal
+app.get("/api/E-seal", async (req, res) => {
+  try {
+    const response = await axios.get(`${SPRING_ENDPOINT}${routes.ESEALSLIST}`);
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error fetching E-seal:", error.message);
+    res.status(500).json({ error: "Failed to fetch E-seal" });
+  }
+});
+
+// get all E-seal with ID
+app.get("/api/Esealidlist", async (req, res) => {
+  console.log("/api/E-seal-id-list");
+
+  try {
+    const response = await axios.get(
+      `${SPRING_ENDPOINT}${routes.ESEALSIDLIST}`
+    );
+
+    res.json(response.data);
+    console.log(response.data);
+  } catch (error) {
+    console.error("Error fetching E-seal:", error.message);
+    res.status(500).json({ error: "Failed to fetch E-seal" });
+  }
+});
+
+app.get("/api/EsealAllDatalist", async (req, res) => {
+  console.log("/api/E-seal-id-list");
+
+  try {
+    const response = await axios.get(`${SPRING_ENDPOINT}${routes.CREATEESEAL}`);
+
+    res.json(response.data);
+    console.log(response.data);
+  } catch (error) {
+    console.error("Error fetching E-seal:", error.message);
+    res.status(500).json({ error: "Failed to fetch E-seal" });
+  }
+});
 
 // create E-seal
 app.post("/api/create/E-Seal", async (req, res) => {
   const eSealData = req.body;
 
   console.log(eSealData);
+  // Validate the data coming from the frontend
+  // const validationResults = validateRfidRegistration(rfidData);
+
+  // if (!validationResults.valid) {
+  //   return res.status(400).json({
+  //     errorMessage: validationResults.errors.join(", "), // Join multiple errors with a comma
+  //   });
+  // }
+
+  try {
+    const response = await axios.post(
+      `${SPRING_ENDPOINT}${routes.CREATEESEAL}`,
+      eSealData
+    );
+
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
 });
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
