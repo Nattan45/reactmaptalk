@@ -120,7 +120,7 @@ const ActiveDevices = () => {
                   <td>
                     <div className="flexList">
                       {device.rfidKeys.map((rfid, idx) => (
-                        <Stack direction="row">
+                        <Stack direction="row" key={idx}>
                           <ThemeProvider theme={theme}>
                             <Button
                               variant="contained"
@@ -129,7 +129,6 @@ const ActiveDevices = () => {
                                   ? "assignedColor"
                                   : "unAssignedColor"
                               }
-                              key={idx}
                             >
                               <span className="sentencebutton">
                                 {formatRfidStatus(rfid.rfidType)}
@@ -143,12 +142,11 @@ const ActiveDevices = () => {
                   <td>
                     <div className="flexList">
                       {device.rfidKeys.map((rfid, idx) => (
-                        <Stack direction="row">
+                        <Stack direction="row" key={idx}>
                           <ThemeProvider theme={theme}>
                             <Button
                               variant="contained"
                               color={"assignedColorkey"}
-                              key={idx}
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"

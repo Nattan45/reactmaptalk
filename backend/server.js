@@ -448,6 +448,22 @@ app.get("/api/rfidkey", async (req, res) => {
   }
 });
 
+// // get Rfid From KeyCode
+// app.get("/api/getRfidkeyCode", async (req, res) => {
+//   const keyCode = req.body;
+//   try {
+//     const response = await axios.get(
+//       `${SPRING_ENDPOINT}${routes.RFIDKEYFROMKEYCODE}/${keyCode}`
+//     );
+
+//     res.json(response.data);
+//     console.log(response.data);
+//   } catch (error) {
+//     console.error("Error fetching E-seal:", error.message);
+//     res.status(500).json({ error: "Failed to fetch E-seal" });
+//   }
+// });
+
 // Create all rfidkeys
 app.post("/api/create/rfid", async (req, res) => {
   const rfidData = req.body;
@@ -519,15 +535,13 @@ app.get("/api/E-seal", async (req, res) => {
 
 // get all E-seal with ID
 app.get("/api/Esealidlist", async (req, res) => {
-  console.log("/api/E-seal-id-list");
-
   try {
     const response = await axios.get(
       `${SPRING_ENDPOINT}${routes.ESEALSIDLIST}`
     );
 
     res.json(response.data);
-    console.log(response.data);
+    // console.log(response.data);
   } catch (error) {
     console.error("Error fetching E-seal:", error.message);
     res.status(500).json({ error: "Failed to fetch E-seal" });
@@ -535,10 +549,23 @@ app.get("/api/Esealidlist", async (req, res) => {
 });
 
 app.get("/api/EsealAllDatalist", async (req, res) => {
-  console.log("/api/E-seal-id-list");
-
   try {
     const response = await axios.get(`${SPRING_ENDPOINT}${routes.CREATEESEAL}`);
+
+    res.json(response.data);
+    // console.log(response.data);
+  } catch (error) {
+    console.error("Error fetching E-seal:", error.message);
+    res.status(500).json({ error: "Failed to fetch E-seal" });
+  }
+});
+
+app.get("/api/Single-EsealData/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const response = await axios.get(
+      `${SPRING_ENDPOINT}${routes.CREATEESEAL}/${id}`
+    );
 
     res.json(response.data);
     console.log(response.data);
@@ -552,7 +579,6 @@ app.get("/api/EsealAllDatalist", async (req, res) => {
 app.post("/api/create/E-Seal", async (req, res) => {
   const eSealData = req.body;
 
-  console.log(eSealData);
   // Validate the data coming from the frontend
   // const validationResults = validateRfidRegistration(rfidData);
 
@@ -579,6 +605,114 @@ app.post("/api/create/E-Seal", async (req, res) => {
     }
   }
 });
+
+app.put("/api/eseal/update-rfid-keys/:id", async (req, res) => {
+  const eSealId = req.params.id;
+  console.log(eSealId);
+
+  const esealRfidData = req.body.rfidKeys;
+
+  console.log(esealRfidData, "esealRfidData");
+
+  if (!esealRfidData || !Array.isArray(esealRfidData)) {
+    return res.status(400).json({ message: "Invalid RFID keys format." });
+  }
+
+  try {
+    // Array to store the keys that are 'UNASSIGNED'
+    const unassignedKeys = [];
+    console.log(unassignedKeys, "--");
+
+    // Loop over the received RFID keys
+    for (const rfidKey of esealRfidData) {
+      try {
+        // Check the status of each RFID key via the Spring API
+        const response = await axios.get(
+          `${SPRING_ENDPOINT}${routes.RFIDKEYFROMKEYCODE}/${rfidKey}`
+        );
+
+        const rfidObject = response.data;
+
+        // If RFID key status is 'UNASSIGNED', add it to the unassignedKeys array
+        if (rfidObject.rfidStatus === "UNASSIGNED") {
+          unassignedKeys.push(rfidObject.id);
+        }
+      } catch (error) {
+        console.error(`Error fetching RFID key ${rfidKey}: `, error.message);
+      }
+
+      console.log(unassignedKeys, "++");
+    }
+
+    // If there are unassigned keys, make a PUT request to update them in the Spring backend
+    if (unassignedKeys.length > 0) {
+      console.log(unassignedKeys, "unassignedKeys.length");
+      const updateResponse = await axios.put(
+        `${SPRING_ENDPOINT}${routes.CREATEESEAL}/${eSealId}`,
+        { rfidKeyId: unassignedKeys }
+      );
+
+      // Log and send response back
+      console.log(updateResponse.data, "000000000000");
+      return res
+        .status(200)
+        .json({ message: "RFID keys updated", data: updateResponse.data });
+    } else if (unassignedKeys.length === 0) {
+      const unassignedKeys = [];
+
+      console.log("No unassigned RFID keys found. Processing removals...");
+
+      // Loop again to process all RFID keys, removing any that are necessary
+      for (const rfidKey of esealRfidData) {
+        try {
+          const response = await axios.get(
+            `${SPRING_ENDPOINT}${routes.RFIDKEYFROMKEYCODE}/${rfidKey}`
+          );
+
+          const rfidObject = response.data;
+
+          // Example: Handle logic here if you want to remove or update the RFID key
+
+          // Logging for each RFID key processed
+          console.log(`Processed RFID key: ${rfidObject.id}`);
+        } catch (error) {
+          console.error(`Error fetching RFID key ${rfidKey}: `, error.message);
+        }
+      }
+      return res.status(200).json({
+        message: "No unassigned RFID keys found, existing keys processed.",
+      });
+    }
+  } catch (error) {
+    if (error.response) {
+      console.error("Error updating RFID keys:", error.message);
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      return res.status(500).json({ message: "Internal server error." });
+    }
+  }
+});
+
+// try {
+//   const response = await axios.delete(
+//     `${SPRING_ENDPOINT}${routes.VEHICLESLIST}/${vehicleId}`
+//   );
+
+//   res
+//     .status(response.status)
+//     .json({ message: "Vehicle deleted successfully" });
+// } catch (error) {
+//   if (error.response) {
+//     console.log("Response from Spring service:", error.response.data);
+
+//     const errorMessage = error.response.data.errorMessage || "Unknown error";
+//     res.status(error.response.status).json({ errorMessage });
+//   } else {
+//     console.log("Error:", error.message);
+//     res.status(500).json({ message: "Internal Server Error" });
+//   }
+// }
 
 // Start the server
 app.listen(PORT, () => {

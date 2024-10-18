@@ -3,13 +3,22 @@ import React, { useEffect, useState } from "react";
 import Paginator from "../../paginator/Paginator";
 import MessagePopup from "../../messageComponent/MessagePopup";
 import axios from "axios";
-import { createTheme, ThemeProvider, Button, Stack } from "@mui/material";
+import {
+  createTheme,
+  ThemeProvider,
+  Button,
+  Stack,
+  Modal,
+} from "@mui/material";
 import { formatRfidStatus } from "../../devices/formatRfidStatus";
 
 const InactiveDevices = () => {
   const [deviceData, setDeviceData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
+
+  const [rfidKeyId, setRfidKeyId] = useState([]); // State for RFID Keys
+  const [open, setOpen] = useState(false); // State to control the modal open/close
 
   // Message Toast
   const [messages, setMessages] = useState([]);
@@ -53,7 +62,7 @@ const InactiveDevices = () => {
     (eseal) => eseal.electronicSealStatus === "UNLOCKED"
   );
 
-  console.log(activeEsealsCount);
+  // console.log(activeEsealsCount);
 
   // Calculate the current items to display on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -85,6 +94,55 @@ const InactiveDevices = () => {
     },
   });
 
+  const [deviceId, setDeviceId] = useState([]); // State for RFID Keys
+  // Handle RFID Edit Button Click
+  const handleEditRfid = (deviceid, rfidKeys) => {
+    setRfidKeyId(rfidKeys); // Set RFID keys for selected device
+    setDeviceId(deviceid);
+    setOpen(true); // Open the modal
+  };
+
+  // Handle Save RFID Keys
+  const handleSave = async () => {
+    // Get the RFID keys' keyCodes
+    const newRfidKeys = rfidKeyId.map((rfid) => rfid.keyCode);
+
+    console.log(newRfidKeys, "newRfidKeys    108");
+
+    try {
+      // Send the updated RFID keyCodes to the backend
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_URL}/api/eseal/update-rfid-keys/${deviceId}`,
+        { rfidKeys: newRfidKeys } // Adjust the payload to match your backend's expectation
+      );
+
+      console.log("Updated RFID keys:", response.data);
+      setOpen(false); // Close the modal after save
+      addMessage("RFID keys updated successfully", "success");
+    } catch (err) {
+      addMessage("Failed to update RFID keys", "error");
+    }
+  };
+
+  // Handle changes in RFID keys input
+  const handleRfidKeyChange = (index, value) => {
+    const updatedKeys = [...rfidKeyId];
+    updatedKeys[index].keyCode = value;
+    setRfidKeyId(updatedKeys);
+  };
+
+  // Add a new empty RFID key input field
+  const handleAddRfidKey = () => {
+    setRfidKeyId([...rfidKeyId, { keyCode: "" }]);
+  };
+
+  // Remove an RFID key input field
+  const handleRemoveRfidKey = (index) => {
+    const updatedKeys = [...rfidKeyId];
+    updatedKeys.splice(index, 1);
+    setRfidKeyId(updatedKeys);
+  };
+
   return (
     <div>
       <h2 className="tableDataHeaderTitle inactiveColor">
@@ -103,14 +161,14 @@ const InactiveDevices = () => {
         </thead>
         <tbody>
           {currentItems.length > 0 ? (
-            currentItems.map((device) => (
-              <tr key={device.id}>
+            currentItems.map((device, key) => (
+              <tr key={key}>
                 <td>{device.tagName}</td>
                 <td>{device.brand}</td>
                 <td>
                   <div className="flexList">
                     {device.rfidKeys.map((rfid, idx) => (
-                      <Stack direction="row">
+                      <Stack direction="row" key={idx}>
                         <ThemeProvider theme={theme}>
                           <Button
                             variant="contained"
@@ -130,10 +188,11 @@ const InactiveDevices = () => {
                     ))}
                   </div>
                 </td>
+                {/* keyCode */}
                 <td>
                   <div className="flexList">
                     {device.rfidKeys.map((rfid, idx) => (
-                      <Stack direction="row">
+                      <Stack direction="row" key={idx}>
                         <ThemeProvider theme={theme}>
                           <Button
                             variant="contained"
@@ -166,12 +225,14 @@ const InactiveDevices = () => {
                     ))}
                   </div>
                 </td>
+                {/* Rfid */}
                 <td>
                   {device.electronicSealStatus === "UNLOCKED" ? (
                     <Button
                       variant="contained"
                       color="success"
                       className="smallbutton"
+                      onClick={() => handleEditRfid(device.id, device.rfidKeys)}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -220,6 +281,31 @@ const InactiveDevices = () => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+
+      {/* Modal for Editing RFID Keys */}
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <div className="modalContent">
+          <h2>Edit RFID Keys</h2>
+          {rfidKeyId.map((rfid, index) => (
+            <div key={index}>
+              <input
+                type="text"
+                value={rfid.keyCode}
+                onChange={(e) => handleRfidKeyChange(index, e.target.value)}
+              />
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => handleRemoveRfidKey(index)}
+              >
+                Remove
+              </Button>
+            </div>
+          ))}
+          <Button onClick={handleAddRfidKey}>Add RFID Key</Button>
+          <Button onClick={handleSave}>Save</Button>
+        </div>
+      </Modal>
 
       <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
