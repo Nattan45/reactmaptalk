@@ -673,10 +673,9 @@ app.put("/api/eseal/update-rfid-keys/:id", async (req, res) => {
   }
 });
 
+// delete E-seal by nullifying its relations then - remove
 app.delete("/api/delete/Eseal/:id", async (req, res) => {
   deletableEseal = req.params.id;
-
-  // console.log(deletableEseal, "deletableEseal");
 
   // check if the Eseal have relations with rfid and vehicle and its not empty
   try {
@@ -741,6 +740,17 @@ app.delete("/api/delete/Eseal/:id", async (req, res) => {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
+});
+
+// E-seal Related Endpoints ________________________________________________
+// get all routes
+app.get("/api/roads", async (req, res) => {
+  console.log("hello World");
+});
+
+// get all Routes with ID
+app.get("/api/roads-id-list", async (req, res) => {
+  console.log("hello World");
 });
 
 // Start the server

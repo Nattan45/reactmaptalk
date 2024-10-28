@@ -1,124 +1,219 @@
 import React, { useState, useEffect } from "react";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Button from "@mui/material/Button";
-import vehiclesData from "../../data/Vehicles"; // Adjust path if necessary
-import driversData from "../../data/Drivers"; // Adjust path if necessary
-import eSealData from "../../data/Eseal";
-import Routes from "../../data/RouteData";
+
+import axios from "axios";
+import MessagePopup from "../messageComponent/MessagePopup";
 
 const StartTripForm = () => {
   const [plateNumber, setPlateNumber] = useState("");
   const [vehicleDetails, setVehicleDetails] = useState(null);
-  const [vehicleError, setVehicleError] = useState("");
+
   const [driverId, setDriverId] = useState("");
   const [driverDetails, setDriverDetails] = useState(null);
-  const [driverError, setDriverError] = useState("");
-  const [gpsId, setGpsId] = useState(""); // GPS ID state
-  const [eSeal, setESeal] = useState(null); // Single eSeal state
-  const [eSealError, setESealError] = useState("");
-  const [eSealList, setESealList] = useState([]); // List of added eSeals
+
+  const [routeDetails, setRouteDetails] = useState(""); // Input for road number
+  const [routeName, setRouteName] = useState("");
+
   const [gpsMountedDate, setGpsMountedDate] = useState("");
   const [tripStartingDate, setTripStartingDate] = useState("");
-  const [roadNumber, setRoadNumber] = useState(""); // Input for road number
-  const [roadName, setRoadName] = useState("");
+
+  const [eseals, setEseals] = useState([""]);
+  const [esealStatuses, setEsealStatuses] = useState([]);
+  const [storedEseal, setStoredEseal] = useState([]);
+
   const [Checkpoints, setCheckpoints] = useState("");
 
-  // Function to find vehicle by plate number if its status is not active
-  const handleFindVehicle = () => {
-    const foundVehicle = vehiclesData.find(
-      (vehicle) =>
-        vehicle.plateNumber === plateNumber && vehicle.status !== "Active"
+  const [startingPoint, setStartingPoint] = useState("");
+  const [destination, setDestination] = useState("");
+
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
     );
-    if (foundVehicle) {
-      setVehicleDetails(foundVehicle);
-      setVehicleError(""); // Clear error if found
-    } else {
-      setVehicleError("Vehicle not found or it is Active!");
-      setVehicleDetails(null); // Clear previous details
+  };
+
+  // Function to find vehicle by plate number if its status is not active
+  const handleFindVehicle = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/vehicles-id-list`
+      );
+
+      const filteredVehicle = response.data.filter(
+        (vehicle) =>
+          vehicle.plateNumber === plateNumber &&
+          vehicle.vehicleStatus === "WAITING"
+      );
+
+      if (filteredVehicle.length > 0) {
+        setVehicleDetails(filteredVehicle);
+      } else {
+        setVehicleDetails(""); // Reset if no match
+      }
+    } catch (error) {
+      console.error("Error fetching vehicle:", error);
     }
   };
+
+  useEffect(() => {
+    if (plateNumber) {
+      handleFindVehicle();
+    }
+  }, [plateNumber]); // Trigger whenever plateNumber changes
 
   // Function to find driver by ID if their status is not active
-  const handleFindDriver = () => {
-    const foundDriver = driversData.find(
-      (driver) => driver.driverId === driverId && driver.status !== "Active"
-    );
-    if (foundDriver) {
-      setDriverDetails(foundDriver);
-      setDriverError(""); // Clear error if found
-    } else {
-      setDriverError("Driver not found or they are Active!");
-      setDriverDetails(null); // Clear previous details
+  const handleFindDriver = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/drivers-id-list`
+      );
+
+      const filteredDriver = response.data.filter(
+        (driver) =>
+          driver.driverId === driverId && driver.driverStatus === "ACTIVE"
+      );
+
+      if (filteredDriver.length > 0) {
+        setDriverDetails(filteredDriver);
+      } else {
+        setDriverDetails(""); // Reset if no match
+      }
+    } catch (error) {
+      console.error("Error fetching Driver:", error);
     }
   };
 
-  // Function to find eSeal by GPS ID if its status is not active
-  const handleFindESeal = () => {
-    const foundESeal = eSealData.find(
-      (seal) => seal.gpsId === gpsId && seal.status !== "Active"
-    );
-    if (foundESeal) {
-      setESeal(foundESeal);
-      setESealError(""); // Clear error if found
-    } else {
-      setESealError("eSeal not found or it is Active!");
-      setESeal(null); // Clear previous eSeal data
+  useEffect(() => {
+    if (driverId) {
+      handleFindDriver();
+    }
+  }, [driverId]); // Trigger whenever driver Id changes
+
+  // Function to find road by road Name
+  const handleFindRoad = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/roads-id-list`
+      );
+
+      const filteredRoute = response.data.filter(
+        (route) => route.routeName === routeName
+      );
+
+      if (filteredRoute.length > 0) {
+        setRouteDetails(filteredRoute);
+      } else {
+        setRouteDetails(""); // Reset if no match
+      }
+    } catch (error) {
+      console.error("Error fetching Route:", error);
     }
   };
 
-  // Function to add eSeal to the list
-  const handleAddESeal = () => {
-    if (eSeal) {
-      setESealList([...eSealList, eSeal]);
-      setESeal(null); // Clear eSeal after adding
+  useEffect(() => {
+    if (routeName) {
+      handleFindRoad();
+    }
+  }, [routeName]); // Trigger whenever driver Id changes
+
+  // Function to handle adding a new RFID key input field
+  const handleAddEseal = () => {
+    setEseals([...eseals, ""]);
+  };
+
+  // Function to handle removing an RFID key input field
+  const handleRemoveEseal = (index) => {
+    const updatedEseal = eseals.filter((_, i) => i !== index);
+    const updatedIds = storedEseal.filter((_, i) => i !== index);
+    const updatedStatuses = esealStatuses.filter((_, i) => i !== index);
+
+    setEseals(updatedEseal);
+    setStoredEseal(updatedIds);
+    setEsealStatuses(updatedStatuses);
+  };
+
+  // Function to handle changes in RFID key input fields
+  const handleRfidKeyChange = (index, value) => {
+    const updatedKeys = [...eseals];
+    updatedKeys[index] = value;
+    setEseals(updatedKeys);
+
+    checkEsealStatus(value, index);
+  };
+
+  const checkEsealStatus = async (tagName, index) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/Esealidlist`
+      );
+
+      const freeEseals = response.data;
+      const freeRecords = freeEseals.filter(
+        (eseal) => eseal.electronicSealStatus === "UNLOCKED"
+      );
+
+      // Check if the entered tagName is found among free records
+      const foundRecord = freeRecords.find(
+        (record) => record.tagName === tagName
+      );
+
+      const updatedStatuses = [...esealStatuses];
+      const updatedstoredEseal = [...storedEseal];
+
+      if (foundRecord) {
+        updatedStatuses[index] = "found";
+        updatedstoredEseal[index] = foundRecord.id; // Store the RFID id
+      } else {
+        updatedStatuses[index] = "not-found";
+        updatedstoredEseal[index] = ""; // Clear the RFID id if not found
+      }
+
+      setEsealStatuses(updatedStatuses);
+      setStoredEseal(updatedstoredEseal);
+    } catch (err) {
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage ||
+          err.response.data.message ||
+          "An error occurred: 500";
+        addMessage(errorMessage, "error");
+      } else {
+        addMessage("Network error: Unable to reach the server.", "error");
+      }
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const validEseals = storedEseal.filter(
+      (_, index) => esealStatuses[index] === "found"
+    );
+
     const vehicleData = {
-      vehicleName: vehicleDetails?.vehicleName || "",
-      brand: vehicleDetails?.brand || "",
-      model: vehicleDetails?.model || "",
-      plateNumber,
-      driverId,
-      eSealList, // Updated to use the eSealList
+      vehicleName: vehicleDetails[0]?.id || "",
+      driverId: driverDetails[0]?.id || "",
+      roadNumber: routeDetails[0]?.id || "",
+
       gpsMountedDate,
       tripStartingDate,
+
+      eSealList: validEseals,
       Checkpoints,
-      roadNumber,
-      Signal: "",
-      Warnings: "",
-      Problems: "",
+
+      startingPoint,
+      destination,
     };
 
-    console.log(vehicleData);
+    console.log(JSON.stringify(vehicleData, null, 2));
   };
-
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: "#74aa65",
-      },
-      secondary: {
-        main: "#FF5733",
-      },
-    },
-  });
-
-  // Function to find route by roadNumber
-  const findRoadNameByNumber = (number) => {
-    const foundRoute = Routes.find((route) => route.roadNumber === number);
-    return foundRoute ? foundRoute.routeName : "Route not found";
-  };
-
-  // Fetch route name when roadNumber changes
-  useEffect(() => {
-    if (roadNumber) {
-      const routeName = findRoadNameByNumber(roadNumber);
-      setRoadName(routeName);
-    }
-  }, [roadNumber]);
 
   return (
     <form className="form wh-fit-content singleColumn" onSubmit={handleSubmit}>
@@ -145,192 +240,31 @@ const StartTripForm = () => {
         </svg>
         <p className="title textcenter">Create Trip Form</p>
       </div>
+
       <br />
+
       <div className="form-flex grid">
         {/* Plate Number and Vehicle */}
-        <div className="twoSections">
-          <label>
-            <input
-              className="input "
-              type="text"
-              value={plateNumber}
-              onChange={(e) => setPlateNumber(e.target.value)}
-              required
-            />
-            <span>Plate Number:</span>
-          </label>
-          <ThemeProvider theme={theme}>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handleFindVehicle}
-              style={{ width: "100px", marginLeft: "35px" }}
-              className="margindata"
-            >
-              Get
-            </Button>
-          </ThemeProvider>
-          <div className="tripdata">
-            {vehicleError && <p className="error">{vehicleError}</p>}
-            {vehicleDetails && (
-              <div>
-                <p className="selected">
-                  Vehicle: {vehicleDetails.vehicleName} {vehicleDetails.brand}{" "}
-                  {vehicleDetails.model}
-                </p>
-                <p>plateNumber: {vehicleDetails.plateNumber} </p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Driver ID and Driver */}
-        <div className="twoSections">
-          <label>
-            <input
-              className="input"
-              type="text"
-              value={driverId}
-              onChange={(e) => setDriverId(e.target.value)}
-              required
-            />
-            <span>Driver ID:</span>
-          </label>
-          <ThemeProvider theme={theme}>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handleFindDriver}
-              style={{ width: "100px", marginLeft: "35px" }}
-              className="margindata"
-            >
-              Get
-            </Button>
-          </ThemeProvider>
-          <div className="tripdatadata">
-            {driverError && <p className="error">{driverError}</p>}
-            {driverDetails && (
-              <div>
-                <p className="selected">
-                  Driver: {driverDetails.firstName} {driverDetails.lastName}
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* eSeal Section */}
-        <div className="twoSections">
-          <label>
-            <input
-              className="input"
-              type="text"
-              value={gpsId}
-              onChange={(e) => setGpsId(e.target.value)}
-              required
-            />
-            <span>GPS ID:</span>
-          </label>
-          <ThemeProvider theme={theme}>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handleFindESeal}
-              style={{ width: "100px", marginLeft: "35px" }}
-              className="margindata"
-            >
-              Get
-            </Button>
-          </ThemeProvider>
-          <div className="tripdata">
-            {eSealError && <p className="error">{eSealError}</p>}
-            {eSeal && (
-              <div>
-                <p>Device Name: {eSeal.deviceName}</p>
-                <p>Brand: {eSeal.brand}</p>
-                <ThemeProvider theme={theme}>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    onClick={handleAddESeal}
-                    style={{ width: "100px", marginLeft: "35px" }}
-                    className="margindata"
-                  >
-                    Add
-                  </Button>
-                </ThemeProvider>
-              </div>
-            )}
-          </div>
-
-          {/* Display Added eSeals */}
-          <div className="displayAddedeSeals">
-            {eSealList.length > 0 ? (
-              <div className="grid marginTop">
-                <label className="textcenter">Selected Gps</label>
-                <hr />
-                <div className="threeCardRowContainer">
-                  {eSealList.map((seal, index) => (
-                    <div key={index}>
-                      <p className="selected">{seal.gpsId}</p>
-                    </div>
-                  ))}
-                </div>
-                <hr />
-              </div>
-            ) : (
-              <label className="textcenter">No Gps added yet.</label>
-            )}
-          </div>
-        </div>
-
-        {/* GPS and Trip Info */}
-        <label>
-          <input
-            className="input"
-            type="date"
-            value={gpsMountedDate}
-            onChange={(e) => setGpsMountedDate(e.target.value)}
-          />
-          <span>GPS Mounted Date:</span>
-        </label>
-        <label>
-          <input
-            className="input"
-            type="date"
-            value={tripStartingDate}
-            onChange={(e) => setTripStartingDate(e.target.value)}
-          />
-          <span>Trip Starting Date:</span>
-        </label>
-        <label>
-          <input
-            className="input"
-            type="text"
-            value={Checkpoints}
-            onChange={(e) => setCheckpoints(e.target.value)}
-          />
-          <span>Checkpoints:</span>
-        </label>
-
         <div className="driverForm">
           <label className="driverLabel">
             <div className="driverInputSection">
               <input
                 type="text"
-                value={roadNumber}
-                onChange={(e) => setRoadNumber(e.target.value)} // Set roadNumber on change
+                value={plateNumber}
+                onChange={(e) => setPlateNumber(e.target.value)}
                 required
                 className="driverInput"
-                placeholder="Road Number"
+                placeholder="Plate Number"
               />
-              <span className="driverLabelText">Road Name</span>
+              <span className="driverLabelText">Vehicle Name</span>
             </div>
 
             {/* Display Route Name on the right side of the input */}
             <div className="driverNameSection">
-              {roadName ? (
-                <span className="driverName">{roadName}</span>
+              {vehicleDetails ? (
+                <span className="driverName">
+                  {vehicleDetails[0].vehicleName}
+                </span>
               ) : (
                 <span className="driverName">Waiting for ID...</span>
               )}
@@ -338,10 +272,227 @@ const StartTripForm = () => {
           </label>
         </div>
 
+        {/* Driver ID and Driver */}
+        <div className="driverForm">
+          <label className="driverLabel">
+            <div className="driverInputSection">
+              <input
+                type="text"
+                value={driverId}
+                onChange={(e) => setDriverId(e.target.value)}
+                required
+                className="driverInput"
+                placeholder="Driver ID"
+              />
+              <span className="driverLabelText">Driver Name</span>
+            </div>
+
+            {/* Display Route Name on the right side of the input */}
+            <div className="driverNameSection">
+              {driverDetails ? (
+                <span className="driverName">
+                  {driverDetails[0].firstName} - {driverDetails[0].lastName}
+                </span>
+              ) : (
+                <span className="driverName">Waiting for ID...</span>
+              )}
+            </div>
+          </label>
+        </div>
+
+        {/* Route ID and Route Name */}
+        <div className="driverForm">
+          <label className="driverLabel">
+            <div className="driverInputSection">
+              <input
+                type="text"
+                value={routeName}
+                onChange={(e) => setRouteName(e.target.value)}
+                required
+                className="driverInput"
+                placeholder="Road Name"
+              />
+              <span className="driverLabelText">Road Name</span>
+            </div>
+
+            {/* Display Route Name on the right side of the input */}
+            <div className="driverNameSection">
+              {routeDetails ? (
+                <span className="driverName">{routeDetails[0].routeName}</span>
+              ) : (
+                <span className="driverName">Waiting for Name...</span>
+              )}
+            </div>
+          </label>
+        </div>
+
+        {/* eSeal Section */}
+        <div className="twoGridRowCenter">
+          <div className="newrfids">
+            <label>Electronic Seal</label>
+            {eseals.map((eseal, index) => (
+              <div key={index} className="pendingRfidLists">
+                <input
+                  type="text"
+                  value={eseal}
+                  onChange={(e) => handleRfidKeyChange(index, e.target.value)}
+                  required
+                  className={`input ${esealStatuses[index]}`} // Apply class based on status
+                  placeholder="Eseal-ID"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => handleRemoveEseal(index)}
+                  disabled={eseals.length === 1} // Disable removal if it's the only input
+                  className="remove-rfid"
+                >
+                  Remove
+                </button>
+
+                {esealStatuses[index] === "found" && (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#00ff6e"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-circle-check-big"
+                  >
+                    <path d="M21.801 10A10 10 0 1 1 17 3.335" />
+                    <path d="m9 11 3 3L22 4" />
+                  </svg>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={handleAddEseal}
+              className="submit-rfid"
+            >
+              Add More
+            </button>
+          </div>
+
+          <div className="newrfids">
+            <label>Checkpoints</label>
+            {/* {eseals.map((eseal, index) => ( */}
+            {/* <div key={index} className="pendingRfidLists"> */}
+            <div className="pendingRfidLists">
+              <input
+                type="text"
+                // value={eseal}
+                // onChange={(e) => handleRfidKeyChange(index, e.target.value)}
+                required
+                // className={`input ${esealStatuses[index]}`} // Apply class based on status
+                placeholder="Checkpoints Id"
+              />
+              <button
+                type="button"
+                // onClick={() => handleRemoveEseal(index)}
+                // disabled={eseals.length === 1} // Disable removal if it's the only input
+                className="remove-rfid"
+              >
+                Remove
+              </button>
+              {/* {esealStatuses[index] === "found" && ( */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#00ff6e"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-circle-check-big"
+              >
+                <path d="M21.801 10A10 10 0 1 1 17 3.335" />
+                <path d="m9 11 3 3L22 4" />
+              </svg>
+              {/* )} */}
+            </div>
+            {/* ))} */}
+            <button
+              type="button"
+              // onClick={handleAddEseal}
+              className="submit-rfid"
+            >
+              Add More
+            </button>
+          </div>
+        </div>
+
+        {/* GPS Mounted Date */}
+        <label>
+          <input
+            className="input"
+            type="date"
+            value={gpsMountedDate}
+            onChange={(e) => setGpsMountedDate(e.target.value)}
+          />
+          <span>GPS Mounted Date</span>
+        </label>
+
+        {/* Trip Starting Date */}
+        <label>
+          <input
+            className="input"
+            type="date"
+            value={tripStartingDate}
+            onChange={(e) => setTripStartingDate(e.target.value)}
+          />
+          <span>Trip Starting Date</span>
+        </label>
+
+        <label>
+          <input
+            className="input"
+            type="text"
+            value={Checkpoints}
+            onChange={(e) => setCheckpoints(e.target.value)}
+          />
+          <span>Checkpoints</span>
+        </label>
+        <div className=""></div>
+
+        <div className="twoGridRowCenter ">
+          {/* Starting Point */}
+          <label>
+            <input
+              className="input"
+              type="text"
+              value={startingPoint}
+              onChange={(e) => setStartingPoint(e.target.value)}
+              style={{ width: "250px" }}
+            />
+            <span>Starting Point</span>
+          </label>
+
+          {/* Destination */}
+          <label>
+            <input
+              className="input"
+              type="text"
+              value={destination}
+              onChange={(e) => setDestination(e.target.value)}
+              style={{ width: "250px" }}
+            />
+            <span>Destination</span>
+          </label>
+        </div>
+
         <button type="submit" className="submit placeEnd">
           Submit
         </button>
       </div>
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </form>
   );
 };
