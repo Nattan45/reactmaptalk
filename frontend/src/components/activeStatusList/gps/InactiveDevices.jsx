@@ -143,6 +143,27 @@ const InactiveDevices = () => {
     setRfidKeyId(updatedKeys);
   };
 
+  // deleting the eseal
+  const handleDeleteEseal = async (id) => {
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/delete/Eseal/${id}`
+      );
+
+      addMessage("Eseal Deleted successfully", "success");
+    } catch (err) {
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage ||
+          err.response.data.message ||
+          "An error occurred: 500";
+        addMessage(errorMessage, "error");
+      } else {
+        addMessage("Network error: Unable to reach the server.", "error");
+      }
+    }
+  };
+
   return (
     <div>
       <h2 className="tableDataHeaderTitle inactiveColor">
@@ -261,6 +282,7 @@ const InactiveDevices = () => {
                     variant="contained"
                     color="error"
                     className="smallbutton"
+                    onClick={() => handleDeleteEseal(device.id)}
                   >
                     <span className="sentencebutton">Delete</span>
                   </Button>

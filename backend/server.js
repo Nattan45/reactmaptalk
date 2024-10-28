@@ -548,6 +548,7 @@ app.get("/api/Esealidlist", async (req, res) => {
   }
 });
 
+// E-seal detailed data with its relation
 app.get("/api/EsealAllDatalist", async (req, res) => {
   try {
     const response = await axios.get(`${SPRING_ENDPOINT}${routes.CREATEESEAL}`);
@@ -560,6 +561,7 @@ app.get("/api/EsealAllDatalist", async (req, res) => {
   }
 });
 
+// get eseal by id
 app.get("/api/Single-EsealData/:id", async (req, res) => {
   const id = req.params.id;
   try {
@@ -568,7 +570,7 @@ app.get("/api/Single-EsealData/:id", async (req, res) => {
     );
 
     res.json(response.data);
-    console.log(response.data);
+    // console.log(response.data);
   } catch (error) {
     console.error("Error fetching E-seal:", error.message);
     res.status(500).json({ error: "Failed to fetch E-seal" });
@@ -606,22 +608,19 @@ app.post("/api/create/E-Seal", async (req, res) => {
   }
 });
 
+// update E-seal Rfid keys - remove | upate
 app.put("/api/eseal/update-rfid-keys/:id", async (req, res) => {
   const eSealId = req.params.id;
-  console.log(eSealId);
 
   const esealRfidData = req.body.rfidKeys;
-
-  console.log(esealRfidData, "esealRfidData");
 
   if (!esealRfidData || !Array.isArray(esealRfidData)) {
     return res.status(400).json({ message: "Invalid RFID keys format." });
   }
 
   try {
-    // Array to store the keys that are 'UNASSIGNED'
-    const unassignedKeys = [];
-    console.log(unassignedKeys, "--");
+    // Array to store the keys
+    const UpdateRfidKeys = [];
 
     // Loop over the received RFID keys
     for (const rfidKey of esealRfidData) {
@@ -633,56 +632,21 @@ app.put("/api/eseal/update-rfid-keys/:id", async (req, res) => {
 
         const rfidObject = response.data;
 
-        // If RFID key status is 'UNASSIGNED', add it to the unassignedKeys array
-        if (rfidObject.rfidStatus === "UNASSIGNED") {
-          unassignedKeys.push(rfidObject.id);
-        }
+        UpdateRfidKeys.push(rfidObject.id);
       } catch (error) {
         console.error(`Error fetching RFID key ${rfidKey}: `, error.message);
       }
-
-      console.log(unassignedKeys, "++");
     }
 
-    // If there are unassigned keys, make a PUT request to update them in the Spring backend
-    if (unassignedKeys.length > 0) {
-      console.log(unassignedKeys, "unassignedKeys.length");
-      const updateResponse = await axios.put(
-        `${SPRING_ENDPOINT}${routes.CREATEESEAL}/${eSealId}`,
-        { rfidKeyId: unassignedKeys }
-      );
+    // make a PUT request to update them in the Spring backend
+    const updateResponse = await axios.put(
+      `${SPRING_ENDPOINT}${routes.CREATEESEAL}/${eSealId}`,
+      { rfidKeyId: UpdateRfidKeys }
+    );
 
-      // Log and send response back
-      console.log(updateResponse.data, "000000000000");
-      return res
-        .status(200)
-        .json({ message: "RFID keys updated", data: updateResponse.data });
-    } else if (unassignedKeys.length === 0) {
-      const unassignedKeys = [];
-
-      console.log("No unassigned RFID keys found. Processing removals...");
-
-      // Loop again to process all RFID keys, removing any that are necessary
-      for (const rfidKey of esealRfidData) {
-        try {
-          const response = await axios.get(
-            `${SPRING_ENDPOINT}${routes.RFIDKEYFROMKEYCODE}/${rfidKey}`
-          );
-
-          const rfidObject = response.data;
-
-          // Example: Handle logic here if you want to remove or update the RFID key
-
-          // Logging for each RFID key processed
-          console.log(`Processed RFID key: ${rfidObject.id}`);
-        } catch (error) {
-          console.error(`Error fetching RFID key ${rfidKey}: `, error.message);
-        }
-      }
-      return res.status(200).json({
-        message: "No unassigned RFID keys found, existing keys processed.",
-      });
-    }
+    return res
+      .status(200)
+      .json({ message: "RFID keys updated", data: updateResponse.data });
   } catch (error) {
     if (error.response) {
       console.error("Error updating RFID keys:", error.message);
@@ -694,25 +658,75 @@ app.put("/api/eseal/update-rfid-keys/:id", async (req, res) => {
   }
 });
 
-// try {
-//   const response = await axios.delete(
-//     `${SPRING_ENDPOINT}${routes.VEHICLESLIST}/${vehicleId}`
-//   );
+app.delete("/api/delete/Eseal/:id", async (req, res) => {
+  deletableEseal = req.params.id;
 
-//   res
-//     .status(response.status)
-//     .json({ message: "Vehicle deleted successfully" });
-// } catch (error) {
-//   if (error.response) {
-//     console.log("Response from Spring service:", error.response.data);
+  // console.log(deletableEseal, "deletableEseal");
 
-//     const errorMessage = error.response.data.errorMessage || "Unknown error";
-//     res.status(error.response.status).json({ errorMessage });
-//   } else {
-//     console.log("Error:", error.message);
-//     res.status(500).json({ message: "Internal Server Error" });
-//   }
-// }
+  // check if the Eseal have relations with rfid and vehicle and its not empty
+  try {
+    // Step 1: Check if the E-seal has relations with RFID or Vehicle
+    const response = await axios.get(
+      `${SPRING_ENDPOINT}${routes.CREATEESEAL}/${deletableEseal}`
+    );
+
+    const requestedData = response.data;
+
+    if (requestedData.rfidKeys && requestedData.rfidKeys.length > 0) {
+      res
+        .status(400)
+        .json({ message: "E-seal is not empty, it's assigned to Rfid" });
+    } else if (requestedData.vehicleId && requestedData.vehicleId.length > 0) {
+      res
+        .status(400)
+        .json({ message: "E-seal is not empty, it's assigned to a vehicle" });
+    } else {
+      // Step 2: Nullify associations if no relation is found
+      try {
+        const response = await axios.put(
+          `${SPRING_ENDPOINT}${routes.CREATEESEAL}/${deletableEseal}/null`
+        );
+
+        if (response.status === 200) {
+          // console.log(deletableEseal, "is now nulled");
+
+          // Step 3: Proceed to delete the E-seal
+          try {
+            await axios.delete(
+              `${SPRING_ENDPOINT}${routes.ESEALSLIST}/${deletableEseal}`
+            );
+
+            res.status(200).json({ message: "E-seal deleted" });
+          } catch (deleteError) {
+            const deleteErrorMessage =
+              deleteError.response?.data?.errorMessage ||
+              "Error during deletion";
+            return res
+              .status(deleteError.response?.status || 500)
+              .json({ message: deleteErrorMessage });
+          }
+        }
+      } catch (error) {
+        if (error.response) {
+          const errorMessage =
+            error.response.data.errorMessage || "Unknown error";
+          res.status(error.response.status).json({ errorMessage });
+        } else {
+          console.log("Error:", error.message);
+          res.status(500).json({ message: "Internal Server Error" });
+        }
+      }
+    }
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
 
 // Start the server
 app.listen(PORT, () => {
