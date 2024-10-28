@@ -2,6 +2,8 @@ import React from "react";
 import ActiveGpsTrackers from "../activeStatusCards/ActiveGpsTrackers";
 import ActiveVehicleStatus from "../activeStatusCards/ActiveVehicleStatus";
 import InActiveGpsTrackers from "../inactiveStatusCards/InActiveGpsTrackers";
+import AssignedRfidsStatus from "../activeStatusCards/AssignedRfidsStatus";
+import UnassignedRfidsStatus from "../inactiveStatusCards/UnassignedRfidsStatus";
 
 const DeviceStastics = () => {
   return (
@@ -14,6 +16,12 @@ const DeviceStastics = () => {
 
       {/* Active Vehicles */}
       <ActiveVehicleStatus />
+
+      {/* Assigned Rfids */}
+      <AssignedRfidsStatus />
+
+      {/* Unassigned Rfids */}
+      <UnassignedRfidsStatus />
     </div>
   );
 };

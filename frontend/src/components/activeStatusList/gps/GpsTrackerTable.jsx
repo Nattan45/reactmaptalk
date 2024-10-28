@@ -1,18 +1,49 @@
 import React, { useEffect, useState } from "react";
 
 import Paginator from "../../paginator/Paginator";
-import Eseal from "../../../data/Eseal"; // Importing dummy data
-// import Button from "@mui/material/Button";
+import axios from "axios";
+import MessagePopup from "../../messageComponent/MessagePopup";
+import { createTheme, ThemeProvider, Button, Stack } from "@mui/material";
+import { formatRfidStatus } from "../../devices/formatRfidStatus";
 
 const GpsTrackerTable = () => {
   const [deviceData, setDeviceData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
+  const [plateNumber, setPlateNumber] = useState("");
 
-  // Simulating fetching data from a database (replace this with an actual API call)
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      setDeviceData(Eseal); // Load the dummy data into state
+      try {
+        const eseal = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/EsealAllDatalist`
+        );
+        setDeviceData(eseal.data);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
     };
 
     fetchData(); // Call the fetch function
@@ -31,6 +62,40 @@ const GpsTrackerTable = () => {
     setCurrentPage(pageNumber); // Set the new page number
   };
 
+  const { palette } = createTheme();
+  const { augmentColor } = palette;
+  const createColor = (mainColor) =>
+    augmentColor({ color: { main: mainColor } });
+  const theme = createTheme({
+    palette: {
+      inactivebtn: createColor("#ccc"),
+      assignedColor: createColor("#95EF71"),
+      unAssignedColor: createColor("#F6B85A"),
+      assignedColorkey: createColor("#DFC57B"),
+      unAssignedColorkey: createColor("#175E60"),
+    },
+  });
+
+  const displayPlateNumber = async (id) => {
+    try {
+      const vehicle = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/vehicles/${id}`
+      );
+
+      setPlateNumber(vehicle.data.plateNumber);
+    } catch (err) {
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage ||
+          err.response.data.message ||
+          "An error occurred: 500";
+        addMessage(errorMessage, "error");
+      } else {
+        addMessage("Network error: Unable to reach the server.", "error");
+      }
+    }
+  };
+
   return (
     <div>
       <h2 className="tableDataHeaderTitle">
@@ -39,9 +104,9 @@ const GpsTrackerTable = () => {
       <table border="1" cellPadding="10">
         <thead>
           <tr>
-            <th>Device Name</th>
-            <th>Brand</th>
-            <th>GPS ID</th>
+            <th>GPS Tag Name</th>
+            <th>GPS Brand</th>
+            <th>Rfid Type</th>
             <th>RFID Keys</th>
             <th>Status</th>
             <th>Vehicle</th>
@@ -55,20 +120,94 @@ const GpsTrackerTable = () => {
           {currentItems.length > 0 ? (
             currentItems.map((device) => (
               <tr key={device.id}>
-                <td>{device.deviceName}</td>
+                <td>{device.tagName}</td>
                 <td>{device.brand}</td>
-                <td>{device.gpsId}</td>
+                {/* Rfid Type */}
                 <td>
                   <div className="flexList">
                     {device.rfidKeys.map((rfid, idx) => (
-                      <button key={idx} className=" itemCenter">
-                        {rfid.RfidKey}
-                      </button>
+                      <Stack direction="row" key={idx}>
+                        <ThemeProvider theme={theme}>
+                          <Button
+                            variant="contained"
+                            color={
+                              rfid.rfidType === "PASSIVE_RFID"
+                                ? "assignedColor"
+                                : "unAssignedColor"
+                            }
+                            key={idx}
+                          >
+                            <span className="sentencebutton">
+                              {formatRfidStatus(rfid.rfidType)}
+                            </span>
+                          </Button>
+                        </ThemeProvider>
+                      </Stack>
                     ))}
                   </div>
                 </td>
-                <td>{device.status}</td>
-                <td>{device.status === "Active" ? device.vehicle : ""}</td>
+                {/* keyCode */}
+                <td>
+                  <div className="flexList">
+                    {device.rfidKeys.map((rfid, idx) => (
+                      <Stack direction="row" key={idx}>
+                        <ThemeProvider theme={theme}>
+                          <Button
+                            variant="contained"
+                            color={"assignedColorkey"}
+                            key={idx}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="9"
+                              height="9"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="lucide lucide-key"
+                            >
+                              <path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4" />
+                              <path d="m21 2-9.6 9.6" />
+                              <circle cx="7.5" cy="15.5" r="5.5" />
+                            </svg>
+                            &nbsp;
+                            <span className="sentencebutton">
+                              {formatRfidStatus(rfid.keyCode)}
+                            </span>
+                          </Button>
+                        </ThemeProvider>
+                      </Stack>
+                    ))}
+                  </div>
+                </td>
+                <td>
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      variant="contained"
+                      color={
+                        device.electronicSealStatus === "UNLOCKED"
+                          ? "assignedColor"
+                          : "unAssignedColor"
+                      }
+                      className="smallbutton"
+                    >
+                      <span className="sentencebutton">
+                        {formatRfidStatus(device.electronicSealStatus)}
+                      </span>
+                    </Button>
+                  </ThemeProvider>
+                </td>
+                <td>
+                  {device.electronicSealStatus === "LOCKED" &&
+                  displayPlateNumber(device.vehicleId) ? (
+                    <span>{plateNumber}</span> // and display the vehicleName here
+                  ) : (
+                    ""
+                  )}
+                </td>
                 <td>{device.speed}</td>
                 <td>{device.InstallationDate}</td>
                 <td>{device.BatteryLevel}</td>
@@ -101,6 +240,8 @@ const GpsTrackerTable = () => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

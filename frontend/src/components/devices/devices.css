@@ -5,7 +5,7 @@
 }
 .DeviceStasticsContainer {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(5, 1fr);
   justify-self: center;
   gap: 40px;
 }

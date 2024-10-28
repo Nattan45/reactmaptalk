@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
-import FreeRfid from "./FreeRfid";
 import axios from "axios";
 import MessagePopup from "../messageComponent/MessagePopup";
 import { validateFormData } from "./validateEseal";
+import FreeRfid from "../activeStatusList/rfidsstatus/FreeRfid";
 
 const RegisterGpsTrackerForm = () => {
   const [tagName, setTagName] = useState("");

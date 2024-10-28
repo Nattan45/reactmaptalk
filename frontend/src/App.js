@@ -24,6 +24,7 @@ import DevicesStatusPage from "./page/DevicesStatusPage";
 import VehiclesStatusPage from "./page/VehiclesStatusPage";
 import DriversStatusPage from "./page/DriversStatusPage";
 import AccountsStatusPage from "./page/AccountsStatusPage";
+import RfidsStatusPage from "./page/RfidsStatusPage";
 
 function App() {
   return (
@@ -68,6 +69,11 @@ function App() {
           path="/DevicesStatusPage"
           exact
           element={<DevicesStatusPage />}
+        ></Route>
+        <Route
+          path="/RfidsStatusPage"
+          exact
+          element={<RfidsStatusPage />}
         ></Route>
         <Route path="/VehiclesPage" exact element={<VehiclesPage />}></Route>
         <Route

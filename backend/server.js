@@ -323,6 +323,21 @@ app.get("/api/vehicles", async (req, res) => {
   }
 });
 
+//get vehicles by id
+app.get("/api/vehicles/:id", async (req, res) => {
+  id = req.params.id;
+  try {
+    const response = await axios.get(
+      `${SPRING_ENDPOINT}${routes.VEHICLESLIST}/${id}`
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error fetching vehicles:", error.message);
+    res.status(500).json({ error: "Failed to fetch vehicles" });
+  }
+});
+
 // create vehicles
 app.post("/api/create/vehicle", async (req, res) => {
   const vehicleData = req.body;

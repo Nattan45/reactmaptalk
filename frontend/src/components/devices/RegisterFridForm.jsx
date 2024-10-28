@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 
-import AllRfidList from "./AllRfidList";
 import { Select, MenuItem, Box } from "@mui/material";
 import axios from "axios";
 import MessagePopup from "../messageComponent/MessagePopup";
+import AllRfidList from "../activeStatusList/rfidsstatus/AllRfidList";
+
 const validateRfid = require("./validateRfid"); // Import the validation function
 
 const RegisterFridForm = () => {
