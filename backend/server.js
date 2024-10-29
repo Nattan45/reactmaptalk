@@ -743,14 +743,62 @@ app.delete("/api/delete/Eseal/:id", async (req, res) => {
 });
 
 // E-seal Related Endpoints ________________________________________________
-// get all routes
+// get all routes with ID
 app.get("/api/roads", async (req, res) => {
-  console.log("hello World");
+  try {
+    const response = await axios.get(`${SPRING_ENDPOINT}${routes.ROUTELIST}`);
+
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
 });
 
 // get all Routes with ID
-app.get("/api/roads-id-list", async (req, res) => {
-  console.log("hello World");
+app.get("/api/route-detail/:id", async (req, res) => {
+  id = req.params.id;
+  try {
+    const response = await axios.get(
+      `${SPRING_ENDPOINT}${routes.ROUTELIST}/${id}`
+    );
+
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
+app.post("/api/create/route", async (req, res) => {
+  routeData = req.body;
+
+  try {
+    const response = await axios.post(
+      `${SPRING_ENDPOINT}${routes.ROUTELIST}`,
+      routeData
+    );
+
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
 });
 
 // Start the server

@@ -11,7 +11,7 @@ const StartTripForm = () => {
   const [driverDetails, setDriverDetails] = useState(null);
 
   const [routeDetails, setRouteDetails] = useState(""); // Input for road number
-  const [routeName, setRouteName] = useState("");
+  const [routeId, setRouteId] = useState("");
 
   const [gpsMountedDate, setGpsMountedDate] = useState("");
   const [tripStartingDate, setTripStartingDate] = useState("");
@@ -100,11 +100,11 @@ const StartTripForm = () => {
   const handleFindRoad = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/roads-id-list`
+        `${process.env.REACT_APP_API_URL}/api/roads`
       );
 
       const filteredRoute = response.data.filter(
-        (route) => route.routeName === routeName
+        (route) => route.routeId === routeId
       );
 
       if (filteredRoute.length > 0) {
@@ -118,10 +118,10 @@ const StartTripForm = () => {
   };
 
   useEffect(() => {
-    if (routeName) {
+    if (routeId) {
       handleFindRoad();
     }
-  }, [routeName]); // Trigger whenever driver Id changes
+  }, [routeId]); // Trigger whenever driver Id changes
 
   // Function to handle adding a new RFID key input field
   const handleAddEseal = () => {
@@ -306,11 +306,11 @@ const StartTripForm = () => {
             <div className="driverInputSection">
               <input
                 type="text"
-                value={routeName}
-                onChange={(e) => setRouteName(e.target.value)}
+                value={routeId}
+                onChange={(e) => setRouteId(e.target.value)}
                 required
                 className="driverInput"
-                placeholder="Road Name"
+                placeholder="Road ID"
               />
               <span className="driverLabelText">Road Name</span>
             </div>
@@ -320,7 +320,7 @@ const StartTripForm = () => {
               {routeDetails ? (
                 <span className="driverName">{routeDetails[0].routeName}</span>
               ) : (
-                <span className="driverName">Waiting for Name...</span>
+                <span className="driverName">Waiting for ID...</span>
               )}
             </div>
           </label>

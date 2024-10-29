@@ -51,4 +51,8 @@ module.exports = {
 
   // create/ get/ PUT eseal with rfid and vehicle forenkey
   CREATEESEAL: "/esealinfo",
+
+  // Route Endpoints __________________________________________
+  // Route home route
+  ROUTELIST: "/route",
 };
