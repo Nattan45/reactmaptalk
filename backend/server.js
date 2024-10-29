@@ -742,7 +742,7 @@ app.delete("/api/delete/Eseal/:id", async (req, res) => {
   }
 });
 
-// E-seal Related Endpoints ________________________________________________
+// Route Related Endpoints ________________________________________________
 // get all routes with ID
 app.get("/api/roads", async (req, res) => {
   try {
@@ -780,6 +780,7 @@ app.get("/api/route-detail/:id", async (req, res) => {
   }
 });
 
+// create Route
 app.post("/api/create/route", async (req, res) => {
   routeData = req.body;
 
@@ -799,6 +800,19 @@ app.post("/api/create/route", async (req, res) => {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
+});
+
+// Checkpoint Related Endpoints ________________________________________________
+// get all Checkpoint with ID
+app.get("/api/checkpoints", async (req, res) => {
+  console.log("/api/checkpoints");
+});
+
+// Create Checkpoint
+app.post("/api/create/checkpoint", async (req, res) => {
+  newCp = req.body;
+
+  console.log(newCp);
 });
 
 // Start the server

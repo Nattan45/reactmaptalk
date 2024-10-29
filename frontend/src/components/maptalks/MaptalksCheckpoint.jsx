@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import * as maptalks from "maptalks";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import axios from "axios";
+import { Stack, Button, createTheme, ThemeProvider } from "@mui/material";
 import { blue, yellow } from "@mui/material/colors";
 
 import { calculateAreaOfRectangle } from "./calculateAreaOfRectangle";
 import ResetToMyLocation from "./ResetToMyLocation";
+import MessagePopup from "../messageComponent/MessagePopup";
 
 const MaptalksCheckpoint = () => {
   const mapRef = useRef(null); // Ref to store the map DOM element
@@ -22,6 +22,20 @@ const MaptalksCheckpoint = () => {
   const [rectangleData, setRectangleData] = useState([]);
 
   const [rectangleNames, setRectangleNames] = useState({}); // State to track rectangle names
+
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
 
   // Handle mouse down event when user starts drawing
   const handleMouseDown = (e) => {
@@ -252,7 +266,7 @@ const MaptalksCheckpoint = () => {
   };
 
   // Handle Save button click
-  const handleSave = () => {
+  const handleSave = async () => {
     const rectanglesWithNames = rectangleData.map((data, index) => {
       const rectangleName = rectangleNames[index] || `Rectangle ${index + 1}`; // Use custom name or fallback to default
 
@@ -269,6 +283,25 @@ const MaptalksCheckpoint = () => {
       // rectanglesWithNames,  // in array format
       JSON.stringify(rectanglesWithNames, null, 2) // in json format
     );
+
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/create/checkpoint`,
+        rectanglesWithNames
+      );
+
+      addMessage("Checkpoint created successfully!", "success");
+    } catch (err) {
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage ||
+          err.response.data.message ||
+          "An error occurred: 500";
+        addMessage(errorMessage, "error");
+      } else {
+        addMessage("Network error: Unable to reach the server.", "error");
+      }
+    }
   };
 
   return (
@@ -381,6 +414,7 @@ const MaptalksCheckpoint = () => {
           <div ref={mapRef} style={{ width: "70vw", height: "80vh" }} />
         </div>
       </div>
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };
