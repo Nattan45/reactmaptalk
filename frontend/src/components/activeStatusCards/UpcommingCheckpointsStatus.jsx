@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import axios from "axios";
 import MessagePopup from "../messageComponent/MessagePopup";
+import { NavLink } from "react-router-dom";
 
 const UpcommingCheckpointsStatus = () => {
   const [totalCheckpoints, setTotalCheckpoints] = useState(0); // State for total checkpoints
@@ -74,7 +75,9 @@ const UpcommingCheckpointsStatus = () => {
 
             <p className="Stastics-text-body textcenter">{totalCheckpoints}</p>
           </div>
-          <button className="Stastics-card-button">More info</button>
+          <NavLink exact="true" to="/CheckpointsListPage">
+            <button className="Stastics-card-button">Manage</button>
+          </NavLink>
         </div>
       </div>
 
