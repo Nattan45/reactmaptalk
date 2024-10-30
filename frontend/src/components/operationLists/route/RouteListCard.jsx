@@ -1,14 +1,49 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-import RouteData from "../../../data/RouteData";
 import { NavLink } from "react-router-dom";
+import MessagePopup from "../../messageComponent/MessagePopup";
 
 const RouteListCard = () => {
-  const [deviceData, setDeviceData] = useState([]); // State for the full data
+  const [deviceData, setDeviceData] = useState([]);
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
 
   useEffect(() => {
-    setDeviceData(RouteData); // Load the dummy data into state
+    const fetchData = async () => {
+      try {
+        const RouteData = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/roads`
+        );
+
+        setDeviceData(RouteData.data);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
+    };
+
+    fetchData();
   }, []);
+
   return (
     <div className="allStastics">
       <div className="Stastics-card">
@@ -41,6 +76,7 @@ const RouteListCard = () => {
           <button className="Stastics-card-button">Manage</button>
         </NavLink>
       </div>
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 import Paginator from "../../paginator/Paginator";
-import RouteData from "../../../data/RouteData";
+import axios from "axios";
+import MessagePopup from "../../messageComponent/MessagePopup";
 
 const RouteList = () => {
   const [deviceData, setDeviceData] = useState([]); // State for the full data
@@ -10,8 +11,42 @@ const RouteList = () => {
 
   const [visibleCategory, setVisibleCategory] = useState(null); // State to control the visibility of each category's checkpoints list
 
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
   useEffect(() => {
-    setDeviceData(RouteData); // Load the dummy data into state
+    const fetchData = async () => {
+      try {
+        const RouteData = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/roads`
+        );
+
+        setDeviceData(RouteData.data);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
+    };
+
+    fetchData();
   }, []);
 
   // Calculate the current items to display on the current page
@@ -53,7 +88,7 @@ const RouteList = () => {
               currentItems.map((route, idx) => (
                 <tr key={route.id}>
                   <td>{route.routeName}</td>
-                  <td>{route.roadNumber}</td>
+                  <td>{route.routeId}</td>
                   <td>
                     <div className="categoryHeader">
                       <div className="categoryInfo">
@@ -81,8 +116,8 @@ const RouteList = () => {
                         <div className="checkpointsList ">
                           {route.routeCoordinates.map((coordinate, index) => (
                             <p key={index}>
-                              [{coordinate[0].toFixed(5)},{" "}
-                              {coordinate[1].toFixed(5)}]
+                              [{coordinate.latitude.toFixed(5)},{" "}
+                              {coordinate.longitude.toFixed(5)}]
                             </p>
                           ))}
                         </div>
@@ -162,6 +197,7 @@ const RouteList = () => {
           onPageChange={handlePageChange}
         />
       </div>
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

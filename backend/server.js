@@ -673,10 +673,9 @@ app.put("/api/eseal/update-rfid-keys/:id", async (req, res) => {
   }
 });
 
+// delete E-seal by nullifying its relations then - remove
 app.delete("/api/delete/Eseal/:id", async (req, res) => {
   deletableEseal = req.params.id;
-
-  // console.log(deletableEseal, "deletableEseal");
 
   // check if the Eseal have relations with rfid and vehicle and its not empty
   try {
@@ -741,6 +740,79 @@ app.delete("/api/delete/Eseal/:id", async (req, res) => {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
+});
+
+// Route Related Endpoints ________________________________________________
+// get all routes with ID
+app.get("/api/roads", async (req, res) => {
+  try {
+    const response = await axios.get(`${SPRING_ENDPOINT}${routes.ROUTELIST}`);
+
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
+// get all Routes with ID
+app.get("/api/route-detail/:id", async (req, res) => {
+  id = req.params.id;
+  try {
+    const response = await axios.get(
+      `${SPRING_ENDPOINT}${routes.ROUTELIST}/${id}`
+    );
+
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
+// create Route
+app.post("/api/create/route", async (req, res) => {
+  routeData = req.body;
+
+  try {
+    const response = await axios.post(
+      `${SPRING_ENDPOINT}${routes.ROUTELIST}`,
+      routeData
+    );
+
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
+// Checkpoint Related Endpoints ________________________________________________
+// get all Checkpoint with ID
+app.get("/api/checkpoints", async (req, res) => {
+  console.log("/api/checkpoints");
+});
+
+// Create Checkpoint
+app.post("/api/create/checkpoint", async (req, res) => {
+  newCp = req.body;
+
+  console.log(newCp);
 });
 
 // Start the server

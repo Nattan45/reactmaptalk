@@ -12,8 +12,8 @@ const ActiveTripStatus = () => {
       <div className="fiveCardRowContainer">
         <ActiveVehicleStatus />
         <ActiveDriverStatus />
-        <ActiveRoadStatus />
         <ActiveGpsTrackers />
+        <ActiveRoadStatus />
         <UpcommingCheckpointsStatus />
       </div>
     </div>

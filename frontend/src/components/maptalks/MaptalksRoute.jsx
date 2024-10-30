@@ -2,16 +2,21 @@ import React, { useEffect, useRef, useState } from "react";
 
 import * as maptalks from "maptalks";
 import { calculateTotalDistance } from "./calculateDistance";
-import Stack from "@mui/material/Stack"; // npm install @mui/material @emotion/react @emotion/styled
-import Button from "@mui/material/Button";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import {
+  Stack,
+  Button,
+  createTheme,
+  ThemeProvider,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
 import { blue, yellow } from "@mui/material/colors";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
+import axios from "axios";
+import MessagePopup from "../messageComponent/MessagePopup";
 
 const MaptalksRoute = () => {
   const mapRef = useRef(null);
@@ -23,6 +28,20 @@ const MaptalksRoute = () => {
   }); // State to store distance
   const [dialogOpen, setDialogOpen] = useState(false); // State for dialog visibility
   const [routeName, setRouteName] = useState(""); // State for route name
+
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
 
   useEffect(() => {
     const defaultCenter = [39.7823, 9.145]; // Ethiopian coordinates [Longitude, Latitude]
@@ -117,8 +136,8 @@ const MaptalksRoute = () => {
     }
 
     const calculatedDistance = calculateTotalDistance(routeCoordinates);
-    console.log("Total Distance (m):", calculatedDistance.totalDistance);
-    console.log("Total Distance (km):", calculatedDistance.totalDistanceKm);
+    // console.log("Total Distance (m):", calculatedDistance.totalDistance);
+    // console.log("Total Distance (km):", calculatedDistance.totalDistanceKm);
 
     setDistance(calculatedDistance); // Update distance state with the calculated values
   }, [routeCoordinates]);
@@ -152,17 +171,45 @@ const MaptalksRoute = () => {
     setRouteName(event.target.value); // Update route name state
   };
 
-  const handleSave = () => {
+  const handleSave = async (e) => {
+    e.preventDefault();
+
+    // Transform routeCoordinates to include latitude and longitude
+    const formattedCoordinates = routeCoordinates.map((coord) => ({
+      latitude: coord[1], // Ensure you're accessing the correct value for latitude
+      longitude: coord[0], // Ensure you're accessing the correct value for longitude
+    }));
+
     const routeData = {
       routeName: routeName,
-      routeCoordinates: routeCoordinates,
-      totalDistance: distance.totalDistance,
+      // routeCoordinates: routeCoordinates,
+      routeCoordinates: formattedCoordinates,
+      // totalDistance: distance.totalDistance,
       totalDistanceKm: distance.totalDistanceKm,
     };
 
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/create/route`,
+        routeData
+      );
+
+      addMessage("Route created successfully!", "success");
+      handleDialogClose(); // Close the dialog after saving
+    } catch (err) {
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage ||
+          err.response.data.message ||
+          "An error occurred: 500";
+        addMessage(errorMessage, "error");
+      } else {
+        addMessage("Network error: Unable to reach the server.", "error");
+      }
+    }
+
     // Log the route data in JSON format
     console.log(JSON.stringify(routeData, null, 2)); // Pretty-print JSON with 2 spaces
-    handleDialogClose(); // Close the dialog after saving
   };
 
   return (
@@ -245,7 +292,7 @@ const MaptalksRoute = () => {
                   <div>
                     {routeCoordinates.length > 0 ? (
                       routeCoordinates.map((coords, index) => (
-                        <p className="">
+                        <p className="" key={index}>
                           <Button
                             variant="text"
                             style={{
@@ -316,6 +363,8 @@ const MaptalksRoute = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };
