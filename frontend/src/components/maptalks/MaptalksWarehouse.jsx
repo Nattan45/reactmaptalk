@@ -1,14 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import * as maptalks from "maptalks";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import { Select, MenuItem } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import {
+  Select,
+  MenuItem,
+  Button,
+  Stack,
+  createTheme,
+  ThemeProvider,
+} from "@mui/material";
 import { blue, yellow } from "@mui/material/colors";
 
 import { calculatePolygonDetails } from "./calculatePolygonDetails";
 import ResetToMyLocation from "./ResetToMyLocation";
+import axios from "axios";
+import MessagePopup from "../messageComponent/MessagePopup";
 
 const MaptalksWarehouse = () => {
   const mapRef = useRef(null); // Ref to store the map DOM element
@@ -19,8 +25,21 @@ const MaptalksWarehouse = () => {
   const layerRef = useRef(null); // Ref to store the layer
   const shapesRef = useRef([]); // Array to store all drawn shapes
 
-  // const [isOpen, setIsOpen] = useState(false);
   const [allPolygonData, setAllPolygonData] = useState([]); // Store all polygon data
+
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
 
   const [sides, setSides] = useState(5); // Default to 6 sides (hexagon)
   const sidesRef = useRef(sides); // Create a ref to store sides
@@ -71,7 +90,7 @@ const MaptalksWarehouse = () => {
         ...prevData,
         {
           id: prevData.length + 1,
-          sides: sidesRef.current, // Store the sides at the time of drawing
+          side: sidesRef.current, // Store the sides at the time of drawing
           area: polygonDetails.area, // Store the area
           unit: polygonDetails.unit, // Store the area
           coordinates, // Store the transformed coordinates
@@ -256,16 +275,27 @@ const MaptalksWarehouse = () => {
   };
 
   // Updated handleSave function
-  const handleSave = () => {
+  const handleSave = async () => {
     const polygonDataWithNames = allPolygonData.map((polygon, index) => {
       const userInputName = polygonNames[index] || ""; // Get user input or default to empty
       const formattedName = userInputName
-        ? `${userInputName} ${polygon.sides}-sided polygon` // Format with sides
-        : `Polygon ${index + 1} (${polygon.sides}-sided polygon)`; // Default name if no input
+        ? `${userInputName} ${polygon.side}-sided polygon` // Format with sides
+        : `Polygon ${index + 1} (${polygon.side}-sided polygon)`; // Default name if no input
+
+      // Format coordinates as required
+      const formattedCoordinates = polygon.coordinates.map(
+        ([longitude, latitude]) => ({
+          latitude,
+          longitude,
+        })
+      );
 
       return {
-        ...polygon,
-        PolygonName: formattedName, // Use the formatted name
+        side: polygon.side,
+        area: polygon.area,
+        unit: polygon.unit,
+        warehouseCoordinates: formattedCoordinates,
+        warehouseName: formattedName, // Use the formatted name
       };
     });
 
@@ -274,6 +304,27 @@ const MaptalksWarehouse = () => {
       // polygonDataWithNames // in array format
       JSON.stringify(polygonDataWithNames, null, 2) // in json format
     );
+
+    try {
+      for (const warehouse of polygonDataWithNames) {
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/create/warehouse`,
+          warehouse
+        );
+      }
+
+      addMessage("Warehouse created successfully!", "success");
+    } catch (err) {
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage ||
+          err.response.data.message ||
+          "An error occurred: 500";
+        addMessage(errorMessage, "error");
+      } else {
+        addMessage("Network error: Unable to reach the server.", "error");
+      }
+    }
   };
 
   return (
@@ -423,6 +474,8 @@ const MaptalksWarehouse = () => {
           <div ref={mapRef} style={{ width: "70vw", height: "80vh" }} />
         </div>
       </div>
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

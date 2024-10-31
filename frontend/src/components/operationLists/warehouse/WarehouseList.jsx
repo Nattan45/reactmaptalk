@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import Paginator from "../../paginator/Paginator";
-import WarehousesData from "../../../data/WarehousesData"; // Multi-Warehouses data
-import WarehouseData from "../../../data/WarehouseData"; // Single Warehouse data
+
 import WarehousesCategoryList from "./WarehousesCategoryList";
+import axios from "axios";
+import MessagePopup from "../../messageComponent/MessagePopup";
 
 const WarehouseList = () => {
   const [deviceData, setDeviceData] = useState([]); // State for the full data
@@ -11,21 +12,51 @@ const WarehouseList = () => {
   const [itemsPerPage] = useState(10); // Number of items per page
 
   const [visibleCategory, setVisibleCategory] = useState(null); // State to control the visibility of each category's checkpoints list
+  const [totalWarehouses, setTotalWarehouses] = useState(0); // State for total warehouses
+
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
 
   useEffect(() => {
-    // Combine single warehouse data into the same structure as the multiple warehouse data
-    const combinedData = [
-      ...WarehousesData.map((category) => ({
-        ...category,
-        warehouseList: category.warehouseList || [], // Ensure it exists
-      })),
-      {
-        categoryName: "", // Add a category for single warehouse
-        warehouseList: WarehouseData, // Use the single warehouse data
-      },
-    ];
+    const fetchData = async () => {
+      try {
+        const Warehouses = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/warehouse`
+        );
 
-    setDeviceData(combinedData); // Load the combined data into state
+        const totalWarehouses = Warehouses.data;
+        const totalWarehousesLength = Warehouses.data.length;
+
+        setDeviceData(totalWarehouses);
+
+        console.log(totalWarehouses);
+
+        setTotalWarehouses(totalWarehousesLength);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
+    };
+
+    fetchData();
   }, []);
 
   // Calculate the current items to display on the current page
@@ -40,22 +71,6 @@ const WarehouseList = () => {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber); // Set the new page number
   };
-
-  const [totalWarehouses, setTotalWarehouses] = useState(0); // State for total warehouses
-
-  useEffect(() => {
-    // Calculate the total number of warehouses
-    const totalFromWarehousesData = WarehousesData.reduce((total, category) => {
-      return (
-        total + (category.warehouseList ? category.warehouseList.length : 0)
-      );
-    }, 0);
-
-    const totalFromWarehouseData = WarehouseData.length;
-
-    // Set total number of warehouses
-    setTotalWarehouses(totalFromWarehousesData + totalFromWarehouseData);
-  }, []);
 
   // Function to toggle the visibility of a category's checkpoints list
   const toggleCategoryVisibility = (index) => {
@@ -72,7 +87,7 @@ const WarehouseList = () => {
           <thead>
             <tr>
               <th>Warehouse Name</th>
-              <th>Category Name</th>
+              <th>Warehouse ID</th>
               <th>Coordinates</th>
               <th>Area</th>
               <th>Actions</th>
@@ -80,53 +95,17 @@ const WarehouseList = () => {
           </thead>
           <tbody>
             {currentItems.length > 0 ? (
-              currentItems.map((category, idx) => (
+              currentItems.map((warehouse, idx) => (
                 <React.Fragment key={idx}>
-                  {category.warehouseList.map((warehouse, warehouseIdx) => (
-                    <tr key={warehouseIdx}>
-                      <td>{warehouse.PolygonName}</td>
-                      <td>{category.categoryName || ""}</td>
-                      <td className="">
-                        <div className="categoryHeader">
-                          <div className="categoryInfo">
-                            <p>{warehouse.sides} Side</p>
-                          </div>
-
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="lucide lucide-chevron-down"
-                            onClick={() =>
-                              toggleCategoryVisibility(warehouseIdx)
-                            }
-                          >
-                            <path d="m6 9 6 6 6-6" />
-                          </svg>
+                  <tr key={idx}>
+                    <td>{warehouse.warehouseName}</td>
+                    <td>{warehouse.warehouseId}</td>
+                    <td className="">
+                      <div className="categoryHeader">
+                        <div className="categoryInfo">
+                          <p>{warehouse.side} Side</p>
                         </div>
-                        {visibleCategory === warehouseIdx && (
-                          <div className="checkpointsList">
-                            {warehouse.coordinates.map((coordinate, index) => (
-                              <div key={index}>
-                                [{coordinate[0].toFixed(5)},{" "}
-                                {coordinate[1].toFixed(5)}]
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </td>
 
-                      <td>
-                        {warehouse.area} {warehouse.unit}
-                      </td>
-                      <td>
-                        {/* View icon */}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
@@ -137,14 +116,49 @@ const WarehouseList = () => {
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          className="lucide lucide-eye"
+                          className="lucide lucide-chevron-down"
+                          onClick={() => toggleCategoryVisibility(idx)}
                         >
-                          <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
-                          <circle cx="12" cy="12" r="3" />
+                          <path d="m6 9 6 6 6-6" />
                         </svg>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        {/* Edit icons */}
-                        <svg
+                      </div>
+                      {visibleCategory === idx && (
+                        <div className="checkpointsList">
+                          {warehouse.warehouseCoordinates.map(
+                            (coordinate, index) => (
+                              <div key={index}>
+                                [{coordinate.latitude.toFixed(5)},
+                                {coordinate.longitude.toFixed(5)}]
+                              </div>
+                            )
+                          )}
+                        </div>
+                      )}
+                    </td>
+
+                    <td>
+                      {warehouse.area} {warehouse.unit}
+                    </td>
+                    <td>
+                      {/* View icon */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="lucide lucide-eye"
+                      >
+                        <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                      &nbsp;&nbsp;&nbsp;
+                      {/* Edit icons */}
+                      {/* <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
                           height="24"
@@ -159,30 +173,29 @@ const WarehouseList = () => {
                           <path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2" />
                           <path d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
                           <path d="M8 18h1" />
-                        </svg>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        {/* Delete icons */}
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="#ff0000"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="lucide lucide-trash-2"
-                        >
-                          <path d="M3 6h18" />
-                          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                          <line x1="10" x2="10" y1="11" y2="17" />
-                          <line x1="14" x2="14" y1="11" y2="17" />
-                        </svg>
-                      </td>
-                    </tr>
-                  ))}
+                        </svg> */}
+                      &nbsp;&nbsp;&nbsp;
+                      {/* Delete icons */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#ff0000"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="lucide lucide-trash-2"
+                      >
+                        <path d="M3 6h18" />
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                        <line x1="10" x2="10" y1="11" y2="17" />
+                        <line x1="14" x2="14" y1="11" y2="17" />
+                      </svg>
+                    </td>
+                  </tr>
                 </React.Fragment>
               ))
             ) : (
@@ -200,6 +213,8 @@ const WarehouseList = () => {
         />
       </div>
       <WarehousesCategoryList />
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

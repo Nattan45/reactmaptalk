@@ -295,11 +295,6 @@ const MaptalksCheckpoint = () => {
     );
 
     try {
-      // await axios.post(
-      //   `${process.env.REACT_APP_API_URL}/api/create/checkpoint`,
-      //   rectanglesWithNames
-      // );
-
       for (const rectangle of rectanglesWithNames) {
         await axios.post(
           `${process.env.REACT_APP_API_URL}/api/create/checkpoint`,
