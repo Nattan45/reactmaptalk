@@ -7,7 +7,7 @@ const MessagePopup = ({ messages, removeMessage }) => {
       if (messages.length > 0) {
         removeMessage(messages[0].id); // Remove the first message after 5 seconds
       }
-    }, 5000); // 5 seconds
+    }, 3000); // 3 seconds
 
     return () => clearTimeout(timer); // Clean up the timer
   }, [messages, removeMessage]);
