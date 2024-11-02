@@ -1,25 +1,52 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 import { NavLink } from "react-router-dom";
-import WarehousesData from "../../../data/WarehousesData"; // Multi-Warehouses data
-import WarehouseData from "../../../data/WarehouseData"; // Single Warehouse data
+import MessagePopup from "../../messageComponent/MessagePopup";
 
 const WarehousesCard = () => {
   const [totalWarehouses, setTotalWarehouses] = useState(0); // State for total warehouses
 
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
   useEffect(() => {
-    // Calculate the total number of warehouses
-    const totalFromWarehousesData = WarehousesData.reduce((total, category) => {
-      return (
-        total + (category.warehouseList ? category.warehouseList.length : 0)
-      );
-    }, 0);
+    const fetchData = async () => {
+      try {
+        const Warehouses = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/warehouse`
+        );
 
-    const totalFromWarehouseData = WarehouseData.length;
+        const totalWarehouses = Warehouses.data.length;
 
-    // Set total number of warehouses
-    setTotalWarehouses(totalFromWarehousesData + totalFromWarehouseData);
+        setTotalWarehouses(totalWarehouses);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
+    };
+
+    fetchData();
   }, []);
+
   return (
     <div className="allStastics">
       <div className="Stastics-card">
@@ -53,6 +80,8 @@ const WarehousesCard = () => {
           <button className="Stastics-card-button">Manage</button>
         </NavLink>
       </div>
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

@@ -784,6 +784,8 @@ app.get("/api/route-detail/:id", async (req, res) => {
 app.post("/api/create/route", async (req, res) => {
   routeData = req.body;
 
+  console.log(routeData);
+
   try {
     const response = await axios.post(
       `${SPRING_ENDPOINT}${routes.ROUTELIST}`,
@@ -805,7 +807,19 @@ app.post("/api/create/route", async (req, res) => {
 // Checkpoint Related Endpoints ________________________________________________
 // get all Checkpoint with ID
 app.get("/api/checkpoints", async (req, res) => {
-  console.log("/api/checkpoints");
+  try {
+    const response = await axios.get(`${SPRING_ENDPOINT}${routes.CPLIST}`);
+
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
 });
 
 // Create Checkpoint
@@ -813,6 +827,64 @@ app.post("/api/create/checkpoint", async (req, res) => {
   newCp = req.body;
 
   console.log(newCp);
+  try {
+    const response = await axios.post(
+      `${SPRING_ENDPOINT}${routes.CPLIST}`,
+      newCp
+    );
+
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
+// Warehouse Related Endpoints ________________________________________________
+// get all Warehouse with ID
+app.get("/api/warehouse", async (req, res) => {
+  try {
+    const response = await axios.get(
+      `${SPRING_ENDPOINT}${routes.WAREHOUSELIST}`
+    );
+
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
+// Warehouse Checkpoint
+app.post("/api/create/warehouse", async (req, res) => {
+  warehouseData = req.body;
+
+  try {
+    const response = await axios.post(
+      `${SPRING_ENDPOINT}${routes.WAREHOUSELIST}`,
+      warehouseData
+    );
+
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
 });
 
 // Start the server

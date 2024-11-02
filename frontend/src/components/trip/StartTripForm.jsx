@@ -20,8 +20,6 @@ const StartTripForm = () => {
   const [esealStatuses, setEsealStatuses] = useState([]);
   const [storedEseal, setStoredEseal] = useState([]);
 
-  const [Checkpoints, setCheckpoints] = useState("");
-
   const [startingPoint, setStartingPoint] = useState("");
   const [destination, setDestination] = useState("");
 
@@ -190,11 +188,74 @@ const StartTripForm = () => {
     }
   };
 
+  const [checkpoints, setCheckpoints] = useState([""]);
+  const [storedCheckpoint, setStoredCheckpoint] = useState([]);
+  const [checkpointStatuses, setCheckpointStatuses] = useState([]);
+
+  const handleAddCheckpoint = () => {
+    setCheckpoints([...checkpoints, ""]);
+  };
+
+  const handleRemoveCheckpoint = (index) => {
+    const updatedCheckpoints = checkpoints.filter((_, i) => i !== index);
+    const updatedIds = storedCheckpoint.filter((_, i) => i !== index);
+    const updatedStatuses = checkpointStatuses.filter((_, i) => i !== index);
+
+    setCheckpoints(updatedCheckpoints);
+    setStoredCheckpoint(updatedIds);
+    setCheckpointStatuses(updatedStatuses);
+  };
+
+  const handleCheckpointChange = (index, value) => {
+    const updatedCheckpoints = [...checkpoints];
+    updatedCheckpoints[index] = value;
+    setCheckpoints(updatedCheckpoints);
+
+    checkCheckpointStatus(value, index);
+  };
+
+  const checkCheckpointStatus = async (checkpointId, index) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/checkpoints`
+      );
+
+      const validCheckpoints = response.data;
+      const foundCheckpoint = validCheckpoints.find(
+        (checkpoint) => checkpoint.checkpointId === checkpointId
+      );
+
+      const updatedStatuses = [...checkpointStatuses];
+      const updatedStoredCheckpoints = [...storedCheckpoint];
+
+      if (foundCheckpoint) {
+        updatedStatuses[index] = "found";
+        updatedStoredCheckpoints[index] = foundCheckpoint.id; // Store the checkpoint id
+      } else {
+        updatedStatuses[index] = "not-found";
+        updatedStoredCheckpoints[index] = ""; // Clear the id if not found
+      }
+
+      setCheckpointStatuses(updatedStatuses);
+      setStoredCheckpoint(updatedStoredCheckpoints);
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.errorMessage ||
+        err.response?.data?.message ||
+        "An error occurred: 500";
+      addMessage(errorMessage, "error");
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const validEseals = storedEseal.filter(
       (_, index) => esealStatuses[index] === "found"
+    );
+
+    const validCheckpoints = storedCheckpoint.filter(
+      (_, index) => checkpointStatuses[index] === "found"
     );
 
     const vehicleData = {
@@ -206,7 +267,7 @@ const StartTripForm = () => {
       tripStartingDate,
 
       eSealList: validEseals,
-      Checkpoints,
+      checkpoints: validCheckpoints,
 
       startingPoint,
       destination,
@@ -379,48 +440,51 @@ const StartTripForm = () => {
           </div>
 
           <div className="newrfids">
-            <label>Checkpoints</label>
-            {/* {eseals.map((eseal, index) => ( */}
-            {/* <div key={index} className="pendingRfidLists"> */}
-            <div className="pendingRfidLists">
-              <input
-                type="text"
-                // value={eseal}
-                // onChange={(e) => handleRfidKeyChange(index, e.target.value)}
-                required
-                // className={`input ${esealStatuses[index]}`} // Apply class based on status
-                placeholder="Checkpoints Id"
-              />
-              <button
-                type="button"
-                // onClick={() => handleRemoveEseal(index)}
-                // disabled={eseals.length === 1} // Disable removal if it's the only input
-                className="remove-rfid"
-              >
-                Remove
-              </button>
-              {/* {esealStatuses[index] === "found" && ( */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#00ff6e"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-circle-check-big"
-              >
-                <path d="M21.801 10A10 10 0 1 1 17 3.335" />
-                <path d="m9 11 3 3L22 4" />
-              </svg>
-              {/* )} */}
-            </div>
-            {/* ))} */}
+            <label>Checkpoint</label>
+            {checkpoints.map((checkpoint, index) => (
+              <div key={index} className="pendingRfidLists">
+                <input
+                  type="text"
+                  value={checkpoint}
+                  onChange={(e) =>
+                    handleCheckpointChange(index, e.target.value)
+                  }
+                  required
+                  className={`input ${checkpointStatuses[index]}`} // Apply class based on status
+                  placeholder="Checkpoint ID"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => handleRemoveCheckpoint(index)}
+                  disabled={checkpoints.length === 1} // Disable removal if it's the only input
+                  className="remove-rfid"
+                >
+                  Remove
+                </button>
+
+                {checkpointStatuses[index] === "found" && (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#00ff6e"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-circle-check-big"
+                  >
+                    <path d="M21.801 10A10 10 0 1 1 17 3.335" />
+                    <path d="m9 11 3 3L22 4" />
+                  </svg>
+                )}
+              </div>
+            ))}
             <button
               type="button"
-              // onClick={handleAddEseal}
+              onClick={handleAddCheckpoint}
               className="submit-rfid"
             >
               Add More
@@ -449,17 +513,6 @@ const StartTripForm = () => {
           />
           <span>Trip Starting Date</span>
         </label>
-
-        <label>
-          <input
-            className="input"
-            type="text"
-            value={Checkpoints}
-            onChange={(e) => setCheckpoints(e.target.value)}
-          />
-          <span>Checkpoints</span>
-        </label>
-        <div className=""></div>
 
         <div className="twoGridRowCenter ">
           {/* Starting Point */}

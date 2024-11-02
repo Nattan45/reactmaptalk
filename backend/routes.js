@@ -55,4 +55,12 @@ module.exports = {
   // Route Endpoints __________________________________________
   // Route home route
   ROUTELIST: "/route",
+
+  // Checkpoint Endpoints __________________________________________
+  // Checkpoint home route
+  CPLIST: "/checkpoint",
+
+  // Warehouse Endpoints __________________________________________
+  // Warehouse home route
+  WAREHOUSELIST: "/warehouses",
 };

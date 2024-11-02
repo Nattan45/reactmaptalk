@@ -169,7 +169,7 @@ const MaptalksCheckpoint = () => {
 
       console.log("Removed last shape and updated RectangleData data");
     } else {
-      console.log("No shapes to remove");
+      addMessage("No shapes to remove", "error");
     }
   };
 
@@ -268,27 +268,39 @@ const MaptalksCheckpoint = () => {
   // Handle Save button click
   const handleSave = async () => {
     const rectanglesWithNames = rectangleData.map((data, index) => {
-      const rectangleName = rectangleNames[index] || `Rectangle ${index + 1}`; // Use custom name or fallback to default
+      const rectangleName = rectangleNames[index] || `Rectangle ${index + 1}`;
+
+      // Ensure LowerLeft and UpperRight have the correct structure
+      const formattedLowerLeft = {
+        longitude: data.lowerLeft[0],
+        latitude: data.lowerLeft[1],
+      };
+
+      const formattedUpperRight = {
+        longitude: data.upperRight[0],
+        latitude: data.upperRight[1],
+      };
 
       return {
-        RectangleName: rectangleName,
-        LowerLeft: data.lowerLeft, // Keep coordinates as an array
-        UpperRight: data.upperRight,
-        Area: data.area ? `${data.area.toFixed(2)} m²` : "No area data",
+        rectangleName: rectangleName,
+        lowerLeft: formattedLowerLeft,
+        upperRight: formattedUpperRight,
+        area: data.area ? `${data.area.toFixed(2)}` : "No area data",
       };
     });
 
     console.log(
       "All drawn rectangles with their saved names:",
-      // rectanglesWithNames,  // in array format
-      JSON.stringify(rectanglesWithNames, null, 2) // in json format
+      JSON.stringify(rectanglesWithNames, null, 2) // in JSON format
     );
 
     try {
-      await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/create/checkpoint`,
-        rectanglesWithNames
-      );
+      for (const rectangle of rectanglesWithNames) {
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/create/checkpoint`,
+          rectangle
+        );
+      }
 
       addMessage("Checkpoint created successfully!", "success");
     } catch (err) {

@@ -1,6 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import axios from "axios";
+import MessagePopup from "../messageComponent/MessagePopup";
+import { NavLink } from "react-router-dom";
 
 const UpcommingCheckpointsStatus = () => {
+  const [totalCheckpoints, setTotalCheckpoints] = useState(0); // State for total checkpoints
+
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const Cp = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/checkpoints`
+        );
+
+        const totalCp = Cp.data.length;
+
+        setTotalCheckpoints(totalCp);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="">
       {/* actives Checkpoints */}
@@ -27,11 +73,15 @@ const UpcommingCheckpointsStatus = () => {
             </p>
             <p className="Stastics-text-title textcenter">Checkpoints</p>
 
-            <p className="Stastics-text-body textcenter">10</p>
+            <p className="Stastics-text-body textcenter">{totalCheckpoints}</p>
           </div>
-          <button className="Stastics-card-button">More info</button>
+          <NavLink exact="true" to="/CheckpointsListPage">
+            <button className="Stastics-card-button">Manage</button>
+          </NavLink>
         </div>
       </div>
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };
