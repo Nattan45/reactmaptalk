@@ -87,7 +87,7 @@ const ActiveVehicles = () => {
       <h2 className="tableDataHeaderTitle activeColor">
         <div className="titleAndRefresh">
           <div className="titleLeft">
-            {activeVehicles.length} Active Vehicles Status
+            {activeVehicles.length} Deployed Vehicles Status
           </div>
           <div className="refreshRight">
             <svg
