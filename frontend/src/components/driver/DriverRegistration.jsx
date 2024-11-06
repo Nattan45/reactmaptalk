@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Select, MenuItem, Box } from "@mui/material";
 import { validateFormData } from "./driverValidation";
-import AllDriversList from "../activeStatusList/drivers/AllDriversList";
 import MessagePopup from "../messageComponent/MessagePopup";
+import ActiveDrivers from "../activeStatusList/drivers/ActiveDrivers";
 
 const DriverRegistration = () => {
   const [driverId, setDriverId] = useState("");
@@ -231,7 +231,7 @@ const DriverRegistration = () => {
         </button>
       </form>
 
-      <AllDriversList />
+      <ActiveDrivers />
 
       <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>

@@ -826,7 +826,7 @@ app.get("/api/checkpoints", async (req, res) => {
 app.post("/api/create/checkpoint", async (req, res) => {
   newCp = req.body;
 
-  console.log(newCp);
+  // console.log(newCp);
   try {
     const response = await axios.post(
       `${SPRING_ENDPOINT}${routes.CPLIST}`,

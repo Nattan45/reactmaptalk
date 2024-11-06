@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
-import InactiveDrivers from "../activeStatusList/drivers/InactiveDrivers";
 import axios from "axios";
 import MessagePopup from "../messageComponent/MessagePopup";
 import { validatePlateNumber, validateTextFields } from "./vehicleValidation";
+import ActiveDrivers from "../activeStatusList/drivers/ActiveDrivers";
 
 const VehicleRegistration = () => {
   const [vehicleName, setVehicleName] = useState("");
@@ -224,7 +224,7 @@ const VehicleRegistration = () => {
           Register
         </button>
       </form>
-      <InactiveDrivers />
+      <ActiveDrivers />
 
       <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
