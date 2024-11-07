@@ -1,6 +1,10 @@
-import problemData from "../../data/Problem";
+// import problemData from "../../data/Problem";
 
 const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
+  console.log("---vehicleId-------", vehicleId);
+
+  // console.log("---vehicleData-------", vehicleData);
+
   // Check for vapd vehicleData and vehicleId
   if (!vehicleData || vehicleData.length === 0 || !vehicleId) {
     return (
@@ -29,12 +33,11 @@ const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
   }
 
   // Find the selected vehicle
-  const selectedVehicle = vehicleData.find(
-    (vehicle) => vehicle.id === vehicleId
-  );
+  const selectedTrip = vehicleData.find((vehicle) => vehicle.id === vehicleId);
+  console.log("---selectedTrip-------", selectedTrip);
 
   // If the selected vehicle is not found, display a message
-  if (!selectedVehicle) {
+  if (!selectedTrip) {
     return (
       <div className="vehicleDetails vehicle-card" style={{ color: "red" }}>
         <div className="trip-id">
@@ -60,10 +63,10 @@ const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
     );
   }
 
-  // Helper function to find problem details by problem ID
-  const findProblemDetails = (problemId) => {
-    return problemData.find((problem) => problem.id === problemId);
-  };
+  // // Helper function to find problem details by problem ID
+  // const findProblemDetails = (problemId) => {
+  //   return problemData.find((problem) => problem.id === problemId);
+  // };
   // Render the details of the selected vehicle
   return (
     <div className="vehicle-card">
@@ -71,7 +74,7 @@ const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
         <p>
           Trip ID:{" "}
           <span className="darktext">
-            {selectedVehicle.tripId || "Not available"}
+            {selectedTrip.tripTicketId || "Not available"}
           </span>
         </p>
       </div>
@@ -80,36 +83,36 @@ const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
         <p>
           Driver ID:{" "}
           <span className="darktext">
-            {Array.isArray(selectedVehicle.driver) &&
-              selectedVehicle.driver.map((driver, index) => (
-                <p key={index}>{driver.driverId || "Not available"}</p>
-              ))}
+            {selectedTrip.driver ? selectedTrip.driver.driverId : "No Driver"}
           </span>
         </p>
         <p>
           Plate Number:{" "}
           <span className="darktext">
-            {selectedVehicle.plateNumber || "Not available"}
+            {selectedTrip.vehicle
+              ? selectedTrip.vehicle.plateNumber
+              : "No Driver"}
           </span>
         </p>
         <p>
           Brand:{" "}
           <span className="darktext">
-            {selectedVehicle.brand || "Not available"}
+            {selectedTrip.vehicle ? selectedTrip.vehicle.brand : "No Driver"}
           </span>
         </p>
         <p>
           Model:{" "}
           <span className="darktext">
-            {selectedVehicle.model || "Not available"}
+            {selectedTrip.vehicle ? selectedTrip.vehicle.model : "No Driver"}
           </span>
         </p>
+        <br />
         <p>
           GPS:
-          {Array.isArray(selectedVehicle.eSeal) &&
-          selectedVehicle.eSeal.length > 0 ? (
+          {Array.isArray(selectedTrip.electronicSealIds) &&
+          selectedTrip.electronicSealIds.length > 0 ? (
             <span style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
-              {selectedVehicle.eSeal.map((eSealItem) => (
+              {selectedTrip.electronicSealIds.map((eSealItem) => (
                 <button
                   key={eSealItem.id}
                   style={{
@@ -121,7 +124,55 @@ const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
                     color: "#333", // Optional: text color
                   }}
                 >
-                  {eSealItem.gpsId}
+                  {eSealItem.tagName}
+                </button>
+              ))}
+            </span>
+          ) : (
+            "Not available"
+          )}
+        </p>
+        <br />
+        <p>
+          GPS Mounted On:{" "}
+          <span className="darktext">
+            {selectedTrip.gpsMountedDate
+              ? new Date(selectedTrip.gpsMountedDate)
+                  .toISOString()
+                  .split("T")[0]
+              : "Not available"}
+          </span>
+        </p>
+        <p>
+          Trip Starting Date:{" "}
+          <span className="darktext">
+            {selectedTrip.tripStartingDate
+              ? new Date(selectedTrip.tripStartingDate)
+                  .toISOString()
+                  .split("T")[0]
+              : "Not available"}
+          </span>
+        </p>
+        <br />
+
+        <p>
+          Checkpoints:{" "}
+          {Array.isArray(selectedTrip.checkpointIds) &&
+          selectedTrip.checkpointIds.length > 0 ? (
+            <span style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+              {selectedTrip.checkpointIds.map((cp) => (
+                <button
+                  key={cp.id}
+                  style={{
+                    padding: "5px 10px",
+                    border: "1px solid #ccc",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    backgroundColor: "#f0f0f0", // Optional: background color
+                    color: "#333", // Optional: text color
+                  }}
+                >
+                  {cp.rectangleName}
                 </button>
               ))}
             </span>
@@ -130,29 +181,14 @@ const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
           )}
         </p>
         <p>
-          GPS Mounted Date:{" "}
+          From: &nbsp;
           <span className="darktext">
-            {selectedVehicle.gpsMountedDate || "Not available"}
+            {selectedTrip.destination || "Not available"}
           </span>
-        </p>
-        <p>
-          Trip Starting Date:{" "}
+          <br />
+          To: &nbsp;
           <span className="darktext">
-            {selectedVehicle.tripStartingDate || "Not available"}
-          </span>
-        </p>
-        <p>
-          Checkpoints:{" "}
-          <span className="darktext">
-            {selectedVehicle.Checkpoints
-              ? selectedVehicle.Checkpoints.join(", ")
-              : "Not available"}
-          </span>
-        </p>
-        <p>
-          Trip:{" "}
-          <span className="darktext">
-            {selectedVehicle.fromto || "Not available"}
+            {selectedTrip.destination || "Not available"}
           </span>
         </p>
       </div>
@@ -161,36 +197,58 @@ const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
         <p>
           Signal:{" "}
           <span className="darktext">
-            {selectedVehicle.Signal || "Not available"}
+            {selectedTrip.Signal || "Not available"}
           </span>
         </p>
         <p>
           Warnings:{" "}
-          <span className="darktext">
-            {selectedVehicle.Warnings || "Not available"}
-          </span>
+          {Array.isArray(selectedTrip.warnings) &&
+          selectedTrip.warnings.length > 0 ? (
+            <span style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+              {selectedTrip.warnings.map((warning) => (
+                <button
+                  key={warning.id}
+                  style={{
+                    padding: "5px 10px",
+                    border: "1px solid #ccc",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    backgroundColor: "#f0f0f0", // Optional: background color
+                    color: "#333", // Optional: text color
+                  }}
+                >
+                  {warning.message}
+                </button>
+              ))}
+            </span>
+          ) : (
+            "Not available"
+          )}
         </p>
         <p>
           Problems:{" "}
-          <span className="darktext">
-            {Array.isArray(selectedVehicle.Problems) &&
-            selectedVehicle.Problems.length > 0 ? (
-              selectedVehicle.Problems.map((problem) => {
-                const problemDetails = findProblemDetails(problem.id);
-                return (
-                  <p key={problem.id}>
-                    {problemDetails ? (
-                      <span>{problemDetails.Details}</span>
-                    ) : (
-                      <p>No problem.</p>
-                    )}
-                  </p>
-                );
-              })
-            ) : (
-              <p>No problems.</p>
-            )}
-          </span>
+          {Array.isArray(selectedTrip.problems) &&
+          selectedTrip.problems.length > 0 ? (
+            <span style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+              {selectedTrip.problems.map((problem) => (
+                <button
+                  key={problem.id}
+                  style={{
+                    padding: "5px 10px",
+                    border: "1px solid #ccc",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    backgroundColor: "#f0f0f0", // Optional: background color
+                    color: "#333", // Optional: text color
+                  }}
+                >
+                  {problem.description}
+                </button>
+              ))}
+            </span>
+          ) : (
+            "Not available"
+          )}
         </p>
       </div>
     </div>

@@ -924,27 +924,28 @@ app.get("/api/trip-detail/Objects", async (req, res) => {
   }
 });
 
+// Create a Trip
 app.post("/api/create/Trip/FromId", async (req, res) => {
   tripData = req.body;
 
   console.log(tripData);
 
-  // try {
-  //   const response = await axios.post(
-  //     `${SPRING_ENDPOINT}${routes.TRIPLIST}`,
-  //     tripData
-  //   );
+  try {
+    const response = await axios.post(
+      `${SPRING_ENDPOINT}${routes.TRIPLIST}`,
+      tripData
+    );
 
-  //   res.status(response.status).json(response.data);
-  // } catch (error) {
-  //   if (error.response) {
-  //     const errorMessage = error.response.data.errorMessage || "Unknown error";
-  //     res.status(error.response.status).json({ errorMessage });
-  //   } else {
-  //     console.log("Error:", error.message);
-  //     res.status(500).json({ message: "Internal Server Error" });
-  //   }
-  // }
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
 });
 
 // Start the server
