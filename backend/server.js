@@ -924,6 +924,26 @@ app.get("/api/trip-detail/Objects", async (req, res) => {
   }
 });
 
+// get a Trips by its ID
+app.get("/api/trip-detail/Objects/:id", async (req, res) => {
+  tripId = req.params.id;
+  try {
+    const response = await axios.get(
+      `${SPRING_ENDPOINT}${routes.TRIPLIST}/${tripId}${routes.TRIPLISTDATAID}`
+    );
+
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
 // Create a Trip
 app.post("/api/create/Trip/FromId", async (req, res) => {
   tripData = req.body;

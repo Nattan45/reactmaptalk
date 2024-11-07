@@ -1,12 +1,10 @@
-// import problemData from "../../data/Problem";
-
-const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
-  console.log("---vehicleId-------", vehicleId);
+const ActiveVehicleDetails = ({ tripId, tripData }) => {
+  console.log("---vehicleId-------", tripId);
 
   // console.log("---vehicleData-------", vehicleData);
 
   // Check for vapd vehicleData and vehicleId
-  if (!vehicleData || vehicleData.length === 0 || !vehicleId) {
+  if (!tripData || tripData.length === 0 || !tripId) {
     return (
       <div className="vehicleDetails vehicle-card" style={{ color: "red" }}>
         <div className="trip-id">
@@ -33,7 +31,7 @@ const ActiveVehicleDetails = ({ vehicleId, vehicleData }) => {
   }
 
   // Find the selected vehicle
-  const selectedTrip = vehicleData.find((vehicle) => vehicle.id === vehicleId);
+  const selectedTrip = tripData.find((trip) => trip.id === tripId);
   console.log("---selectedTrip-------", selectedTrip);
 
   // If the selected vehicle is not found, display a message

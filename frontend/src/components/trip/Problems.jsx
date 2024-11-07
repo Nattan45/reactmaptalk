@@ -1,23 +1,40 @@
 import React, { useState } from "react";
 
-import Problem from "../../data/Problem";
 import { filterDriveridPlatenumberTripId } from "./filterDriveridPlatenumberTripId";
 import { Button } from "@mui/material";
+import axios from "axios";
 
 const Problems = () => {
   const [filterText, setFilterText] = useState("");
   const [selectedProblem, setSelectedProblem] = useState(null);
-  const [ProblemList] = useState(Problem); // No need for setProblemList
 
-  // Handle Problem selection and clear the filter text
-  const handleSelectProblem = (problem) => {
-    setSelectedProblem(problem); // Set the selected Problem
-    setFilterText(""); // Clear filter text after selection
+  // Fetch data based on the selected problem ID
+  const fetchData = async (problemId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/trip-detail/Objects/${problemId}`
+      );
+      setSelectedProblem(response.data); // Set the selected problem data
+      setFilterText(""); // Clear filter text after selection
+    } catch (err) {
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage || "Error fetching problem details";
+        alert(errorMessage);
+      } else {
+        alert("Network error: Unable to reach the server.");
+      }
+    }
   };
 
-  // Filter Problems based on the input
+  // Handle problem selection
+  const handleSelectProblem = (problemId) => {
+    fetchData(problemId); // Fetch and display selected problem details
+  };
+
+  // Filter problems based on the input
   const filteredProblems = filterDriveridPlatenumberTripId(
-    ProblemList,
+    selectedProblem,
     filterText
   );
 

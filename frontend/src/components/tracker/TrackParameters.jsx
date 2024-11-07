@@ -5,7 +5,7 @@ import axios from "axios";
 import MessagePopup from "../messageComponent/MessagePopup";
 // import ActiveVehicle from "../../data/ActiveVehicle";
 
-const TrackParameters = ({ onVehicleSelect }) => {
+const TrackParameters = ({ onTripSelect }) => {
   const [tripData, setTripData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(5); // Number of items per page
@@ -99,7 +99,7 @@ const TrackParameters = ({ onVehicleSelect }) => {
 
   // existing handleViewClick function
   const handleViewClick = (trip) => {
-    onVehicleSelect(trip.id, tripData);
+    onTripSelect(trip.id, tripData);
   };
 
   return (

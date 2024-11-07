@@ -68,4 +68,5 @@ module.exports = {
   // Trip home route
   TRIPLIST: "/trip",
   TRIPLISTDATA: "/trip/list-data",
+  TRIPLISTDATAID: "/list-data",
 };

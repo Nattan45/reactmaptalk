@@ -12,14 +12,14 @@ const Tracker = () => {
   const markerLayerRef = useRef(null); // Ref for marker layer
   const [locationDenied, setLocationDenied] = useState(false); // To handle location denied
 
-  // get the selected vehicle from TrackParameters
-  const [selectedVehicleId, setSelectedVehicleId] = useState(null);
-  const [vehicleData, setVehicleData] = useState([]);
+  // get the selected Trip from Trip-Parameters
+  const [selectedTripId, setSelectedTripId] = useState(null);
+  const [tripData, setTripData] = useState([]);
 
   // Function to handle vehicle selection from TrackParameters
-  const handleVehicleSelect = (id, data) => {
-    setSelectedVehicleId(id); // Set the selected vehicle ID
-    setVehicleData(data); // Pass the full vehicle data
+  const handleTripSelect = (id, data) => {
+    setSelectedTripId(id); // Set the selected vehicle ID
+    setTripData(data); // Pass the full vehicle data
   };
 
   const initializeMap = (center, zoomLevel = 10) => {
@@ -122,15 +122,12 @@ const Tracker = () => {
         <ActiveTripStatus />
         <br />
         <TrackParameters
-          onVehicleSelect={handleVehicleSelect} // Keep only the vehicle selection handler
+          onTripSelect={handleTripSelect} // Keep only the vehicle selection handler
         />
       </div>
       <div className="viewTrackData">
         {/* Pass selectedVehicleId and vehicleData as props */}
-        <ActiveVehicleDetails
-          vehicleId={selectedVehicleId}
-          vehicleData={vehicleData}
-        />
+        <ActiveVehicleDetails tripId={selectedTripId} tripData={tripData} />
         <div className="viewTrackerDataOnMap">
           {locationDenied && (
             <div
