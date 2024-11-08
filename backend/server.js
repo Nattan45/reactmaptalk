@@ -3,6 +3,11 @@ const express = require("express"); // npm i express
 const cors = require("cors"); // npm i cors
 const axios = require("axios"); // npm i axios
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose"); // npm install mongoose
+const MongoRoutes = require("./models/MongoRoutes"); // Import Mongo-Route model
+const MongoCheckpoint = require("./models/MongoCheckpoint"); // Import Mongo-Checkpoint model
+const MongoWarehouse = require("./models/MongoWarehouse"); // Import Mongo-Warehouse model
+const MongoPin = require("./models/MongoPin"); // Import Mongo-Pin model
 
 const routes = require("./routes"); // Import routes
 
@@ -28,6 +33,18 @@ app.use(bodyParser.json());
 const PORT = process.env.Node_PORT;
 // Get Spring Boot endpoint from the .env file
 const SPRING_ENDPOINT = process.env.SPRING_ENDPOINT;
+
+//______________________________________________________________________________________________________________MONGO
+// Connect to MongoDB
+// The connection Name is MongoDbUI
+mongoose
+  .connect("mongodb://localhost:27017/VehicleTracking")
+  .then(() => {
+    console.log("MongoDB connected");
+  })
+  .catch((err) => {
+    console.error("Error connecting to MongoDB:", err);
+  });
 
 // User Account Related Endpoints ________________________________________________
 // get all users list
@@ -965,6 +982,52 @@ app.post("/api/create/Trip/FromId", async (req, res) => {
       console.log("Error:", error.message);
       res.status(500).json({ message: "Internal Server Error" });
     }
+  }
+});
+
+//______________________________________________________________________________________________________________MONGO
+
+// Define the get routes From MONGO-DB
+app.get("/api/get/mongo/getRoutes", async (req, res) => {
+  try {
+    // Fetch all routes from the database
+    const routes = await MongoRoutes.find(); // You can add query filters here if needed
+
+    if (routes.length === 0) {
+      return res.status(404).json({ message: "No routes found." });
+    }
+
+    res.status(200).json({ routes });
+  } catch (error) {
+    console.error("Error fetching routes:", error);
+    res.status(500).json({ message: "Error fetching routes." });
+  }
+});
+
+// Define the create route To Mongo
+app.post("/api/create/mongo/createRoute", async (req, res) => {
+  try {
+    const { routeName, routeCoordinates, totalDistanceKm } = req.body;
+
+    // Validate incoming data
+    if (!routeName || !routeCoordinates || !totalDistanceKm) {
+      return res
+        .status(400)
+        .json({ message: "Name, coordinates, and distance are required." });
+    }
+
+    // Create and save the route
+    const route = new MongoRoutes({
+      routeName,
+      routeCoordinates,
+      totalDistanceKm,
+    });
+    await route.save();
+
+    res.status(201).json({ message: "Route created successfully!", route });
+  } catch (error) {
+    console.error("Error creating route:", error);
+    res.status(500).json({ message: "Error creating route." });
   }
 });
 
