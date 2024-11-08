@@ -63,4 +63,10 @@ module.exports = {
   // Warehouse Endpoints __________________________________________
   // Warehouse home route
   WAREHOUSELIST: "/warehouses",
+
+  // Trip Endpoints __________________________________________
+  // Trip home route
+  TRIPLIST: "/trip",
+  TRIPLISTDATA: "/trip/list-data",
+  TRIPLISTDATAID: "/list-data",
 };

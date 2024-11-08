@@ -247,7 +247,7 @@ const StartTripForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const validEseals = storedEseal.filter(
@@ -259,21 +259,40 @@ const StartTripForm = () => {
     );
 
     const vehicleData = {
-      vehicleName: vehicleDetails[0]?.id || "",
+      userId: 1,
+      vehicleId: vehicleDetails[0]?.id || "",
       driverId: driverDetails[0]?.id || "",
-      roadNumber: routeDetails[0]?.id || "",
+      routeId: routeDetails[0]?.id || "",
 
       gpsMountedDate,
       tripStartingDate,
 
-      eSealList: validEseals,
-      checkpoints: validCheckpoints,
+      electronicSealIds: validEseals,
+      checkpointIds: validCheckpoints,
 
       startingPoint,
       destination,
     };
 
-    console.log(JSON.stringify(vehicleData, null, 2));
+    // console.log(JSON.stringify(vehicleData, null, 2));
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/create/Trip/FromId`,
+        vehicleData
+      );
+
+      addMessage("Trip created successfully!", "success");
+    } catch (err) {
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage ||
+          err.response.data.message ||
+          "An error occurred: 500";
+        addMessage(errorMessage, "error");
+      } else {
+        addMessage("Network error: Unable to reach the server.", "error");
+      }
+    }
   };
 
   return (

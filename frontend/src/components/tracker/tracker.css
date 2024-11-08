@@ -239,7 +239,7 @@
   color: red;
 }
 .warningColor {
-  color: rgb(255, 119, 0);
+  color: #ff7700;
 }
 .problem-details-Container {
   display: grid;
@@ -273,4 +273,15 @@
   gap: 10px;
   border-left: 1px solid black;
   padding-left: 15px;
+}
+
+.problem-icon-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.problem-count {
+  font-weight: bold;
+  margin-right: 4px;
 }

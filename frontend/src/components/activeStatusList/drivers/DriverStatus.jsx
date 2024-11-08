@@ -26,11 +26,13 @@ const DriverStatus = () => {
   return (
     <div className="gridJustifyCenter">
       <div className="flexRowCenter">
-        <ActiveDrivers />
+        <InactiveDrivers />
+
         <div className="marginLeft">
-          <InactiveDrivers />
+          <ActiveDrivers />
         </div>
       </div>
+
       <div className="fitWidth">
         <UpdateDriverDetails />
       </div>

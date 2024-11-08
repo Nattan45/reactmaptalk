@@ -4,17 +4,17 @@ import { useParams } from "react-router-dom";
 import Header from "../components/header/Header";
 import Sidebar from "../components/sidebar/Sidebar";
 import Footer from "../components/footer/Footer";
-import ProblemDetailsTable from "../components/trip/ProblemDetailsTable";
+import WarningDetailsTable from "../components/trip/WarningDetailsTable";
 import axios from "axios";
 
-const ProblemDetails = () => {
+const WarningDetails = () => {
   const { id } = useParams(); // Get the id from the URL
   const [trip, setTrip] = useState(null); // State to store trip data
   const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
     // Fetch data based on the id param
-    const fetchProblemDetails = async () => {
+    const fetchWarningDetails = async () => {
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/trip-detail/Objects/${id}`
@@ -27,15 +27,15 @@ const ProblemDetails = () => {
       }
     };
 
-    fetchProblemDetails();
+    fetchWarningDetails();
   }, [id]);
 
   if (loading) {
     return <p>Loading...</p>;
   }
 
-  if (!trip || !trip.problems) {
-    return <p>No problem found.</p>;
+  if (!trip || !trip.warnings) {
+    return <p>No warning found.</p>;
   }
 
   return (
@@ -55,8 +55,8 @@ const ProblemDetails = () => {
         {/* All Contents */}
         <div className="contentsContainer gridCenter">
           <div className="detailProblem-container">
-            <h2 className="title textcenter marginTB redColor borderBottom">
-              Problem Details
+            <h2 className="title textcenter marginTB warningColor borderBottom">
+              Warning Details
             </h2>
             <div className="problem-details">
               <p>
@@ -88,11 +88,11 @@ const ProblemDetails = () => {
               </p>
             </div>
             &nbsp;
-            <h4 className="redColor theProblem">
+            <h4 className="warningColor theProblem">
               <strong>Details:</strong>
-              {trip.problems && trip.problems.length > 0
-                ? trip.problems.map((problem) => problem.description).join(", ")
-                : "No problems found"}
+              {trip.warnings && trip.warnings.length > 0
+                ? trip.warnings.map((warning) => warning.message).join(", ")
+                : "No warning found"}
             </h4>
             <div className="eSeal-details">
               <h4 className="textcenter marginTB">
@@ -121,7 +121,7 @@ const ProblemDetails = () => {
               </div>
             </div>
           </div>
-          <ProblemDetailsTable />
+          <WarningDetailsTable />
         </div>
       </div>
 
@@ -133,4 +133,4 @@ const ProblemDetails = () => {
   );
 };
 
-export default ProblemDetails;
+export default WarningDetails;

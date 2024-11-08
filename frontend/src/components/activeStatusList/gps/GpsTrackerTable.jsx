@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 import Paginator from "../../paginator/Paginator";
 import axios from "axios";
@@ -25,27 +25,26 @@ const GpsTrackerTable = () => {
       prevMessages.filter((message) => message.id !== id)
     );
   };
+  const fetchData = useCallback(async () => {
+    try {
+      const eseal = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/EsealAllDatalist`
+      );
+      setDeviceData(eseal.data);
+    } catch (err) {
+      if (err.response) {
+        const errorMessage =
+          err.response.data.errorMessage ||
+          err.response.data.message ||
+          "An error occurred: 500";
+        addMessage(errorMessage, "error");
+      } else {
+        addMessage("Network error: Unable to reach the server.", "error");
+      }
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const eseal = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/EsealAllDatalist`
-        );
-        setDeviceData(eseal.data);
-      } catch (err) {
-        if (err.response) {
-          const errorMessage =
-            err.response.data.errorMessage ||
-            err.response.data.message ||
-            "An error occurred: 500";
-          addMessage(errorMessage, "error");
-        } else {
-          addMessage("Network error: Unable to reach the server.", "error");
-        }
-      }
-    };
-
     fetchData(); // Call the fetch function
   }, []);
 
@@ -201,12 +200,13 @@ const GpsTrackerTable = () => {
                   </ThemeProvider>
                 </td>
                 <td>
-                  {device.electronicSealStatus === "LOCKED" &&
+                  {/* {device.electronicSealStatus === "LOCKED" &&
                   displayPlateNumber(device.vehicleId) ? (
                     <span>{plateNumber}</span> // and display the vehicleName here
                   ) : (
                     ""
-                  )}
+                  )} */}
+                  Bug - "infinite calling"
                 </td>
                 <td>{device.speed}</td>
                 <td>{device.InstallationDate}</td>
@@ -229,7 +229,7 @@ const GpsTrackerTable = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="4">No data available</td>
+              <td colSpan="9">No data available</td>
             </tr>
           )}
         </tbody>

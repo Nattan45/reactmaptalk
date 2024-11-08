@@ -1,38 +1,71 @@
 import React, { useEffect, useState } from "react";
 
 import Paginator from "../paginator/Paginator";
-import ActiveVehicle from "../../data/ActiveVehicle";
+import axios from "axios";
+import MessagePopup from "../messageComponent/MessagePopup";
+// import ActiveVehicle from "../../data/ActiveVehicle";
 
-const TrackParameters = ({ onVehicleSelect }) => {
-  const [vehicleData, setVehicleData] = useState([]); // State for the full data
+const TrackParameters = ({ onTripSelect }) => {
+  const [tripData, setTripData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(5); // Number of items per page
   const [filterText, setFilterText] = useState(""); // State for filtering plate numbers
-  // const [selectedVehicleId, setSelectedVehicleId] = useState(null); // Track selected vehicle ID
 
-  // Simulating fetching data from a database (replace this with an actual API call)
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      setVehicleData(ActiveVehicle); // Load the dummy data (all active vehicles to be tracked)
+      try {
+        const ActiveVehicle = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/trip-detail/Objects`
+        );
+        setTripData(ActiveVehicle.data);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
     };
-    fetchData(); // Call the fetch function
+
+    fetchData();
   }, []);
 
-  const allVehicle = vehicleData;
+  const allVehicle = tripData;
 
   // Apply filter based on filterText (name, ID, phone number, or email)
-  const filteredVehicles = allVehicle.filter((vehicle) => {
-    const tripId = vehicle.tripId ? vehicle.tripId.toLowerCase() : "";
-    const driverId = vehicle.driverId ? vehicle.driverId.toLowerCase() : "";
-    const platenumber = vehicle.plateNumber
-      ? vehicle.plateNumber.toLowerCase()
+  const filteredVehicles = allVehicle.filter((trip) => {
+    // const tripId = vehicle.tripId ? vehicle.tripId.toLowerCase() : "";
+    const tripId = trip.tripTicketId ? trip.tripTicketId.toLowerCase() : "";
+    const driverId = trip.driver ? trip.driver.driverId.toLowerCase() : "";
+    const platenumber = trip.vehicle
+      ? trip.vehicle.plateNumber.toLowerCase()
       : "";
-    const brand = vehicle.brand ? vehicle.brand.toLowerCase() : "";
-    const model = vehicle.model ? vehicle.model.toLowerCase() : "";
+    const brand = trip.vehicle ? trip.vehicle.brand.toLowerCase() : "";
+    const model = trip.vehicle ? trip.vehicle.model.toLowerCase() : "";
 
-    // Check if eSeal is an array, and map through it to extract gpsIds
-    const eSeal = Array.isArray(vehicle.eSeal)
-      ? vehicle.eSeal.map((eSealItem) => eSealItem.gpsId.toLowerCase())
+    // Check if eSeal is an array, and map through it to extract tagNames
+    const eSeal = Array.isArray(trip.electronicSealIds)
+      ? trip.electronicSealIds.map((eSealItem) =>
+          eSealItem.tagName.toLowerCase()
+        )
       : []; // Default to an empty array if eSeal is not an array
 
     const filter = filterText.toLowerCase();
@@ -43,7 +76,7 @@ const TrackParameters = ({ onVehicleSelect }) => {
       platenumber.includes(filter) ||
       brand.includes(filter) ||
       model.includes(filter) ||
-      eSeal.some((gpsId) => gpsId.includes(filter)) // Check if any gpsId matches
+      eSeal.some((tagName) => tagName.includes(filter)) // Check if any tagName matches
     );
   });
 
@@ -65,15 +98,13 @@ const TrackParameters = ({ onVehicleSelect }) => {
   // Handle view click to select the vehicle
 
   // existing handleViewClick function
-  const handleViewClick = (vehicle) => {
-    onVehicleSelect(vehicle.id, vehicleData);
+  const handleViewClick = (trip) => {
+    onTripSelect(trip.id, tripData);
   };
 
   return (
     <div className="trackParametersContainer">
-      <h2 className="tableDataHeaderTitle">
-        <span></span> Live Tracking Vehicles
-      </h2>
+      <h2 className="tableDataHeaderTitle">Live Tracking Vehicles</h2>
 
       <div className="filters">
         <input
@@ -99,20 +130,23 @@ const TrackParameters = ({ onVehicleSelect }) => {
         </thead>
         <tbody>
           {currentItems.length > 0
-            ? currentItems.map((vehicle) => (
-                <tr key={vehicle.id}>
-                  <td>{vehicle.tripId}</td>
+            ? currentItems.map((trip) => (
+                <tr key={trip.id}>
+                  {/* Map tripTicketId instead of tripId */}
+                  <td>{trip.tripTicketId}</td>
+
+                  {/* Update driver data display */}
+                  <td>{trip.driver ? trip.driver.driverId : "No Driver"}</td>
+
+                  {/* Map vehicle data for plateNumber, brand, and model */}
+                  <td>{trip.vehicle ? trip.vehicle.plateNumber : "N/A"}</td>
+                  <td>{trip.vehicle ? trip.vehicle.brand : "N/A"}</td>
+                  <td>{trip.vehicle ? trip.vehicle.model : "N/A"}</td>
+
+                  {/* Map eSeal GPS data */}
                   <td>
-                    {vehicle.driver.map((driver, index) => (
-                      <p key={index}>{driver.driverId}</p>
-                    ))}
-                  </td>
-                  <td>{vehicle.plateNumber}</td>
-                  <td>{vehicle.brand}</td>
-                  <td>{vehicle.model}</td>
-                  <td>
-                    {Array.isArray(vehicle.eSeal) &&
-                    vehicle.eSeal.length > 0 ? (
+                    {Array.isArray(trip.electronicSealIds) &&
+                    trip.electronicSealIds.length > 0 ? (
                       <div
                         style={{
                           display: "flex",
@@ -121,7 +155,7 @@ const TrackParameters = ({ onVehicleSelect }) => {
                         }}
                       >
                         {/* Flex container */}
-                        {vehicle.eSeal.map((eSealItem) => (
+                        {trip.electronicSealIds.map((eSealItem) => (
                           <button
                             key={eSealItem.id}
                             style={{
@@ -131,12 +165,12 @@ const TrackParameters = ({ onVehicleSelect }) => {
                               cursor: "pointer",
                             }}
                           >
-                            {eSealItem.gpsId}
+                            {eSealItem.tagName}
                           </button>
                         ))}
                       </div>
                     ) : (
-                      <div>No GPS data</div> // Optional: Message if no eSeal data
+                      <div>No Tracker devices</div> // Optional: Message if no eSeal data
                     )}
                   </td>
                   <td>
@@ -151,7 +185,7 @@ const TrackParameters = ({ onVehicleSelect }) => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       className="lucide lucide-eye"
-                      onClick={() => handleViewClick(vehicle)}
+                      onClick={() => handleViewClick(trip)}
                     >
                       <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
                       <circle cx="12" cy="12" r="3" />
@@ -175,6 +209,7 @@ const TrackParameters = ({ onVehicleSelect }) => {
         vehicleId={selectedVehicleId}
         vehicleData={vehicleData}
       /> */}
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

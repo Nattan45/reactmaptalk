@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import Paginator from "../paginator/Paginator";
-import Vehicles from "../../data/ActiveVehicle"; // Importing dummy data
+import MessagePopup from "../messageComponent/MessagePopup";
+import axios from "axios";
 
 const OngoingTrip = () => {
   const [vehicleData, setVehicleData] = useState([]); // State for the full data
@@ -11,12 +12,41 @@ const OngoingTrip = () => {
   const [showGpsList, setShowGpsList] = useState(false); // State for showing/hiding GPS list
   const navigate = useNavigate(); // For redirecting
 
-  // Simulating fetching data from a database (replace this with an actual API call)
+  // Message Toast
+  const [messages, setMessages] = useState([]);
+  // Add Message
+  const addMessage = (text, type) => {
+    const id = Date.now(); // Unique ID based on timestamp
+    setMessages((prevMessages) => [...prevMessages, { id, text, type }]);
+  };
+  // Remove Message
+  const removeMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== id)
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      setVehicleData(Vehicles); // Load the dummy data into state
+      try {
+        const tripDatas = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/trip-detail/Objects`
+        );
+        setVehicleData(tripDatas.data);
+      } catch (err) {
+        if (err.response) {
+          const errorMessage =
+            err.response.data.errorMessage ||
+            err.response.data.message ||
+            "An error occurred: 500";
+          addMessage(errorMessage, "error");
+        } else {
+          addMessage("Network error: Unable to reach the server.", "error");
+        }
+      }
     };
-    fetchData(); // Call the fetch function
+
+    fetchData();
   }, []);
 
   // Calculate the current items to display on the current page
@@ -40,6 +70,11 @@ const OngoingTrip = () => {
   // Handle Problem selection and redirect to the details page
   const handleSelectProblem = (id) => {
     navigate(`/problem/${id}`); // Redirect to ProblemDetails page
+  };
+
+  // Handle Warning selection and redirect to the details page
+  const handleSelectWarning = (id) => {
+    navigate(`/warning/${id}`); // Redirect to WarningDetails page
   };
 
   return (
@@ -68,29 +103,24 @@ const OngoingTrip = () => {
         </thead>
         <tbody>
           {currentItems.length > 0 ? (
-            currentItems.map((aVehicle) => (
-              <tr key={aVehicle.id}>
-                <td>{aVehicle.tripId}</td>
-                <td>{aVehicle.plateNumber}</td>
-                <td>{aVehicle.brand}</td>
-                <td>{aVehicle.model}</td>
+            currentItems.map((trip) => (
+              <tr key={trip.id}>
+                <td>{trip.tripTicketId}</td>
+                <td>{trip.vehicle ? trip.vehicle.plateNumber : "N/A"}</td>
+                <td>{trip.vehicle ? trip.vehicle.brand : "N/A"}</td>
+                <td>{trip.vehicle ? trip.vehicle.model : "N/A"}</td>
                 <td>
-                  {aVehicle.driver.map((driver, index) => (
-                    <p key={index}>{driver.driverName}</p>
-                  ))}
+                  {trip.driver ? trip.driver.firstName : "N/A"}&nbsp;-&nbsp;
+                  {trip.driver ? trip.driver.lastName : "N/A"}
                 </td>
-                <td>
-                  {aVehicle.driver.map((driver, index) => (
-                    <p key={index}>{driver.phoneNumber}</p>
-                  ))}
-                </td>
+                <td>{trip.driver ? trip.driver.phoneNumber : "N/A"}</td>
                 {/* Number of GPS trackers */}
                 <td>
-                  {Array.isArray(aVehicle.eSeal) ? (
+                  {Array.isArray(trip.electronicSealIds) ? (
                     <div className="activeEsealDataContainer">
                       {/* Button to show the number of GPS trackers */}
                       <div className="activeEsealfirstData">
-                        {aVehicle.eSeal.length} GPS
+                        {trip.electronicSealIds.length} GPS
                         {/* Button to toggle GPS list visibility */}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -111,16 +141,17 @@ const OngoingTrip = () => {
                       </div>
                       {/* Conditional rendering of GPS list based on state */}
                       {showGpsList &&
-                        aVehicle.eSeal.map((seal, index) => (
+                        trip.electronicSealIds.map((seal, index) => (
                           <div key={index} className="activeEsealData">
                             <p>
-                              GPS ID: {seal.gpsId}, Status: {seal.status}
+                              GPS ID: {seal.tagName}, Status:{" "}
+                              {seal.electronicSealStatus}
                             </p>
                             <div className="activeEsealData-rfids">
                               {Array.isArray(seal.rfidKeys) &&
                                 seal.rfidKeys.map((key) => (
                                   <button key={key.id}>
-                                    RFID: {key.RfidKey}
+                                    RFID: {key.keyCode}
                                   </button>
                                 ))}
                             </div>
@@ -132,38 +163,79 @@ const OngoingTrip = () => {
                   )}
                 </td>
                 <td>
-                  {Array.isArray(aVehicle.eSeal) ? (
+                  {Array.isArray(trip.electronicSealIds) &&
+                  trip.electronicSealIds.length > 0 ? (
                     <div className="batterybutton">
-                      {aVehicle.eSeal.map((seal, index) => (
+                      {trip.electronicSealIds.map((seal, index) => (
                         <div key={index}>
                           <p>
                             <button>
-                              {seal.gpsId} {seal.battery}%
-                            </button>{" "}
-                            {""}
-                            <button></button>
+                              {seal.tagName} {"N/A"} %
+                            </button>
                           </p>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p>No GPS data available</p>
+                    <p>No E-seal is found</p>
                   )}
                 </td>
-                <td>{aVehicle.gpsMountedDate}</td>
-                <td>{aVehicle.tripStartingDate}</td>
-                <td>{aVehicle.fromto}</td>
-                <td>{aVehicle.Signal}</td>
-                <td>{aVehicle.Warnings}</td>
                 <td>
-                  {Array.isArray(aVehicle.Problems) &&
-                    aVehicle.Problems.map((Problem, index) => (
+                  {new Date(trip.gpsMountedDate).toISOString().split("T")[0]}
+                </td>
+                <td>
+                  {new Date(trip.tripStartingDate).toISOString().split("T")[0]}
+                </td>
+                <td>
+                  {trip.startingPoint} - {trip.destination}
+                </td>
+                <td>{trip.Signal ? trip.Signal : "N/A"}</td>
+                <td>
+                  {Array.isArray(trip.warnings) && trip.warnings.length > 0 && (
+                    <div
+                      className="problem-icon-container"
+                      onClick={() => handleSelectWarning(trip.id)}
+                    >
+                      <span className="problem-count">
+                        {trip.warnings.length}
+                      </span>
+                      &nbsp;
                       <svg
-                        key={index}
-                        onClick={() => handleSelectProblem(Problem.id)} // Correctly pass Problem.id
+                        key={trip.id}
                         xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#ff7700"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="lucide lucide-flag"
+                      >
+                        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                        <line x1="4" x2="4" y1="22" y2="15" />
+                      </svg>
+                    </div>
+                  )}
+                </td>
+
+                {/* Problem */}
+                <td>
+                  {Array.isArray(trip.problems) && trip.problems.length > 0 && (
+                    <div
+                      className="problem-icon-container"
+                      onClick={() => handleSelectProblem(trip.id)}
+                    >
+                      <span className="problem-count">
+                        {trip.problems.length}
+                      </span>
+                      &nbsp;
+                      <svg
+                        key={trip.id}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="15"
+                        height="15"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="#ff0000"
@@ -176,7 +248,8 @@ const OngoingTrip = () => {
                         <path d="M2.586 16.726A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2h6.624a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586z" />
                         <path d="m9 9 6 6" />
                       </svg>
-                    ))}
+                    </div>
+                  )}
                 </td>
               </tr>
             ))
@@ -193,6 +266,8 @@ const OngoingTrip = () => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+
+      <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );
 };

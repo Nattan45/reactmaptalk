@@ -70,8 +70,8 @@ const RegisterGpsTrackerForm = () => {
     // Validate form data
     const validationResult = validateFormData(formData);
 
-    console.log(validationResult, "validationResult");
-    console.log(formData, "formDataformDataformData");
+    // console.log(validationResult, "validationResult");
+    // console.log(formData, "formDataformDataformData");
     if (validationResult.valid) {
       try {
         await axios.post(
