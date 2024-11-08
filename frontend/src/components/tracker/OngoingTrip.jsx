@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import Paginator from "../paginator/Paginator";
-import Vehicles from "../../data/ActiveVehicle"; // Importing dummy data
 import MessagePopup from "../messageComponent/MessagePopup";
 import axios from "axios";
 
@@ -73,6 +72,11 @@ const OngoingTrip = () => {
     navigate(`/problem/${id}`); // Redirect to ProblemDetails page
   };
 
+  // Handle Warning selection and redirect to the details page
+  const handleSelectWarning = (id) => {
+    navigate(`/warning/${id}`); // Redirect to WarningDetails page
+  };
+
   return (
     <div>
       <h2 className="tableDataHeaderTitle">
@@ -106,9 +110,8 @@ const OngoingTrip = () => {
                 <td>{trip.vehicle ? trip.vehicle.brand : "N/A"}</td>
                 <td>{trip.vehicle ? trip.vehicle.model : "N/A"}</td>
                 <td>
-                  {trip.driver
-                    ? trip.driver.firstName - trip.driver.lastName
-                    : "N/A"}
+                  {trip.driver ? trip.driver.firstName : "N/A"}&nbsp;-&nbsp;
+                  {trip.driver ? trip.driver.lastName : "N/A"}
                 </td>
                 <td>{trip.driver ? trip.driver.phoneNumber : "N/A"}</td>
                 {/* Number of GPS trackers */}
@@ -160,40 +163,79 @@ const OngoingTrip = () => {
                   )}
                 </td>
                 <td>
-                  {Array.isArray(trip.electronicSealIds) ? (
+                  {Array.isArray(trip.electronicSealIds) &&
+                  trip.electronicSealIds.length > 0 ? (
                     <div className="batterybutton">
                       {trip.electronicSealIds.map((seal, index) => (
                         <div key={index}>
                           <p>
                             <button>
-                              {/* {seal.tagName} {seal.battery}% */}
                               {seal.tagName} {"N/A"} %
-                            </button>{" "}
-                            {""}
-                            <button></button>
+                            </button>
                           </p>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p>No GPS data available</p>
+                    <p>No E-seal is found</p>
                   )}
                 </td>
-                <td>{trip.gpsMountedDate}</td>
-                <td>{trip.tripStartingDate}</td>
+                <td>
+                  {new Date(trip.gpsMountedDate).toISOString().split("T")[0]}
+                </td>
+                <td>
+                  {new Date(trip.tripStartingDate).toISOString().split("T")[0]}
+                </td>
                 <td>
                   {trip.startingPoint} - {trip.destination}
                 </td>
-                <td>{trip.Signal}</td>
+                <td>{trip.Signal ? trip.Signal : "N/A"}</td>
                 <td>
-                  {Array.isArray(trip.warnings) &&
-                    trip.warnings.map((warning, index) => (
+                  {Array.isArray(trip.warnings) && trip.warnings.length > 0 && (
+                    <div
+                      className="problem-icon-container"
+                      onClick={() => handleSelectWarning(trip.id)}
+                    >
+                      <span className="problem-count">
+                        {trip.warnings.length}
+                      </span>
+                      &nbsp;
                       <svg
-                        key={index}
-                        onClick={() => handleSelectProblem(warning.id)} // Correctly pass Problem.id
+                        key={trip.id}
                         xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#ff7700"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="lucide lucide-flag"
+                      >
+                        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                        <line x1="4" x2="4" y1="22" y2="15" />
+                      </svg>
+                    </div>
+                  )}
+                </td>
+
+                {/* Problem */}
+                <td>
+                  {Array.isArray(trip.problems) && trip.problems.length > 0 && (
+                    <div
+                      className="problem-icon-container"
+                      onClick={() => handleSelectProblem(trip.id)}
+                    >
+                      <span className="problem-count">
+                        {trip.problems.length}
+                      </span>
+                      &nbsp;
+                      <svg
+                        key={trip.id}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="15"
+                        height="15"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="#ff0000"
@@ -206,28 +248,7 @@ const OngoingTrip = () => {
                         <path d="M2.586 16.726A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2h6.624a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586z" />
                         <path d="m9 9 6 6" />
                       </svg>
-                    ))}
-                </td>
-                <td>
-                  {Array.isArray(trip.problems) && trip.problems.length > 0 && (
-                    <svg
-                      key={trip.id}
-                      onClick={() => handleSelectProblem(trip.id)} // Correctly pass Problem.id
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#ff0000"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-octagon-x"
-                    >
-                      <path d="m15 9-6 6" />
-                      <path d="M2.586 16.726A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2h6.624a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586z" />
-                      <path d="m9 9 6 6" />
-                    </svg>
+                    </div>
                   )}
                 </td>
               </tr>

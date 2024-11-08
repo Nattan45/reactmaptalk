@@ -1,7 +1,7 @@
 # Props using Tracker.jsx
 
 ```
-Tracker.jsx.jsx
+Tracker.jsx
 │
 ├── TrackParameters.jsx <-- Can call `onTripSelect` to update state in MainParent
 │
