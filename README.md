@@ -79,6 +79,14 @@ To get started with the project, follow these steps:
 7. **View Saved Documents**:
    - You can view the saved Pinned places, Routes, Checkpoints, and Warehouses and track the live activities.
 
+## To-Dos
+
+1. Complite Trip Form [TripPage - Complite Trip Form ](http://localhost:3000/#/TripPage)
+2. filter warnings and see the details [TripPage - Warning](http://localhost:3000/#/TripPage)
+3. Warning Table Data rendering [TripPage - Warning data table](http://localhost:3000/#/warning/:id)
+4. Active Users [TripPage - Account Setting](http://localhost:3000/#/AccountPage)
+5. Update Account [TripPage - Update Account](http://localhost:3000/#/AccountPage)
+
 ## Contributing
 
 Contributions are welcome! Please follow these steps:
