@@ -5,6 +5,9 @@ const axios = require("axios"); // npm i axios
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose"); // npm install mongoose
 const MongoRoutes = require("./models/MongoRoutes"); // Import Mongo-Route model
+const MongoCheckpoint = require("./models/MongoCheckpoint"); // Import Mongo-Checkpoint model
+const MongoWarehouse = require("./models/MongoWarehouse"); // Import Mongo-Warehouse model
+const MongoPin = require("./models/MongoPin"); // Import Mongo-Pin model
 
 const routes = require("./routes"); // Import routes
 
@@ -33,15 +36,15 @@ const SPRING_ENDPOINT = process.env.SPRING_ENDPOINT;
 
 //______________________________________________________________________________________________________________MONGO
 // Connect to MongoDB
-const mongoURL =
-  process.env.NODE_ENV === "production"
-    ? "mongodb://mongo:27017/yourProductionDatabase" // Docker URL in production
-    : "mongodb://localhost:27017/yourLocalDatabase"; // Local URL in development
-
+// The connection Name is MongoDbUI
 mongoose
-  .connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((error) => console.error("Error connecting to MongoDB:", error));
+  .connect("mongodb://localhost:27017/VehicleTracking")
+  .then(() => {
+    console.log("MongoDB connected");
+  })
+  .catch((err) => {
+    console.error("Error connecting to MongoDB:", err);
+  });
 
 // User Account Related Endpoints ________________________________________________
 // get all users list
@@ -1004,17 +1007,21 @@ app.get("/api/get/mongo/getRoutes", async (req, res) => {
 // Define the create route To Mongo
 app.post("/api/create/mongo/createRoute", async (req, res) => {
   try {
-    const { name, coordinates } = req.body;
+    const { routeName, routeCoordinates, totalDistanceKm } = req.body;
 
     // Validate incoming data
-    if (!name || !coordinates) {
+    if (!routeName || !routeCoordinates || !totalDistanceKm) {
       return res
         .status(400)
-        .json({ message: "Name and coordinates are required." });
+        .json({ message: "Name, coordinates, and distance are required." });
     }
 
     // Create and save the route
-    const route = new MongoRoutes({ name, coordinates });
+    const route = new MongoRoutes({
+      routeName,
+      routeCoordinates,
+      totalDistanceKm,
+    });
     await route.save();
 
     res.status(201).json({ message: "Route created successfully!", route });
