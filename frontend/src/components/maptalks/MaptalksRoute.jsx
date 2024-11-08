@@ -189,13 +189,29 @@ const MaptalksRoute = () => {
     };
 
     try {
-      await axios.post(
+      // Step 1: Send route data to Spring Boot
+      const springResponse = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/create/route`,
         routeData
       );
 
-      addMessage("Route created successfully!", "success");
-      handleDialogClose(); // Close the dialog after saving
+      // Check if Spring Boot successfully saved the route
+      if (springResponse.status === 200) {
+        addMessage("Route Saved successfully!", "success");
+        handleDialogClose(); // Close the dialog after saving
+
+        // Step 2: Save data to MongoDB upon successful Spring Boot response
+        const mongoResponse = await axios.post(
+          `${process.env.REACT_APP_NODE_API_URL}/api/mongo/createRoute`,
+          routeData
+        );
+
+        if (mongoResponse.status === 200) {
+          addMessage("Route Cached successfully!", "success");
+        } else {
+          addMessage("Error Caching Route.", "error");
+        }
+      }
     } catch (err) {
       if (err.response) {
         const errorMessage =
