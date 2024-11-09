@@ -801,7 +801,7 @@ app.get("/api/route-detail/:id", async (req, res) => {
 app.post("/api/create/route", async (req, res) => {
   routeData = req.body;
 
-  console.log(routeData);
+  // console.log(routeData);
 
   try {
     const response = await axios.post(
@@ -986,12 +986,30 @@ app.post("/api/create/Trip/FromId", async (req, res) => {
 });
 
 //______________________________________________________________________________________________________________MONGO
-
+// Mongo Db Endpoints
 // Define the get routes From MONGO-DB
 app.get("/api/get/mongo/getRoutes", async (req, res) => {
   try {
     // Fetch all routes from the database
-    const routes = await MongoRoutes.find(); // You can add query filters here if needed
+    const routes = await MongoRoutes.find();
+
+    if (routes.length === 0) {
+      return res.status(404).json({ message: "No routes found." });
+    }
+
+    res.status(200).json({ routes });
+  } catch (error) {
+    console.error("Error fetching routes:", error);
+    res.status(500).json({ message: "Error fetching routes." });
+  }
+});
+
+app.get("/api/getRoutes/mongo/getRoutesByRouteID/:id", async (req, res) => {
+  selectedRouteId = req.params.id;
+
+  try {
+    // Fetch the route by routeId
+    const routes = await MongoRoutes.find({ routeId: selectedRouteId });
 
     if (routes.length === 0) {
       return res.status(404).json({ message: "No routes found." });
@@ -1007,27 +1025,45 @@ app.get("/api/get/mongo/getRoutes", async (req, res) => {
 // Define the create route To Mongo
 app.post("/api/create/mongo/createRoute", async (req, res) => {
   try {
-    const { routeName, routeCoordinates, totalDistanceKm } = req.body;
+    const {
+      routeName,
+      routeId,
+      routeCoordinates,
+      totalDistanceKm,
+      lineColor,
+      lineWidth,
+    } = req.body;
 
     // Validate incoming data
-    if (!routeName || !routeCoordinates || !totalDistanceKm) {
-      return res
-        .status(400)
-        .json({ message: "Name, coordinates, and distance are required." });
+    if (!routeName || !routeId || !routeCoordinates || !totalDistanceKm) {
+      return res.status(400).json({
+        message: "Name, RouteID, coordinates, and distance are required.",
+      });
+    }
+
+    // Check if a route with the same routeId already exists
+    const existingRoute = await MongoRoutes.findOne({ routeId });
+    if (existingRoute) {
+      return res.status(409).json({
+        message: `Route with routeId ${routeId} already exists.`,
+      });
     }
 
     // Create and save the route
     const route = new MongoRoutes({
       routeName,
+      routeId,
       routeCoordinates,
       totalDistanceKm,
+      lineColor,
+      lineWidth,
     });
     await route.save();
 
-    res.status(201).json({ message: "Route created successfully!", route });
+    res.status(201).json({ message: "Route Cached successfully!", route });
   } catch (error) {
-    console.error("Error creating route:", error);
-    res.status(500).json({ message: "Error creating route." });
+    console.error("Error caching routeee:", error);
+    res.status(500).json({ message: "Error caching routeaaaaa." });
   }
 });
 

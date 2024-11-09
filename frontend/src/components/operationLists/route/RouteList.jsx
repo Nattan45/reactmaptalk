@@ -3,8 +3,11 @@ import React, { useEffect, useState } from "react";
 import Paginator from "../../paginator/Paginator";
 import axios from "axios";
 import MessagePopup from "../../messageComponent/MessagePopup";
+// import { useNavigate } from "react-router-dom";
+import RouteListMaptalksView from "./RouteListMaptalksView";
 
 const RouteList = () => {
+  // const navigate = useNavigate(); // For redirecting
   const [deviceData, setDeviceData] = useState([]); // State for the full data
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [itemsPerPage] = useState(10); // Number of items per page
@@ -29,10 +32,10 @@ const RouteList = () => {
     const fetchData = async () => {
       try {
         const RouteData = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/roads`
+          `${process.env.REACT_APP_API_URL}/api/get/mongo/getRoutes`
         );
 
-        setDeviceData(RouteData.data);
+        setDeviceData(RouteData.data.routes);
       } catch (err) {
         if (err.response) {
           const errorMessage =
@@ -67,6 +70,18 @@ const RouteList = () => {
     setVisibleCategory(visibleCategory === index ? null : index);
   };
 
+  const [selectedRouteId, setSelectedRouteId] = useState(null);
+  // const [routeCoordinates, setRouteCoordinates] = useState([]);
+
+  const viewRouteOnMaptalks = (selectedRouteId) => {
+    setSelectedRouteId(selectedRouteId); // Update state
+    // setRouteCoordinates(routeCoordinates); // Update state
+  };
+
+  const deleteRoute = (selectedRouteId) => {
+    console.log("deleteRoute", selectedRouteId);
+  };
+
   return (
     <div className="gridCenter">
       <div className="checkpintsList fitContent">
@@ -86,7 +101,7 @@ const RouteList = () => {
           <tbody>
             {currentItems.length > 0 ? (
               currentItems.map((route, idx) => (
-                <tr key={route.id}>
+                <tr key={idx}>
                   <td>{route.routeName}</td>
                   <td>{route.routeId}</td>
                   <td>
@@ -124,7 +139,7 @@ const RouteList = () => {
                       )}
                     </div>
                   </td>
-                  <td>{route.totalDistanceKm.toFixed(2)} km</td>
+                  <td>{route.totalDistanceKm} km</td>
                   <td>
                     {/* View icon */}
                     <svg
@@ -138,29 +153,12 @@ const RouteList = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       className="lucide lucide-eye"
+                      onClick={() => viewRouteOnMaptalks(route.routeId)}
                     >
                       <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
                       <circle cx="12" cy="12" r="3" />
                     </svg>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {/* Edit icon */}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#000000"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-file-pen-line"
-                    >
-                      <path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2" />
-                      <path d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
-                      <path d="M8 18h1" />
-                    </svg>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
                     {/* Delete icon */}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -173,6 +171,7 @@ const RouteList = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       className="lucide lucide-trash-2"
+                      onClick={() => deleteRoute(route.routeId)}
                     >
                       <path d="M3 6h18" />
                       <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
@@ -197,6 +196,14 @@ const RouteList = () => {
           onPageChange={handlePageChange}
         />
       </div>
+
+      {selectedRouteId && (
+        <RouteListMaptalksView
+          selectedRouteId={selectedRouteId}
+          // routeCoordinates={routeCoordinates}
+        />
+      )}
+
       <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
   );

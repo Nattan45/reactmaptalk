@@ -26,6 +26,7 @@ import DriversStatusPage from "./page/DriversStatusPage";
 import AccountsStatusPage from "./page/AccountsStatusPage";
 import RfidsStatusPage from "./page/RfidsStatusPage";
 import WarningDetails from "./page/WarningDetails";
+import RouteListMaptalksView from "./components/operationLists/route/RouteListMaptalksView";
 
 function App() {
   return (
@@ -110,6 +111,11 @@ function App() {
         {/* redirects */}
         <Route path="/problem/:id" element={<ProblemDetails />} />
         <Route path="/warning/:id" element={<WarningDetails />} />
+        {/* view specific routes */}
+        <Route
+          path="/RouteonMaptalks/:selectedRouteId"
+          element={<RouteListMaptalksView />}
+        />
         {/* Catch-all route for 404 page */}
         <Route path="/404" element={<NotFoundPage />} />{" "}
         <Route path="*" element={<NotFoundPage />} />
