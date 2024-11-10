@@ -78,6 +78,7 @@ const RouteList = () => {
     // setRouteCoordinates(routeCoordinates); // Update state
   };
 
+  // delete Routes from Springboot > then Mongo
   const deleteRoute = async (selectedRouteId) => {
     try {
       // Step 1: Send DELETE request to Spring Boot to delete the route by routeId

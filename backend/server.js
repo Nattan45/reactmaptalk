@@ -946,6 +946,27 @@ app.post("/api/create/warehouse", async (req, res) => {
   }
 });
 
+// delete Route From Springboot
+app.delete("/api/delete-warehouse/:id", async (req, res) => {
+  warehouseId = req.params.id;
+  try {
+    const response = await axios.delete(
+      `${SPRING_ENDPOINT}${routes.WAREHOUSELIST}/${warehouseId}`
+    );
+    if (response.status === 200) {
+      res.status(200).json({ message: "Warehouse deleted successfully." });
+    }
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
 // Trip Related Endpoints ________________________________________________
 // get all Trips with ID and ID of Related <objects> From Springboot
 app.get("/api/trip-detail/Id", async (req, res) => {
@@ -1138,7 +1159,7 @@ app.delete(
 
 //______________________________________________________________________________________________________________MONGO
 // Mongo Db Endpoints
-// Define the get routes From MONGO-DB
+// Define the get Checkpoint From MONGO-DB
 app.get("/api/get/mongo/getCheckpoints", async (req, res) => {
   try {
     // Fetch all routes from the database
@@ -1250,7 +1271,7 @@ app.delete(
     selectedCheckpointId = req.params.id;
 
     try {
-      // Fetch the route by routeId
+      // Fetch the checkpoint by checkpointId
       const checkpoint = await MongoCheckpoint.find({
         checkpointId: selectedCheckpointId,
       });
@@ -1259,7 +1280,7 @@ app.delete(
         return res.status(404).json({ message: "No checkpoint found." });
       }
 
-      // Delete the route
+      // Delete the checkpoint
       await MongoCheckpoint.deleteOne({ checkpointId: selectedCheckpointId });
 
       // Send success response
@@ -1269,6 +1290,146 @@ app.delete(
     } catch (error) {
       console.error("Error fetching Checkpoint:", error);
       res.status(500).json({ message: "Error fetching Checkpoint." });
+    }
+  }
+);
+
+//______________________________________________________________________________________________________________MONGO
+// Mongo Db Endpoints
+// Define the get Warehouse From MONGO-DB
+app.get("/api/get/mongo/getWarehouse", async (req, res) => {
+  try {
+    // Fetch all routes from the database
+    const warehouses = await MongoWarehouse.find();
+
+    if (warehouses.length === 0) {
+      return res.status(404).json({ message: "No warehouses found." });
+    }
+
+    res.status(200).json({ warehouses });
+  } catch (error) {
+    console.error("Error fetching warehouses:", error);
+    res.status(500).json({ message: "Error fetching warehouses." });
+  }
+});
+
+// get Warehouses by warehouseId From MongoDb
+app.get(
+  "/api/getWarehouses/mongo/getWarehousesByWarehouseId/:id",
+  async (req, res) => {
+    selectedWarehousesId = req.params.id;
+
+    try {
+      // Fetch the route by routeId
+      const warehouse = await MongoWarehouse.find({
+        warehouseId: selectedWarehousesId,
+      });
+
+      if (warehouse.length === 0) {
+        return res.status(404).json({ message: "No warehouse found." });
+      }
+
+      res.status(200).json({ warehouse });
+    } catch (error) {
+      console.error("Error fetching warehouse:", error);
+      res.status(500).json({ message: "Error fetching warehouse." });
+    }
+  }
+);
+
+// create Warehouse In MongoDb
+app.post("/api/create/mongo/createWarehouse", async (req, res) => {
+  try {
+    const {
+      warehouseName,
+      warehouseId,
+      unit,
+      side,
+      area,
+      warehouseCoordinates,
+      lineColor,
+      lineWidth,
+      polygonFill,
+      polygonOpacity,
+    } = req.body;
+
+    // Validate incoming data
+    if (
+      !warehouseName ||
+      !warehouseId ||
+      !warehouseCoordinates ||
+      !unit ||
+      !side ||
+      area === undefined ||
+      !Array.isArray(warehouseCoordinates) || // Ensure warehouseCoordinates is an array
+      warehouseCoordinates.some(
+        (coord) => !coord.latitude || !coord.longitude // Ensure each coordinate has latitude and longitude
+      )
+    ) {
+      return res.status(400).json({
+        message:
+          "warehouseName, warehouseId, unit, side, area, warehouseCoordinates with valid latitude and longitude are required.",
+      });
+    }
+
+    // Check if a warehouse with the same warehouseId already exists
+    const existingWarehouse = await MongoWarehouse.findOne({ warehouseId });
+    if (existingWarehouse) {
+      return res.status(409).json({
+        message: `Warehouse with ID ${warehouseId} already exists.`,
+      });
+    }
+
+    // Create and save the warehouse
+    const warehouse = new MongoWarehouse({
+      warehouseName,
+      warehouseId,
+      unit,
+      side,
+      area,
+      warehouseCoordinates,
+      lineColor,
+      lineWidth,
+      polygonFill,
+      polygonOpacity,
+    });
+    await warehouse.save();
+
+    res
+      .status(201)
+      .json({ message: "Warehouse cached successfully!", warehouse });
+  } catch (error) {
+    console.error("Error caching warehouse:", error);
+    res.status(500).json({ message: "Error caching warehouse." });
+  }
+});
+
+// delete Warehouse Form MongoDb
+app.delete(
+  "/api/deleteWarehouse/mongo/deleteWarehouseByWarehouseID/:id",
+  async (req, res) => {
+    selectedWarehouseId = req.params.id;
+
+    try {
+      // Fetch the warehouse by warehouseId
+      const warehouse = await MongoWarehouse.find({
+        warehouseId: selectedWarehouseId,
+      });
+
+      if (warehouse.length === 0) {
+        return res.status(404).json({ message: "No Warehouse found." });
+      }
+
+      // Delete the warehouse
+      await MongoWarehouse.deleteOne({ warehouseId: selectedWarehouseId });
+
+      // Send success response
+      res
+        .status(200)
+        .json({ message: "Cached Warehouse deleted successfully." });
+    } catch (error) {
+      console.error("Error fetching Warehouse:", error);
+      res.status(500).json({ message: "Error fetching Warehouse." });
     }
   }
 );

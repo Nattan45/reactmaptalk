@@ -72,6 +72,7 @@ const CheckpointsList = () => {
     setSelectedCheckpointId(selectedCheckpointId); // Update state
   };
 
+  // delete Checkpoints from Springboot > then Mongo
   const deleteCheckpoints = async (selectedCheckpointId) => {
     try {
       // Step 1: Send DELETE request to Spring Boot to delete the checkpoint by checkpointId

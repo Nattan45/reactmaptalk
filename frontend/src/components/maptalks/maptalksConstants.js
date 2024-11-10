@@ -16,7 +16,7 @@ export const Checkpoint_polygon_Fill = "#34495e";
 export const Checkpoint_polygon_Opacity = 0.4;
 
 // Warehouse Related Constants
-export const Warehouse_Line_Color = "#1bbc9b";
-export const Warehouse_Line_Width = 8;
+export const Warehouse_Line_Color = "#34495e";
+export const Warehouse_Line_Width = 2;
 export const Warehouse_polygon_Fill = "#34495e";
 export const Warehouse_polygon_Opacity = 0.4;

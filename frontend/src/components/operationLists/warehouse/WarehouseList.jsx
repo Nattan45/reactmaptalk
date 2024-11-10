@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 
 import Paginator from "../../paginator/Paginator";
 
-import WarehousesCategoryList from "./WarehousesCategoryList";
 import axios from "axios";
 import MessagePopup from "../../messageComponent/MessagePopup";
+import WarehousesListMaptalksView from "./WarehousesListMaptalksView";
 
 const WarehouseList = () => {
   const [deviceData, setDeviceData] = useState([]); // State for the full data
@@ -32,15 +32,13 @@ const WarehouseList = () => {
     const fetchData = async () => {
       try {
         const Warehouses = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/warehouse`
+          `${process.env.REACT_APP_API_URL}/api/get/mongo/getWarehouse`
         );
 
-        const totalWarehouses = Warehouses.data;
-        const totalWarehousesLength = Warehouses.data.length;
+        const totalWarehouses = Warehouses.data.warehouses;
+        const totalWarehousesLength = Warehouses.data.warehouses.length;
 
         setDeviceData(totalWarehouses);
-
-        console.log(totalWarehouses);
 
         setTotalWarehouses(totalWarehousesLength);
       } catch (err) {
@@ -75,6 +73,46 @@ const WarehouseList = () => {
   // Function to toggle the visibility of a category's checkpoints list
   const toggleCategoryVisibility = (index) => {
     setVisibleCategory(visibleCategory === index ? null : index);
+  };
+
+  const [selectedWarehouseId, setSelectedWarehouseId] = useState(null);
+
+  const viewWarehouseOnMaptalks = (selectedWarehouseId) => {
+    setSelectedWarehouseId(selectedWarehouseId); // Update state
+  };
+
+  // delete Warehouses from Springboot > then Mongo
+  const deleteWarehouse = async (selectedWarehouseId) => {
+    try {
+      // Step 1: Send DELETE request to Spring Boot to delete the warehouse by warehouseId
+      const springResponse = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/delete-warehouse/${selectedWarehouseId}`
+      );
+
+      // Check if the deletion in Spring Boot was successful
+      if (springResponse.data.success) {
+        addMessage("Warehouse deleted successfully.", "success");
+
+        // Step 2: Send DELETE request to MongoDB to delete the warehouse by warehouseId
+        const mongoResponse = await axios.delete(
+          `${process.env.REACT_APP_API_URL}/api/deleteWarehouse/mongo/deleteWarehouseByWarehouseID/${selectedWarehouseId}`
+        );
+
+        if (mongoResponse.data.success) {
+          addMessage("Cached Warehouse deleted successfully.", "success");
+        } else {
+          addMessage("Failed to delete Warehouse from the CACHE .", "error");
+        }
+      } else {
+        addMessage(
+          "Failed to delete warehouse in: warehouse may be assigned to a Trip or Vehicle.",
+          "error"
+        );
+      }
+    } catch (error) {
+      // Handle any errors encountered during the process
+      addMessage("Error deleting route: " + error.message, "error");
+    }
   };
 
   return (
@@ -152,29 +190,14 @@ const WarehouseList = () => {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         className="lucide lucide-eye"
+                        onClick={() =>
+                          viewWarehouseOnMaptalks(warehouse.warehouseId)
+                        }
                       >
                         <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
                         <circle cx="12" cy="12" r="3" />
                       </svg>
-                      &nbsp;&nbsp;&nbsp;
-                      {/* Edit icons */}
-                      {/* <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="#000000"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="lucide lucide-file-pen-line"
-                        >
-                          <path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2" />
-                          <path d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
-                          <path d="M8 18h1" />
-                        </svg> */}
-                      &nbsp;&nbsp;&nbsp;
+                      &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
                       {/* Delete icons */}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -187,6 +210,7 @@ const WarehouseList = () => {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         className="lucide lucide-trash-2"
+                        onClick={() => deleteWarehouse(warehouse.warehouseId)}
                       >
                         <path d="M3 6h18" />
                         <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
@@ -212,7 +236,10 @@ const WarehouseList = () => {
           onPageChange={handlePageChange}
         />
       </div>
-      <WarehousesCategoryList />
+
+      <div className="showSelectedRoutes">
+        <WarehousesListMaptalksView selectedWarehouseId={selectedWarehouseId} />
+      </div>
 
       <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
