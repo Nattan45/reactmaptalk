@@ -162,3 +162,7 @@
   height: 30px;
   outline: 1px solid rgb(35, 210, 184);
 }
+
+.showSelectedRoutes {
+  margin: 2% 0 5% -8%;
+}

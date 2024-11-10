@@ -15,6 +15,15 @@ import { calculatePolygonDetails } from "./calculatePolygonDetails";
 import ResetToMyLocation from "./ResetToMyLocation";
 import axios from "axios";
 import MessagePopup from "../messageComponent/MessagePopup";
+import {
+  MAP_LAT,
+  MAP_LONG,
+  MAP_MINZOOM,
+  Warehouse_Line_Color,
+  Warehouse_Line_Width,
+  Warehouse_polygon_Fill,
+  Warehouse_polygon_Opacity,
+} from "./maptalksConstants";
 
 const MaptalksWarehouse = () => {
   const mapRef = useRef(null); // Ref to store the map DOM element
@@ -144,10 +153,10 @@ const MaptalksWarehouse = () => {
     // Create the polygon using the calculated coordinates
     currentShape.current = new maptalks.Polygon(polygonCoordinates, {
       symbol: {
-        lineColor: "#34495e",
-        lineWidth: 2,
-        polygonFill: "#34495e",
-        polygonOpacity: 0.4,
+        lineColor: Warehouse_Line_Color,
+        lineWidth: Warehouse_Line_Width,
+        polygonFill: Warehouse_polygon_Fill,
+        polygonOpacity: Warehouse_polygon_Opacity,
       },
     });
 
@@ -178,7 +187,7 @@ const MaptalksWarehouse = () => {
 
   // useEffect to initialize the map and attach event listeners
   useEffect(() => {
-    const defaultCenter = [39.7823, 9.145]; // Default map center coordinates
+    const defaultCenter = [MAP_LAT, MAP_LONG]; // Ethiopian coordinates [Latitude, Longitude]
 
     // Function to initialize the map with center and zoom level
     const initializeMap = (center, zoom = 10) => {
@@ -190,7 +199,7 @@ const MaptalksWarehouse = () => {
       mapInstance.current = new maptalks.Map(mapRef.current, {
         center: center,
         zoom: zoom,
-        minZoom: 3, // set map's min zoom to
+        minZoom: MAP_MINZOOM, // set map's min zoom to
         attribution: true,
         scaleControl: true, // add scale control
         overviewControl: true, // add overview control
@@ -307,10 +316,39 @@ const MaptalksWarehouse = () => {
 
     try {
       for (const warehouse of polygonDataWithNames) {
-        await axios.post(
+        // Step 1: Save each Warehouse to Spring Boot
+        const springResponse = await axios.post(
           `${process.env.REACT_APP_API_URL}/api/create/warehouse`,
           warehouse
         );
+
+        if (springResponse.status === 200) {
+          const warehouseId = springResponse.data.warehouseId; // Extract checkpointId from Spring Boot's response
+
+          // Step 2: Prepare data for MongoDB with the checkpointId
+          const modifiedWarehouseData = {
+            ...warehouse,
+            warehouseId,
+            lineColor: Warehouse_Line_Color, // Dynamic line color
+            lineWidth: Warehouse_Line_Width,
+            polygonFill: Warehouse_polygon_Fill,
+            polygonOpacity: Warehouse_polygon_Opacity,
+          };
+
+          // Step 3: Save the modified data to MongoDB
+          const mongoResponse = await axios.post(
+            `${process.env.REACT_APP_API_URL}/api/create/mongo/createWarehouse`,
+            modifiedWarehouseData
+          );
+
+          if (mongoResponse.status === 201) {
+            addMessage("Warehouse cached successfully", "success");
+          } else {
+            addMessage("Error caching Warehouse.", "error");
+          }
+        } else {
+          addMessage("Error saving Warehouse.", "error");
+        }
       }
 
       addMessage("Warehouse created successfully!", "success");

@@ -17,6 +17,13 @@ import {
 import { blue, yellow } from "@mui/material/colors";
 import axios from "axios";
 import MessagePopup from "../messageComponent/MessagePopup";
+import {
+  MAP_LAT,
+  MAP_LONG,
+  MAP_MINZOOM,
+  Route_Line_Color,
+  Route_Line_Width,
+} from "./maptalksConstants";
 
 const MaptalksRoute = () => {
   const mapRef = useRef(null);
@@ -44,7 +51,7 @@ const MaptalksRoute = () => {
   };
 
   useEffect(() => {
-    const defaultCenter = [39.7823, 9.145]; // Ethiopian coordinates [Longitude, Latitude]
+    const defaultCenter = [MAP_LAT, MAP_LONG]; // Ethiopian coordinates [Latitude, Longitude]
 
     const initializeMap = (center, zoom = 10) => {
       if (mapInstance.current) {
@@ -54,7 +61,7 @@ const MaptalksRoute = () => {
       mapInstance.current = new maptalks.Map(mapRef.current, {
         center: center,
         zoom: zoom,
-        minZoom: 3, // set map's min zoom to
+        minZoom: MAP_MINZOOM, // set map's min zoom to
         baseLayer: new maptalks.TileLayer("base", {
           urlTemplate: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
           subdomains: ["a", "b", "c"],
@@ -126,8 +133,8 @@ const MaptalksRoute = () => {
       // Create the line with updated coordinates
       const line = new maptalks.LineString(routeCoordinates, {
         symbol: {
-          lineColor: "#1bbc9b",
-          lineWidth: 4,
+          lineColor: Route_Line_Color, // Dynamic line color
+          lineWidth: Route_Line_Width, // Dynamic line width
         },
       });
 
@@ -140,7 +147,7 @@ const MaptalksRoute = () => {
     // console.log("Total Distance (km):", calculatedDistance.totalDistanceKm);
 
     setDistance(calculatedDistance); // Update distance state with the calculated values
-  }, [routeCoordinates]);
+  }, [routeCoordinates, Route_Line_Color, Route_Line_Width]); // Add routeCoordinates, lineColor and lineWidth to the dependency array
 
   const removeLastCoordinate = () => {
     setRouteCoordinates((prevCoords) =>
@@ -176,8 +183,8 @@ const MaptalksRoute = () => {
 
     // Transform routeCoordinates to include latitude and longitude
     const formattedCoordinates = routeCoordinates.map((coord) => ({
-      latitude: coord[1], // Ensure you're accessing the correct value for latitude
-      longitude: coord[0], // Ensure you're accessing the correct value for longitude
+      latitude: coord[0], // Ensure you're accessing the correct value for latitude
+      longitude: coord[1], // Ensure you're accessing the correct value for longitude
     }));
 
     const routeData = {
@@ -200,13 +207,24 @@ const MaptalksRoute = () => {
         addMessage("Route Saved successfully!", "success");
         handleDialogClose(); // Close the dialog after saving
 
-        // Step 2: Save data to MongoDB upon successful Spring Boot response
+        // Extract routeId from Spring Boot's response
+        const routeId = springResponse.data.routeId;
+
+        // Step 2: Add the routeId to the routeData for MongoDB
+        const modifiedRouteData = {
+          ...routeData,
+          routeId,
+          lineColor: Route_Line_Color, // Dynamic line color
+          lineWidth: Route_Line_Width, // Dynamic line width
+        };
+
+        // Step 3: Save the modified data to MongoDB
         const mongoResponse = await axios.post(
-          `${process.env.REACT_APP_NODE_API_URL}/api/mongo/createRoute`,
-          routeData
+          `${process.env.REACT_APP_API_URL}/api/create/mongo/createRoute`,
+          modifiedRouteData
         );
 
-        if (mongoResponse.status === 200) {
+        if (mongoResponse.status === 201) {
           addMessage("Route Cached successfully!", "success");
         } else {
           addMessage("Error Caching Route.", "error");
@@ -225,7 +243,7 @@ const MaptalksRoute = () => {
     }
 
     // Log the route data in JSON format
-    console.log(JSON.stringify(routeData, null, 2)); // Pretty-print JSON with 2 spaces
+    // console.log(JSON.stringify(routeData, null, 2)); // Pretty-print JSON with 2 spaces
   };
 
   return (

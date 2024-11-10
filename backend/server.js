@@ -760,7 +760,7 @@ app.delete("/api/delete/Eseal/:id", async (req, res) => {
 });
 
 // Route Related Endpoints ________________________________________________
-// get all routes with ID
+// get all routes with ID From Springboot
 app.get("/api/roads", async (req, res) => {
   try {
     const response = await axios.get(`${SPRING_ENDPOINT}${routes.ROUTELIST}`);
@@ -777,7 +777,7 @@ app.get("/api/roads", async (req, res) => {
   }
 });
 
-// get all Routes with ID
+// get all Routes with ID From Springboot
 app.get("/api/route-detail/:id", async (req, res) => {
   id = req.params.id;
   try {
@@ -797,11 +797,11 @@ app.get("/api/route-detail/:id", async (req, res) => {
   }
 });
 
-// create Route
+// create Route to From Springboot
 app.post("/api/create/route", async (req, res) => {
   routeData = req.body;
 
-  console.log(routeData);
+  // console.log(routeData);
 
   try {
     const response = await axios.post(
@@ -810,6 +810,27 @@ app.post("/api/create/route", async (req, res) => {
     );
 
     res.status(response.status).json(response.data);
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
+// delete Route From Springboot
+app.delete("/api/delete-route/:id", async (req, res) => {
+  routeId = req.params.id;
+  try {
+    const response = await axios.delete(
+      `${SPRING_ENDPOINT}${routes.ROUTELIST}/${routeId}`
+    );
+    if (response.status === 200) {
+      res.status(200).json({ message: "Route deleted successfully." });
+    }
   } catch (error) {
     if (error.response) {
       const errorMessage = error.response.data.errorMessage || "Unknown error";
@@ -839,7 +860,7 @@ app.get("/api/checkpoints", async (req, res) => {
   }
 });
 
-// Create Checkpoint
+// Create Checkpoint to Springboot
 app.post("/api/create/checkpoint", async (req, res) => {
   newCp = req.body;
 
@@ -862,8 +883,29 @@ app.post("/api/create/checkpoint", async (req, res) => {
   }
 });
 
+// delete Checkpoint to Springboot
+app.delete("/api/delete-checkpoint/:id", async (req, res) => {
+  checkpointId = req.params.id;
+  try {
+    const response = await axios.delete(
+      `${SPRING_ENDPOINT}${routes.CPLIST}/${checkpointId}`
+    );
+    if (response.status === 200) {
+      res.status(200).json({ message: "Checkpoint deleted successfully." });
+    }
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
 // Warehouse Related Endpoints ________________________________________________
-// get all Warehouse with ID
+// get all Warehouse with ID From Springboot
 app.get("/api/warehouse", async (req, res) => {
   try {
     const response = await axios.get(
@@ -882,7 +924,7 @@ app.get("/api/warehouse", async (req, res) => {
   }
 });
 
-// Warehouse Checkpoint
+// Warehouse Checkpoint to Springboot
 app.post("/api/create/warehouse", async (req, res) => {
   warehouseData = req.body;
 
@@ -904,8 +946,29 @@ app.post("/api/create/warehouse", async (req, res) => {
   }
 });
 
+// delete Route From Springboot
+app.delete("/api/delete-warehouse/:id", async (req, res) => {
+  warehouseId = req.params.id;
+  try {
+    const response = await axios.delete(
+      `${SPRING_ENDPOINT}${routes.WAREHOUSELIST}/${warehouseId}`
+    );
+    if (response.status === 200) {
+      res.status(200).json({ message: "Warehouse deleted successfully." });
+    }
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
 // Trip Related Endpoints ________________________________________________
-// get all Trips with ID and ID of Related <objects>
+// get all Trips with ID and ID of Related <objects> From Springboot
 app.get("/api/trip-detail/Id", async (req, res) => {
   try {
     const response = await axios.get(`${SPRING_ENDPOINT}${routes.TRIPLIST}`);
@@ -922,7 +985,7 @@ app.get("/api/trip-detail/Id", async (req, res) => {
   }
 });
 
-// get all Trips with ID and <objects>
+// get all Trips with ID and <objects> From Springboot
 app.get("/api/trip-detail/Objects", async (req, res) => {
   try {
     const response = await axios.get(
@@ -941,7 +1004,7 @@ app.get("/api/trip-detail/Objects", async (req, res) => {
   }
 });
 
-// get a Trips by its ID
+// get a Trips by its ID From Springboot
 app.get("/api/trip-detail/Objects/:id", async (req, res) => {
   tripId = req.params.id;
   try {
@@ -961,7 +1024,7 @@ app.get("/api/trip-detail/Objects/:id", async (req, res) => {
   }
 });
 
-// Create a Trip
+// Create a Trip to Springboot
 app.post("/api/create/Trip/FromId", async (req, res) => {
   tripData = req.body;
 
@@ -986,12 +1049,31 @@ app.post("/api/create/Trip/FromId", async (req, res) => {
 });
 
 //______________________________________________________________________________________________________________MONGO
-
+// Mongo Db Endpoints
 // Define the get routes From MONGO-DB
 app.get("/api/get/mongo/getRoutes", async (req, res) => {
   try {
     // Fetch all routes from the database
-    const routes = await MongoRoutes.find(); // You can add query filters here if needed
+    const routes = await MongoRoutes.find();
+
+    if (routes.length === 0) {
+      return res.status(404).json({ message: "No routes found." });
+    }
+
+    res.status(200).json({ routes });
+  } catch (error) {
+    console.error("Error fetching routes:", error);
+    res.status(500).json({ message: "Error fetching routes." });
+  }
+});
+
+// get Routes by routeId From MongoDb
+app.get("/api/getRoutes/mongo/getRoutesByRouteID/:id", async (req, res) => {
+  selectedRouteId = req.params.id;
+
+  try {
+    // Fetch the route by routeId
+    const routes = await MongoRoutes.find({ routeId: selectedRouteId });
 
     if (routes.length === 0) {
       return res.status(404).json({ message: "No routes found." });
@@ -1007,29 +1089,350 @@ app.get("/api/get/mongo/getRoutes", async (req, res) => {
 // Define the create route To Mongo
 app.post("/api/create/mongo/createRoute", async (req, res) => {
   try {
-    const { routeName, routeCoordinates, totalDistanceKm } = req.body;
+    const {
+      routeName,
+      routeId,
+      routeCoordinates,
+      totalDistanceKm,
+      lineColor,
+      lineWidth,
+    } = req.body;
 
     // Validate incoming data
-    if (!routeName || !routeCoordinates || !totalDistanceKm) {
-      return res
-        .status(400)
-        .json({ message: "Name, coordinates, and distance are required." });
+    if (!routeName || !routeId || !routeCoordinates || !totalDistanceKm) {
+      return res.status(400).json({
+        message: "Name, RouteID, coordinates, and distance are required.",
+      });
+    }
+
+    // Check if a route with the same routeId already exists
+    const existingRoute = await MongoRoutes.findOne({ routeId });
+    if (existingRoute) {
+      return res.status(409).json({
+        message: `Route with routeId ${routeId} already exists.`,
+      });
     }
 
     // Create and save the route
     const route = new MongoRoutes({
       routeName,
+      routeId,
       routeCoordinates,
       totalDistanceKm,
+      lineColor,
+      lineWidth,
     });
     await route.save();
 
-    res.status(201).json({ message: "Route created successfully!", route });
+    res.status(201).json({ message: "Route Cached successfully!", route });
   } catch (error) {
-    console.error("Error creating route:", error);
-    res.status(500).json({ message: "Error creating route." });
+    console.error("Error caching routeee:", error);
+    res.status(500).json({ message: "Error caching routeaaaaa." });
   }
 });
+
+// delete routes from From MONGO-DB
+app.delete(
+  "/api/deleteRoutes/mongo/deleteRoutesByRouteID/:id",
+  async (req, res) => {
+    selectedRouteId = req.params.id;
+
+    try {
+      // Fetch the route by routeId
+      const routes = await MongoRoutes.find({ routeId: selectedRouteId });
+
+      if (routes.length === 0) {
+        return res.status(404).json({ message: "No routes found." });
+      }
+
+      // Delete the route
+      await MongoRoutes.deleteOne({ routeId: selectedRouteId });
+
+      // Send success response
+      res.status(200).json({ message: "Cached Route deleted successfully." });
+    } catch (error) {
+      console.error("Error fetching routes:", error);
+      res.status(500).json({ message: "Error fetching routes." });
+    }
+  }
+);
+
+//______________________________________________________________________________________________________________MONGO
+// Mongo Db Endpoints
+// Define the get Checkpoint From MONGO-DB
+app.get("/api/get/mongo/getCheckpoints", async (req, res) => {
+  try {
+    // Fetch all routes from the database
+    const checkpoints = await MongoCheckpoint.find();
+
+    if (checkpoints.length === 0) {
+      return res.status(404).json({ message: "No routes found." });
+    }
+
+    res.status(200).json({ checkpoints });
+  } catch (error) {
+    console.error("Error fetching routes:", error);
+    res.status(500).json({ message: "Error fetching routes." });
+  }
+});
+
+// get Checkpoints by CheckpointId From MongoDb
+app.get(
+  "/api/getCheckpoint/mongo/getCheckpointByCheckpointID/:id",
+  async (req, res) => {
+    selectedCheckpointId = req.params.id;
+
+    try {
+      // Fetch the route by routeId
+      const checkpoints = await MongoCheckpoint.find({
+        checkpointId: selectedCheckpointId,
+      });
+
+      if (checkpoints.length === 0) {
+        return res.status(404).json({ message: "No checkpoint found." });
+      }
+
+      res.status(200).json({ checkpoints });
+    } catch (error) {
+      console.error("Error fetching Checkpoints:", error);
+      res.status(500).json({ message: "Error fetching Checkpoints." });
+    }
+  }
+);
+
+// create Checkpoint In MongoDb
+app.post("/api/create/mongo/createCheckpoint", async (req, res) => {
+  try {
+    const {
+      rectangleName,
+      checkpointId,
+      lowerLeft,
+      upperRight,
+      area,
+      lineColor,
+      lineWidth,
+      polygonFill,
+      polygonOpacity,
+    } = req.body;
+
+    // Validate incoming data
+    if (
+      !rectangleName ||
+      !checkpointId ||
+      !lowerLeft ||
+      !upperRight ||
+      area === undefined ||
+      !lowerLeft.latitude ||
+      !lowerLeft.longitude ||
+      !upperRight.latitude ||
+      !upperRight.longitude
+    ) {
+      return res.status(400).json({
+        message:
+          "rectangleName, checkpointId, lowerLeft, upperRight, and area are required, with both latitude and longitude values for lowerLeft and upperRight.",
+      });
+    }
+
+    // Check if a checkpoint with the same checkpointId already exists
+    const existingCheckpoint = await MongoCheckpoint.findOne({ checkpointId });
+    if (existingCheckpoint) {
+      return res.status(409).json({
+        message: `Checkpoint with ID ${checkpointId} already exists.`,
+      });
+    }
+
+    // Create and save the checkpoint
+    const checkpoint = new MongoCheckpoint({
+      rectangleName,
+      checkpointId,
+      lowerLeft,
+      upperRight,
+      area,
+      lineColor,
+      lineWidth,
+      polygonFill,
+      polygonOpacity,
+    });
+    await checkpoint.save();
+
+    res
+      .status(201)
+      .json({ message: "Checkpoint cached successfully!", checkpoint });
+  } catch (error) {
+    console.error("Error caching checkpoint:", error);
+    res.status(500).json({ message: "Error caching checkpoint." });
+  }
+});
+
+// delete Checkpoints Form MongoDb
+app.delete(
+  "/api/deleteCheckpoint/mongo/deleteCheckpointByCheckpointID/:id",
+  async (req, res) => {
+    selectedCheckpointId = req.params.id;
+
+    try {
+      // Fetch the checkpoint by checkpointId
+      const checkpoint = await MongoCheckpoint.find({
+        checkpointId: selectedCheckpointId,
+      });
+
+      if (checkpoint.length === 0) {
+        return res.status(404).json({ message: "No checkpoint found." });
+      }
+
+      // Delete the checkpoint
+      await MongoCheckpoint.deleteOne({ checkpointId: selectedCheckpointId });
+
+      // Send success response
+      res
+        .status(200)
+        .json({ message: "Cached Checkpoint deleted successfully." });
+    } catch (error) {
+      console.error("Error fetching Checkpoint:", error);
+      res.status(500).json({ message: "Error fetching Checkpoint." });
+    }
+  }
+);
+
+//______________________________________________________________________________________________________________MONGO
+// Mongo Db Endpoints
+// Define the get Warehouse From MONGO-DB
+app.get("/api/get/mongo/getWarehouse", async (req, res) => {
+  try {
+    // Fetch all routes from the database
+    const warehouses = await MongoWarehouse.find();
+
+    if (warehouses.length === 0) {
+      return res.status(404).json({ message: "No warehouses found." });
+    }
+
+    res.status(200).json({ warehouses });
+  } catch (error) {
+    console.error("Error fetching warehouses:", error);
+    res.status(500).json({ message: "Error fetching warehouses." });
+  }
+});
+
+// get Warehouses by warehouseId From MongoDb
+app.get(
+  "/api/getWarehouses/mongo/getWarehousesByWarehouseId/:id",
+  async (req, res) => {
+    selectedWarehousesId = req.params.id;
+
+    try {
+      // Fetch the route by routeId
+      const warehouse = await MongoWarehouse.find({
+        warehouseId: selectedWarehousesId,
+      });
+
+      if (warehouse.length === 0) {
+        return res.status(404).json({ message: "No warehouse found." });
+      }
+
+      res.status(200).json({ warehouse });
+    } catch (error) {
+      console.error("Error fetching warehouse:", error);
+      res.status(500).json({ message: "Error fetching warehouse." });
+    }
+  }
+);
+
+// create Warehouse In MongoDb
+app.post("/api/create/mongo/createWarehouse", async (req, res) => {
+  try {
+    const {
+      warehouseName,
+      warehouseId,
+      unit,
+      side,
+      area,
+      warehouseCoordinates,
+      lineColor,
+      lineWidth,
+      polygonFill,
+      polygonOpacity,
+    } = req.body;
+
+    // Validate incoming data
+    if (
+      !warehouseName ||
+      !warehouseId ||
+      !warehouseCoordinates ||
+      !unit ||
+      !side ||
+      area === undefined ||
+      !Array.isArray(warehouseCoordinates) || // Ensure warehouseCoordinates is an array
+      warehouseCoordinates.some(
+        (coord) => !coord.latitude || !coord.longitude // Ensure each coordinate has latitude and longitude
+      )
+    ) {
+      return res.status(400).json({
+        message:
+          "warehouseName, warehouseId, unit, side, area, warehouseCoordinates with valid latitude and longitude are required.",
+      });
+    }
+
+    // Check if a warehouse with the same warehouseId already exists
+    const existingWarehouse = await MongoWarehouse.findOne({ warehouseId });
+    if (existingWarehouse) {
+      return res.status(409).json({
+        message: `Warehouse with ID ${warehouseId} already exists.`,
+      });
+    }
+
+    // Create and save the warehouse
+    const warehouse = new MongoWarehouse({
+      warehouseName,
+      warehouseId,
+      unit,
+      side,
+      area,
+      warehouseCoordinates,
+      lineColor,
+      lineWidth,
+      polygonFill,
+      polygonOpacity,
+    });
+    await warehouse.save();
+
+    res
+      .status(201)
+      .json({ message: "Warehouse cached successfully!", warehouse });
+  } catch (error) {
+    console.error("Error caching warehouse:", error);
+    res.status(500).json({ message: "Error caching warehouse." });
+  }
+});
+
+// delete Warehouse Form MongoDb
+app.delete(
+  "/api/deleteWarehouse/mongo/deleteWarehouseByWarehouseID/:id",
+  async (req, res) => {
+    selectedWarehouseId = req.params.id;
+
+    try {
+      // Fetch the warehouse by warehouseId
+      const warehouse = await MongoWarehouse.find({
+        warehouseId: selectedWarehouseId,
+      });
+
+      if (warehouse.length === 0) {
+        return res.status(404).json({ message: "No Warehouse found." });
+      }
+
+      // Delete the warehouse
+      await MongoWarehouse.deleteOne({ warehouseId: selectedWarehouseId });
+
+      // Send success response
+      res
+        .status(200)
+        .json({ message: "Cached Warehouse deleted successfully." });
+    } catch (error) {
+      console.error("Error fetching Warehouse:", error);
+      res.status(500).json({ message: "Error fetching Warehouse." });
+    }
+  }
+);
 
 // Start the server
 app.listen(PORT, () => {

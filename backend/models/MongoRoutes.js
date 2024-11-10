@@ -9,6 +9,10 @@ const routeSchema = new mongoose.Schema(
       type: String,
       required: [true, "The Route Name is required"],
     },
+    routeId: {
+      type: String,
+      required: [true, "The Route ID is required from Springboot"],
+    },
     routeCoordinates: {
       type: Array, // GeoJSON format
       required: [true, "Coordinates are required"],
@@ -17,6 +21,8 @@ const routeSchema = new mongoose.Schema(
       type: String, // the distance in km
       required: [true, "Distance is required"],
     },
+    lineColor: { type: String, default: "#1bbc9b" }, // Default line color (can be updated)
+    lineWidth: { type: Number, default: 8 }, // Default line width (can be updated)
   },
 
   // timestamp
