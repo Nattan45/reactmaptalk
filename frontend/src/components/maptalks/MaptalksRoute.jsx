@@ -17,6 +17,7 @@ import {
 import { blue, yellow } from "@mui/material/colors";
 import axios from "axios";
 import MessagePopup from "../messageComponent/MessagePopup";
+import { MAP_LAT, MAP_LONG, MAP_MINZOOM } from "./maptalksConstants";
 
 const MaptalksRoute = () => {
   const mapRef = useRef(null);
@@ -47,7 +48,7 @@ const MaptalksRoute = () => {
   };
 
   useEffect(() => {
-    const defaultCenter = [39.7823, 9.145]; // Ethiopian coordinates [Longitude, Latitude]
+    const defaultCenter = [MAP_LAT, MAP_LONG]; // Ethiopian coordinates [Latitude, Longitude]
 
     const initializeMap = (center, zoom = 10) => {
       if (mapInstance.current) {
@@ -57,7 +58,7 @@ const MaptalksRoute = () => {
       mapInstance.current = new maptalks.Map(mapRef.current, {
         center: center,
         zoom: zoom,
-        minZoom: 3, // set map's min zoom to
+        minZoom: MAP_MINZOOM, // set map's min zoom to
         baseLayer: new maptalks.TileLayer("base", {
           urlTemplate: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
           subdomains: ["a", "b", "c"],

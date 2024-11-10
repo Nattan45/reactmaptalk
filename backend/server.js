@@ -821,6 +821,26 @@ app.post("/api/create/route", async (req, res) => {
   }
 });
 
+app.delete("/api/delete-route/:id", async (req, res) => {
+  routeId = req.params.id;
+  try {
+    const response = await axios.delete(
+      `${SPRING_ENDPOINT}${routes.ROUTELIST}/${routeId}`
+    );
+    if (response.status === 200) {
+      res.status(200).json({ message: "Route deleted successfully." });
+    }
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
 // Checkpoint Related Endpoints ________________________________________________
 // get all Checkpoint with ID
 app.get("/api/checkpoints", async (req, res) => {
@@ -1066,6 +1086,32 @@ app.post("/api/create/mongo/createRoute", async (req, res) => {
     res.status(500).json({ message: "Error caching routeaaaaa." });
   }
 });
+
+// delete routes
+app.delete(
+  "/api/deleteRoutes/mongo/deleteRoutesByRouteID/:id",
+  async (req, res) => {
+    selectedRouteId = req.params.id;
+
+    try {
+      // Fetch the route by routeId
+      const routes = await MongoRoutes.find({ routeId: selectedRouteId });
+
+      if (routes.length === 0) {
+        return res.status(404).json({ message: "No routes found." });
+      }
+
+      // Delete the route
+      await MongoRoutes.deleteOne({ routeId: selectedRouteId });
+
+      // Send success response
+      res.status(200).json({ message: "Cached Route deleted successfully." });
+    } catch (error) {
+      console.error("Error fetching routes:", error);
+      res.status(500).json({ message: "Error fetching routes." });
+    }
+  }
+);
 
 // Start the server
 app.listen(PORT, () => {

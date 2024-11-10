@@ -78,8 +78,37 @@ const RouteList = () => {
     // setRouteCoordinates(routeCoordinates); // Update state
   };
 
-  const deleteRoute = (selectedRouteId) => {
-    console.log("deleteRoute", selectedRouteId);
+  const deleteRoute = async (selectedRouteId) => {
+    try {
+      // Step 1: Send DELETE request to Spring Boot to delete the route by routeId
+      const springResponse = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/delete-route/${selectedRouteId}`
+      );
+
+      // Check if the deletion in Spring Boot was successful
+      if (springResponse.data.success) {
+        addMessage("Route deleted successfully.", "success");
+
+        // Step 2: Send DELETE request to MongoDB to delete the route by routeId
+        const mongoResponse = await axios.delete(
+          `${process.env.REACT_APP_API_URL}/api/deleteRoutes/mongo/deleteRoutesByRouteID/${selectedRouteId}`
+        );
+
+        if (mongoResponse.data.success) {
+          addMessage("Cached Route deleted successfully.", "success");
+        } else {
+          addMessage("Failed to delete route from the CACHE .", "error");
+        }
+      } else {
+        addMessage(
+          "Failed to delete route in: route may be assigned to a Trip or Vehicle.",
+          "error"
+        );
+      }
+    } catch (error) {
+      // Handle any errors encountered during the process
+      addMessage("Error deleting route: " + error.message, "error");
+    }
   };
 
   return (
@@ -171,7 +200,7 @@ const RouteList = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       className="lucide lucide-trash-2"
-                      onClick={() => deleteRoute(route.routeId)}
+                      onClick={() => deleteRoute(route.routeId, route.id)}
                     >
                       <path d="M3 6h18" />
                       <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
@@ -197,12 +226,12 @@ const RouteList = () => {
         />
       </div>
 
-      {selectedRouteId && (
-        <RouteListMaptalksView
-          selectedRouteId={selectedRouteId}
-          // routeCoordinates={routeCoordinates}
-        />
-      )}
+      <div className="showSelectedRoutes">
+        {/* conditionally rendering */}
+        {/* {selectedRouteId && ( */}
+        <RouteListMaptalksView selectedRouteId={selectedRouteId} />
+        {/* )} */}
+      </div>
 
       <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>

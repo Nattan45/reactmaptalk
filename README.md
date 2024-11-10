@@ -33,7 +33,7 @@ To get started with the project, follow these steps:
    Navigate to the project directory:
 
    ```bash
-   cd reactmaptalk
+   cd reactmaptalk/frontend
    npm install
    ```
 
@@ -44,8 +44,23 @@ To get started with the project, follow these steps:
    ```
 
 4. **Setup the Backend**:
+   Navigate to the project directory:
+
+   ```bash
+   cd reactmaptalk/backend
+   npm install
+   ```
+
+5. **Start the Backend Development Server**:
+
+   ```bash
+   npm run dev
+   ```
+
+6. **Start the Backend Development Server Springboot**:
+   `Configure the env to communicat to the Spring Endpoints`
    - Please use the README.md file provided in the following Github link.
-   - [Github](https://maptalks.org/) for more Info.
+   - [Github](https://github.com/jooman21/spring-vech-tracking) for more Info.
 
 ## Usage
 
