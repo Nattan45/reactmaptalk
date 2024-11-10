@@ -27,6 +27,7 @@ const RouteListMaptalksView = ({ selectedRouteId }) => {
           );
           setRoute(response.data.routes[0]); // Assuming the response is an array
           // console.log(response.data.routes[0]);
+          console.log("Fetched data:", response.data);
         } catch (error) {
           console.error("Error fetching route data:", error);
         }

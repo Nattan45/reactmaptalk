@@ -17,7 +17,13 @@ import {
 import { blue, yellow } from "@mui/material/colors";
 import axios from "axios";
 import MessagePopup from "../messageComponent/MessagePopup";
-import { MAP_LAT, MAP_LONG, MAP_MINZOOM } from "./maptalksConstants";
+import {
+  MAP_LAT,
+  MAP_LONG,
+  MAP_MINZOOM,
+  Route_Line_Color,
+  Route_Line_Width,
+} from "./maptalksConstants";
 
 const MaptalksRoute = () => {
   const mapRef = useRef(null);
@@ -29,9 +35,6 @@ const MaptalksRoute = () => {
   }); // State to store distance
   const [dialogOpen, setDialogOpen] = useState(false); // State for dialog visibility
   const [routeName, setRouteName] = useState(""); // State for route name
-
-  const [lineColor] = useState("#1bbc9b"); // Default color
-  const [lineWidth] = useState(8); // Default width
 
   // Message Toast
   const [messages, setMessages] = useState([]);
@@ -130,8 +133,8 @@ const MaptalksRoute = () => {
       // Create the line with updated coordinates
       const line = new maptalks.LineString(routeCoordinates, {
         symbol: {
-          lineColor: lineColor, // Dynamic line color
-          lineWidth: lineWidth, // Dynamic line width
+          lineColor: Route_Line_Color, // Dynamic line color
+          lineWidth: Route_Line_Width, // Dynamic line width
         },
       });
 
@@ -144,7 +147,7 @@ const MaptalksRoute = () => {
     // console.log("Total Distance (km):", calculatedDistance.totalDistanceKm);
 
     setDistance(calculatedDistance); // Update distance state with the calculated values
-  }, [routeCoordinates, lineColor, lineWidth]); // Add routeCoordinates, lineColor and lineWidth to the dependency array
+  }, [routeCoordinates, Route_Line_Color, Route_Line_Width]); // Add routeCoordinates, lineColor and lineWidth to the dependency array
 
   const removeLastCoordinate = () => {
     setRouteCoordinates((prevCoords) =>
@@ -211,8 +214,8 @@ const MaptalksRoute = () => {
         const modifiedRouteData = {
           ...routeData,
           routeId,
-          lineColor: lineColor, // Pass line color
-          lineWidth: lineWidth, // Pass line width
+          lineColor: Route_Line_Color, // Dynamic line color
+          lineWidth: Route_Line_Width, // Dynamic line width
         };
 
         // Step 3: Save the modified data to MongoDB

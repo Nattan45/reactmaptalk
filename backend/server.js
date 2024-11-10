@@ -760,7 +760,7 @@ app.delete("/api/delete/Eseal/:id", async (req, res) => {
 });
 
 // Route Related Endpoints ________________________________________________
-// get all routes with ID
+// get all routes with ID From Springboot
 app.get("/api/roads", async (req, res) => {
   try {
     const response = await axios.get(`${SPRING_ENDPOINT}${routes.ROUTELIST}`);
@@ -777,7 +777,7 @@ app.get("/api/roads", async (req, res) => {
   }
 });
 
-// get all Routes with ID
+// get all Routes with ID From Springboot
 app.get("/api/route-detail/:id", async (req, res) => {
   id = req.params.id;
   try {
@@ -797,7 +797,7 @@ app.get("/api/route-detail/:id", async (req, res) => {
   }
 });
 
-// create Route
+// create Route to From Springboot
 app.post("/api/create/route", async (req, res) => {
   routeData = req.body;
 
@@ -821,6 +821,7 @@ app.post("/api/create/route", async (req, res) => {
   }
 });
 
+// delete Route From Springboot
 app.delete("/api/delete-route/:id", async (req, res) => {
   routeId = req.params.id;
   try {
@@ -859,7 +860,7 @@ app.get("/api/checkpoints", async (req, res) => {
   }
 });
 
-// Create Checkpoint
+// Create Checkpoint to Springboot
 app.post("/api/create/checkpoint", async (req, res) => {
   newCp = req.body;
 
@@ -882,8 +883,29 @@ app.post("/api/create/checkpoint", async (req, res) => {
   }
 });
 
+// delete Checkpoint to Springboot
+app.delete("/api/delete-checkpoint/:id", async (req, res) => {
+  checkpointId = req.params.id;
+  try {
+    const response = await axios.delete(
+      `${SPRING_ENDPOINT}${routes.CPLIST}/${checkpointId}`
+    );
+    if (response.status === 200) {
+      res.status(200).json({ message: "Checkpoint deleted successfully." });
+    }
+  } catch (error) {
+    if (error.response) {
+      const errorMessage = error.response.data.errorMessage || "Unknown error";
+      res.status(error.response.status).json({ errorMessage });
+    } else {
+      console.log("Error:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
 // Warehouse Related Endpoints ________________________________________________
-// get all Warehouse with ID
+// get all Warehouse with ID From Springboot
 app.get("/api/warehouse", async (req, res) => {
   try {
     const response = await axios.get(
@@ -902,7 +924,7 @@ app.get("/api/warehouse", async (req, res) => {
   }
 });
 
-// Warehouse Checkpoint
+// Warehouse Checkpoint to Springboot
 app.post("/api/create/warehouse", async (req, res) => {
   warehouseData = req.body;
 
@@ -925,7 +947,7 @@ app.post("/api/create/warehouse", async (req, res) => {
 });
 
 // Trip Related Endpoints ________________________________________________
-// get all Trips with ID and ID of Related <objects>
+// get all Trips with ID and ID of Related <objects> From Springboot
 app.get("/api/trip-detail/Id", async (req, res) => {
   try {
     const response = await axios.get(`${SPRING_ENDPOINT}${routes.TRIPLIST}`);
@@ -942,7 +964,7 @@ app.get("/api/trip-detail/Id", async (req, res) => {
   }
 });
 
-// get all Trips with ID and <objects>
+// get all Trips with ID and <objects> From Springboot
 app.get("/api/trip-detail/Objects", async (req, res) => {
   try {
     const response = await axios.get(
@@ -961,7 +983,7 @@ app.get("/api/trip-detail/Objects", async (req, res) => {
   }
 });
 
-// get a Trips by its ID
+// get a Trips by its ID From Springboot
 app.get("/api/trip-detail/Objects/:id", async (req, res) => {
   tripId = req.params.id;
   try {
@@ -981,7 +1003,7 @@ app.get("/api/trip-detail/Objects/:id", async (req, res) => {
   }
 });
 
-// Create a Trip
+// Create a Trip to Springboot
 app.post("/api/create/Trip/FromId", async (req, res) => {
   tripData = req.body;
 
@@ -1024,6 +1046,7 @@ app.get("/api/get/mongo/getRoutes", async (req, res) => {
   }
 });
 
+// get Routes by routeId From MongoDb
 app.get("/api/getRoutes/mongo/getRoutesByRouteID/:id", async (req, res) => {
   selectedRouteId = req.params.id;
 
@@ -1087,7 +1110,7 @@ app.post("/api/create/mongo/createRoute", async (req, res) => {
   }
 });
 
-// delete routes
+// delete routes from From MONGO-DB
 app.delete(
   "/api/deleteRoutes/mongo/deleteRoutesByRouteID/:id",
   async (req, res) => {
@@ -1109,6 +1132,143 @@ app.delete(
     } catch (error) {
       console.error("Error fetching routes:", error);
       res.status(500).json({ message: "Error fetching routes." });
+    }
+  }
+);
+
+//______________________________________________________________________________________________________________MONGO
+// Mongo Db Endpoints
+// Define the get routes From MONGO-DB
+app.get("/api/get/mongo/getCheckpoints", async (req, res) => {
+  try {
+    // Fetch all routes from the database
+    const checkpoints = await MongoCheckpoint.find();
+
+    if (checkpoints.length === 0) {
+      return res.status(404).json({ message: "No routes found." });
+    }
+
+    res.status(200).json({ checkpoints });
+  } catch (error) {
+    console.error("Error fetching routes:", error);
+    res.status(500).json({ message: "Error fetching routes." });
+  }
+});
+
+// get Checkpoints by CheckpointId From MongoDb
+app.get(
+  "/api/getCheckpoint/mongo/getCheckpointByCheckpointID/:id",
+  async (req, res) => {
+    selectedCheckpointId = req.params.id;
+
+    try {
+      // Fetch the route by routeId
+      const checkpoints = await MongoCheckpoint.find({
+        checkpointId: selectedCheckpointId,
+      });
+
+      if (checkpoints.length === 0) {
+        return res.status(404).json({ message: "No checkpoint found." });
+      }
+
+      res.status(200).json({ checkpoints });
+    } catch (error) {
+      console.error("Error fetching Checkpoints:", error);
+      res.status(500).json({ message: "Error fetching Checkpoints." });
+    }
+  }
+);
+
+// create Checkpoint In MongoDb
+app.post("/api/create/mongo/createCheckpoint", async (req, res) => {
+  try {
+    const {
+      rectangleName,
+      checkpointId,
+      lowerLeft,
+      upperRight,
+      area,
+      lineColor,
+      lineWidth,
+      polygonFill,
+      polygonOpacity,
+    } = req.body;
+
+    // Validate incoming data
+    if (
+      !rectangleName ||
+      !checkpointId ||
+      !lowerLeft ||
+      !upperRight ||
+      area === undefined ||
+      !lowerLeft.latitude ||
+      !lowerLeft.longitude ||
+      !upperRight.latitude ||
+      !upperRight.longitude
+    ) {
+      return res.status(400).json({
+        message:
+          "rectangleName, checkpointId, lowerLeft, upperRight, and area are required, with both latitude and longitude values for lowerLeft and upperRight.",
+      });
+    }
+
+    // Check if a checkpoint with the same checkpointId already exists
+    const existingCheckpoint = await MongoCheckpoint.findOne({ checkpointId });
+    if (existingCheckpoint) {
+      return res.status(409).json({
+        message: `Checkpoint with ID ${checkpointId} already exists.`,
+      });
+    }
+
+    // Create and save the checkpoint
+    const checkpoint = new MongoCheckpoint({
+      rectangleName,
+      checkpointId,
+      lowerLeft,
+      upperRight,
+      area,
+      lineColor,
+      lineWidth,
+      polygonFill,
+      polygonOpacity,
+    });
+    await checkpoint.save();
+
+    res
+      .status(201)
+      .json({ message: "Checkpoint cached successfully!", checkpoint });
+  } catch (error) {
+    console.error("Error caching checkpoint:", error);
+    res.status(500).json({ message: "Error caching checkpoint." });
+  }
+});
+
+// delete Checkpoints Form MongoDb
+app.delete(
+  "/api/deleteCheckpoint/mongo/deleteCheckpointByCheckpointID/:id",
+  async (req, res) => {
+    selectedCheckpointId = req.params.id;
+
+    try {
+      // Fetch the route by routeId
+      const checkpoint = await MongoCheckpoint.find({
+        checkpointId: selectedCheckpointId,
+      });
+
+      if (checkpoint.length === 0) {
+        return res.status(404).json({ message: "No checkpoint found." });
+      }
+
+      // Delete the route
+      await MongoCheckpoint.deleteOne({ checkpointId: selectedCheckpointId });
+
+      // Send success response
+      res
+        .status(200)
+        .json({ message: "Cached Checkpoint deleted successfully." });
+    } catch (error) {
+      console.error("Error fetching Checkpoint:", error);
+      res.status(500).json({ message: "Error fetching Checkpoint." });
     }
   }
 );

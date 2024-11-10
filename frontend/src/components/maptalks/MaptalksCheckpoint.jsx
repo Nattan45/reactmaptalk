@@ -8,6 +8,15 @@ import { blue, yellow } from "@mui/material/colors";
 import { calculateAreaOfRectangle } from "./calculateAreaOfRectangle";
 import ResetToMyLocation from "./ResetToMyLocation";
 import MessagePopup from "../messageComponent/MessagePopup";
+import {
+  MAP_LAT,
+  MAP_LONG,
+  MAP_MINZOOM,
+  Checkpoint_Line_Color,
+  Checkpoint_Line_Width,
+  Checkpoint_polygon_Fill,
+  Checkpoint_polygon_Opacity,
+} from "./maptalksConstants";
 
 const MaptalksCheckpoint = () => {
   const mapRef = useRef(null); // Ref to store the map DOM element
@@ -98,10 +107,10 @@ const MaptalksCheckpoint = () => {
     // Create the polygon using the calculated coordinates
     currentShape.current = new maptalks.Polygon(polygonCoordinates, {
       symbol: {
-        lineColor: "#34495e",
-        lineWidth: 2,
-        polygonFill: "#34495e",
-        polygonOpacity: 0.4,
+        lineColor: Checkpoint_Line_Color, // Dynamic line color
+        lineWidth: Checkpoint_Line_Width,
+        polygonFill: Checkpoint_polygon_Fill,
+        polygonOpacity: Checkpoint_polygon_Opacity,
       },
     });
 
@@ -175,7 +184,7 @@ const MaptalksCheckpoint = () => {
 
   // useEffect to initialize the map and attach event listeners
   useEffect(() => {
-    const defaultCenter = [39.7823, 9.145]; // Default map center coordinates
+    const defaultCenter = [MAP_LAT, MAP_LONG]; // Ethiopian coordinates [Latitude, Longitude]
 
     // Function to initialize the map with center and zoom level
     const initializeMap = (center, zoom = 10) => {
@@ -187,7 +196,7 @@ const MaptalksCheckpoint = () => {
       mapInstance.current = new maptalks.Map(mapRef.current, {
         center: center,
         zoom: zoom,
-        minZoom: 3, // set map's min zoom to
+        minZoom: MAP_MINZOOM, // set map's min zoom to
         attribution: true,
         scaleControl: true, // add scale control
         overviewControl: true, // add overview control
@@ -266,6 +275,56 @@ const MaptalksCheckpoint = () => {
   };
 
   // Handle Save button click
+  // const handleSave = async () => {
+  //   const rectanglesWithNames = rectangleData.map((data, index) => {
+  //     const rectangleName = rectangleNames[index] || `Rectangle ${index + 1}`;
+
+  //     // Ensure LowerLeft and UpperRight have the correct structure
+  //     const formattedLowerLeft = {
+  //       longitude: data.lowerLeft[0],
+  //       latitude: data.lowerLeft[1],
+  //     };
+
+  //     const formattedUpperRight = {
+  //       longitude: data.upperRight[0],
+  //       latitude: data.upperRight[1],
+  //     };
+
+  //     return {
+  //       rectangleName: rectangleName,
+  //       lowerLeft: formattedLowerLeft,
+  //       upperRight: formattedUpperRight,
+  //       area: data.area ? `${data.area.toFixed(2)}` : "No area data",
+  //     };
+  //   });
+
+  //   console.log(
+  //     "All drawn rectangles with their saved names:",
+  //     JSON.stringify(rectanglesWithNames, null, 2) // in JSON format
+  //   );
+
+  //   try {
+  //     for (const rectangle of rectanglesWithNames) {
+  //       await axios.post(
+  //         `${process.env.REACT_APP_API_URL}/api/create/checkpoint`,
+  //         rectangle
+  //       );
+  //     }
+
+  //     addMessage("Checkpoint created successfully!", "success");
+  //   } catch (err) {
+  //     if (err.response) {
+  //       const errorMessage =
+  //         err.response.data.errorMessage ||
+  //         err.response.data.message ||
+  //         "An error occurred: 500";
+  //       addMessage(errorMessage, "error");
+  //     } else {
+  //       addMessage("Network error: Unable to reach the server.", "error");
+  //     }
+  //   }
+  // };
+
   const handleSave = async () => {
     const rectanglesWithNames = rectangleData.map((data, index) => {
       const rectangleName = rectangleNames[index] || `Rectangle ${index + 1}`;
@@ -296,13 +355,42 @@ const MaptalksCheckpoint = () => {
 
     try {
       for (const rectangle of rectanglesWithNames) {
-        await axios.post(
+        // Step 1: Save each checkpoint to Spring Boot
+        const springResponse = await axios.post(
           `${process.env.REACT_APP_API_URL}/api/create/checkpoint`,
           rectangle
         );
+
+        if (springResponse.status === 200) {
+          const checkpointId = springResponse.data.checkpointId; // Extract checkpointId from Spring Boot's response
+
+          // Step 2: Prepare data for MongoDB with the checkpointId
+          const modifiedCheckpointData = {
+            ...rectangle,
+            checkpointId,
+            lineColor: Checkpoint_Line_Color, // Dynamic line color
+            lineWidth: Checkpoint_Line_Width,
+            polygonFill: Checkpoint_polygon_Fill,
+            polygonOpacity: Checkpoint_polygon_Opacity,
+          };
+
+          // Step 3: Save the modified data to MongoDB
+          const mongoResponse = await axios.post(
+            `${process.env.REACT_APP_API_URL}/api/create/mongo/createCheckpoint`,
+            modifiedCheckpointData
+          );
+
+          if (mongoResponse.status === 201) {
+            addMessage("Checkpoint cached successfully", "success");
+          } else {
+            addMessage("Error caching checkpoint.", "error");
+          }
+        } else {
+          addMessage("Error saving checkpoint.", "error");
+        }
       }
 
-      addMessage("Checkpoint created successfully!", "success");
+      addMessage("All checkpoints saved and cached successfully!", "success");
     } catch (err) {
       if (err.response) {
         const errorMessage =

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 
 import "./checkpoints.css";
 import Paginator from "../../paginator/Paginator";
-import CheckpointsCategoryList from "./CheckpointsCategoryList";
 import MessagePopup from "../../messageComponent/MessagePopup";
 import axios from "axios";
+import CheckpointsListMaptalksView from "./CheckpointsListMaptalksView";
 
 const CheckpointsList = () => {
   const [deviceData, setDeviceData] = useState([]); // State for the full data
@@ -30,10 +30,10 @@ const CheckpointsList = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/checkpoints`
+          `${process.env.REACT_APP_API_URL}/api/get/mongo/getCheckpoints`
         );
 
-        const Data = response.data;
+        const Data = response.data.checkpoints;
 
         setDeviceData(Data); // Load the combined data into state
         setTotalCheckpoints(Data.length);
@@ -64,6 +64,45 @@ const CheckpointsList = () => {
   // Function to handle page change
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber); // Set the new page number
+  };
+
+  const [selectedCheckpointId, setSelectedCheckpointId] = useState(null);
+
+  const viewCheckpointsOnMaptalks = (selectedCheckpointId) => {
+    setSelectedCheckpointId(selectedCheckpointId); // Update state
+  };
+
+  const deleteCheckpoints = async (selectedCheckpointId) => {
+    try {
+      // Step 1: Send DELETE request to Spring Boot to delete the checkpoint by checkpointId
+      const springResponse = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/delete-checkpoint/${selectedCheckpointId}`
+      );
+
+      // Check if the deletion in Spring Boot was successful
+      if (springResponse.data.success) {
+        addMessage("Checkpoint deleted successfully.", "success");
+
+        // Step 2: Send DELETE request to MongoDB to delete the checkpoint by checkpointId
+        const mongoResponse = await axios.delete(
+          `${process.env.REACT_APP_API_URL}/api/deleteCheckpoint/mongo/deleteCheckpointByCheckpointID/${selectedCheckpointId}`
+        );
+
+        if (mongoResponse.data.success) {
+          addMessage("Cached checkpoint deleted successfully.", "success");
+        } else {
+          addMessage("Failed to delete checkpoint from the CACHE .", "error");
+        }
+      } else {
+        addMessage(
+          "Failed to delete checkpoint in: checkpoint may be assigned to a Trip or Vehicle.",
+          "error"
+        );
+      }
+    } catch (error) {
+      // Handle any errors encountered during the process
+      addMessage("Error deleting checkpoint: " + error.message, "error");
+    }
   };
 
   return (
@@ -115,29 +154,14 @@ const CheckpointsList = () => {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         className="lucide lucide-eye"
+                        onClick={() =>
+                          viewCheckpointsOnMaptalks(checkpoint.checkpointId)
+                        }
                       >
                         <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
                         <circle cx="12" cy="12" r="3" />
                       </svg>
-                      &nbsp;&nbsp;
-                      {/* Edit icons */}
-                      {/* <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#000000"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="lucide lucide-file-pen-line"
-                      >
-                        <path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2" />
-                        <path d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
-                        <path d="M8 18h1" />
-                      </svg> */}
-                      &nbsp;&nbsp;
+                      &nbsp;&nbsp; &nbsp;&nbsp;
                       {/* Delete icons */}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -150,6 +174,9 @@ const CheckpointsList = () => {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         className="lucide lucide-trash-2"
+                        onClick={() =>
+                          deleteCheckpoints(checkpoint.checkpointId)
+                        }
                       >
                         <path d="M3 6h18" />
                         <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
@@ -175,7 +202,12 @@ const CheckpointsList = () => {
           onPageChange={handlePageChange}
         />
       </div>
-      <CheckpointsCategoryList />
+
+      <div className="showSelectedRoutes">
+        <CheckpointsListMaptalksView
+          selectedCheckpointId={selectedCheckpointId}
+        />
+      </div>
 
       <MessagePopup messages={messages} removeMessage={removeMessage} />
     </div>
