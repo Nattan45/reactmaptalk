@@ -282,12 +282,12 @@ const MaptalksPin = () => {
           <div ref={mapRef} style={{ width: "70vw", height: "80vh" }} />
         </div>
       </div>
-      {/* Dialog for entering route name */}
+      {/* Dialog for entering Pin Location name */}
       <Dialog open={dialogOpen} onClose={handleDialogClose}>
-        <DialogTitle>Save Route</DialogTitle>
+        <DialogTitle>Save Pin Location</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Please enter a name for your route.
+            Please enter a name for Pin Location.
           </DialogContentText>
           <TextField
             autoFocus
