@@ -115,7 +115,7 @@ const SavedLocations = () => {
             Could not display your location.
           </div>
         )}
-        display items on map
+        {/* display items on map */}
         <div ref={mapRef} style={{ width: "70vw", height: "60vh" }} />
       </div>
     </div>
